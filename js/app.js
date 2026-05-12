@@ -990,8 +990,8 @@ window.navigate = async function (url, pushState = true) {
         // Pre-cleanup for safe execution
         window.initPage = null;
 
-        // 3. Extract and Execute Page-Specific Scripts
-        const scripts = newMain.querySelectorAll('script');
+        // 3. Extract and Execute Page-Specific Scripts (from the whole document)
+        const scripts = doc.querySelectorAll('script');
         
         // Helper to load script and return promise
         const loadScript = (oldScript) => {
