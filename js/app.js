@@ -960,7 +960,21 @@ window.navigate = async function (url, pushState = true) {
 
         if (!newMain) { window.location.href = url; return; }
 
-        // Swap content instantly
+        // 1. Extract and apply Styles from the new page's <head>
+        const newStyles = doc.querySelectorAll('style, link[rel="stylesheet"]');
+        newStyles.forEach(style => {
+            // Only add if not already present to avoid duplicates
+            const isDuplicate = Array.from(document.head.querySelectorAll('style, link[rel="stylesheet"]')).some(existing => {
+                if (style.tagName === 'LINK') return existing.href === style.href;
+                return existing.textContent === style.textContent;
+            });
+            if (!isDuplicate) {
+                const clonedStyle = style.cloneNode(true);
+                document.head.appendChild(clonedStyle);
+            }
+        });
+
+        // 2. Swap main content
         mainContent.innerHTML = newMain.innerHTML;
         mainContent.className = newMain.className;
 
@@ -981,30 +995,45 @@ window.navigate = async function (url, pushState = true) {
         // Pre-cleanup for safe execution
         window.initPage = null;
 
-        // Extract and Execute Page-Specific Inline Scripts Only
+        // 3. Extract and Execute Page-Specific Scripts
         const scripts = newMain.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            // Skip core scripts that are already loaded to prevent duplicate logic/listeners
-            if (oldScript.src && (
-                oldScript.src.includes('app.js') || 
-                oldScript.src.includes('db.js') || 
-                oldScript.src.includes('lucide') || 
-                oldScript.src.includes('tailwind') ||
-                oldScript.src.includes('chart.js')
-            )) {
-                return;
-            }
+        
+        // Helper to load script and return promise
+        const loadScript = (oldScript) => {
+            return new Promise((resolve, reject) => {
+                // Skip core scripts that are already loaded
+                if (oldScript.src && (
+                    oldScript.src.includes('app.js') || 
+                    oldScript.src.includes('db.js') || 
+                    oldScript.src.includes('lucide') || 
+                    oldScript.src.includes('tailwind') ||
+                    oldScript.src.includes('chart.js')
+                )) {
+                    return resolve();
+                }
 
-            const newScript = document.createElement('script');
-            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-            document.body.appendChild(newScript);
-            
-            // Clean up immediately after execution if it's inline
-            if (!newScript.src) newScript.remove();
-        });
+                const newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                
+                if (oldScript.src) {
+                    newScript.onload = resolve;
+                    newScript.onerror = reject;
+                    document.body.appendChild(newScript);
+                } else {
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    document.body.appendChild(newScript);
+                    newScript.remove(); // Inline scripts execute instantly
+                    resolve();
+                }
+            });
+        };
 
-        // Re-initialize for the new content
+        // Execute all scripts sequentially to preserve order and dependencies
+        for (const s of scripts) {
+            await loadScript(s);
+        }
+
+        // 4. Re-initialize for the new content
         if (typeof lucide !== 'undefined') {
             lucide.createIcons({
                 root: mainContent,
@@ -1020,7 +1049,7 @@ window.navigate = async function (url, pushState = true) {
                 history.pushState({ url }, doc.title, url);
                 await loadPriorityReminders();
             } catch (e) {
-                console.warn("history.pushState failed (expected on file:// protocol):", e);
+                console.warn("history.pushState failed:", e);
             }
         }
 
@@ -1030,12 +1059,11 @@ window.navigate = async function (url, pushState = true) {
             toggleSidebar();
         }
 
-        // Scroll to top
         window.scrollTo(0, 0);
 
     } catch (err) {
         console.error("Navigation failed:", err);
-        window.location.href = url; // Fallback to normal navigation
+        window.location.href = url; // Fallback
     }
 };
 
