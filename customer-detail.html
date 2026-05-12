@@ -766,10 +766,11 @@
 
             window.initPage = async () => {
                 const params = new URLSearchParams(window.location.search);
-                currentAccountNo = params.get('accountNo');
+                const accFromUrl = params.get('accountNo');
+                if (accFromUrl) currentAccountNo = accFromUrl;
+                
                 if (!currentAccountNo) {
-                    if (typeof window.navigate === 'function') window.navigate("index.html");
-                    else window.location.href = "index.html";
+                    console.error("No Account Number found in URL");
                     return;
                 }
 
@@ -802,9 +803,7 @@
                 if (!currentAccountNo) return;
                 const customer = await getCustomerByAccountNo(currentAccountNo);
                 if (!customer) {
-                    await lrmsAlert("Customer not found!");
-                    if (typeof window.navigate === 'function') window.navigate("index.html");
-                    else window.location.href = "index.html";
+                    await lrmsAlert("Customer not found in Database!");
                     return;
                 }
 
