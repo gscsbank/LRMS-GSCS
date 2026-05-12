@@ -865,11 +865,6 @@ if (!window.lrmsInitHandled) {
             document.getElementById('settingsMenuLink')?.classList.remove('hidden');
         }
 
-        // Initialize charts if on dashboard
-        if (document.getElementById('statusChart')) {
-            setTimeout(initDashboardCharts, 500);
-        }
-
         const savedSettingsStr = localStorage.getItem('lrms_settings');
         if (savedSettingsStr) {
             try {

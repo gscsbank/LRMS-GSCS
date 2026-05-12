@@ -645,8 +645,24 @@
 
             window.initPage = async () => {
                 updateTime();
-                checkDatabaseHealth();
-                setTimeout(() => loadTableData(), 100);
+                
+                // Wait briefly to ensure DB connection is stable during SPA transition
+                setTimeout(async () => {
+                    const isHealthy = await checkDatabaseHealth();
+                    if (!isHealthy) {
+                        console.warn("DB not ready, retrying...");
+                        setTimeout(window.initPage, 1000);
+                        return;
+                    }
+
+                    // Initialize all dashboard components
+                    if (typeof initDashboardCharts === 'function') {
+                        await initDashboardCharts();
+                    }
+                    
+                    loadTableData();
+                    loadFollowUps();
+                }, 300);
             };
         </script>
     </main>
