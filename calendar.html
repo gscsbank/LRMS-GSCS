@@ -244,7 +244,14 @@
                 }
 
                 window.initPage = async () => {
-                    initCalendar();
+                    setTimeout(async () => {
+                        const isHealthy = await checkDatabaseHealth();
+                        if (!isHealthy) {
+                            setTimeout(window.initPage, 1000);
+                            return;
+                        }
+                        initCalendar();
+                    }, 300);
                 };
             }
         </script>

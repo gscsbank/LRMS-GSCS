@@ -773,17 +773,29 @@
                     return;
                 }
 
-                try {
-                    await loadCustomerDetails();
-                    await loadDocuments();
-                    const actionDateInput = document.getElementById('actionDate');
-                    if (actionDateInput) actionDateInput.valueAsDate = new Date();
-                } catch (err) {
-                    console.error("Error initializing customer profile:", err);
-                } finally {
-                    const loadingState = document.getElementById('loadingState');
-                    if (loadingState) loadingState.style.display = 'none';
-                }
+                // Wait briefly to ensure DB connection is stable
+                setTimeout(async () => {
+                    try {
+                        const isHealthy = await checkDatabaseHealth();
+                        if (!isHealthy) {
+                            console.warn("DB not ready, retrying profile init...");
+                            setTimeout(window.initPage, 1000);
+                            return;
+                        }
+
+                        await loadCustomerDetails();
+                        await loadDocuments();
+                        const actionDateInput = document.getElementById('actionDate');
+                        if (actionDateInput) actionDateInput.valueAsDate = new Date();
+                        
+                        const loadingState = document.getElementById('loadingState');
+                        if (loadingState) loadingState.style.display = 'none';
+                    } catch (err) {
+                        console.error("Error initializing customer profile:", err);
+                        const loadingState = document.getElementById('loadingState');
+                        if (loadingState) loadingState.style.display = 'none';
+                    }
+                }, 300);
             };
 
             async function loadCustomerDetails() {
