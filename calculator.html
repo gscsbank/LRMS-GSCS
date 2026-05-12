@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest & Penalty Calculator - LRMS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script src="https://cdn.tailwindcss.com"></script>
+        <script src="js/db.js?v=3.12"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.12">
+    <style>
+        .calc-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--violet-100);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-display {
+            background: linear-gradient(135deg, var(--violet-50), #fff);
+            border: 2px dashed var(--violet-200);
+        }
+
+        .animate-in {
+            animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+
+    <!-- Main -->
+        <!-- Modern Top Navigation -->
+    <nav class="modern-top-nav">
+        <div class="nav-container">
+                        <div class="nav-logo">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+                <div class="brand-info">
+                    <span class="nav-brand">GSCS Bank</span>
+                    <span class="system-name">Loan Recovery System</span>
+                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                </div>
+            </div>
+            
+                        <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                
+                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
+                
+                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
+                    <div class="dropdown-menu">
+                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
+                        
+                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                
+                
+                <div class="nav-dropdown">
+                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+                    <div class="dropdown-menu align-right" style="width:220px">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+                        </div>
+                        <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-header">
+            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
+
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-violet-100 text-violet-600 rounded-xl">
+                    <i data-lucide="calculator" style="width:24px;height:24px"></i>
+                </div>
+                <div>
+                    <h2>Interest & Penalty Calculator</h2>
+                    <p>Calculate penalties using the standard formula</p>
+                </div>
+            </div>
+            <div class="no-print">
+                <button onclick="window.history.back()" class="btn btn-secondary">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content-area flex items-center justify-center">
+            <div class="w-full max-w-lg animate-in">
+                <div class="card calc-card p-8 rounded-3xl">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="form-label text-violet-700 font-bold mb-3 block">Interest Amount (LKR)</label>
+                            <div class="relative">
+                                <span
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">LKR</span>
+                                <input type="number" id="interestInput" placeholder="Enter amount"
+                                    class="form-input text-xl font-bold pl-16 py-4 border-2 border-violet-100 focus:border-violet-500 rounded-2xl w-full"
+                                    oninput="calculate()">
+                            </div>
+                        </div>
+
+                        <div class="py-4 flex justify-center">
+                            <div
+                                class="w-12 h-12 bg-violet-50 text-violet-400 rounded-full flex items-center justify-center border border-violet-100">
+                                <i data-lucide="arrow-down" style="width:20px;height:20px"></i>
+                            </div>
+                        </div>
+
+                        <div class="result-display p-6 rounded-2xl relative overflow-hidden group">
+                            <div
+                                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i data-lucide="zap" style="width:80px;height:80px;color:var(--violet-600)"></i>
+                            </div>
+                            <label
+                                class="text-[10px] uppercase tracking-[0.2em] font-black text-violet-400 mb-1 block">Calculated
+                                Penalty</label>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-lg font-bold text-violet-400">LKR</span>
+                                <span id="penaltyResult"
+                                    class="text-4xl font-black text-violet-700 tracking-tight">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 pt-4">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Formula</p>
+                                <p class="text-xs font-mono font-bold text-slate-600">Int  2 / 20</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Rate</p>
+                                <p class="text-xs font-bold text-slate-600">10% of Interest</p>
+                            </div>
+                        </div>
+
+                        <button onclick="resetCalc()"
+                            class="w-full btn btn-ghost mt-4 text-gray-400 hover:text-gray-600">
+                            <i data-lucide="refresh-cw"></i> Reset Calculator
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-center mt-8 text-slate-400 text-xs font-medium uppercase tracking-widest">
+                    LMRS Internal Calculation Tool
+                </p>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <script>
+            {
+                window.initPage = async () => {
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                    // Check for admin role
+                    if (sessionStorage.getItem('lrms_role') === 'admin') {
+                        document.getElementById('adminMenuLink')?.classList.remove('hidden');
+                        document.getElementById('settingsMenuLink')?.classList.remove('hidden');
+                    }
+
+                    const savedSettingsStr = localStorage.getItem('lrms_settings');
+                    if (savedSettingsStr) {
+                        try {
+                            const s = JSON.parse(savedSettingsStr);
+                            if (s.bankName) {
+                                const v = document.getElementById('sidebarVersion');
+                                if (v) v.innerText = s.bankName + ' v1.0';
+                            }
+                        } catch(e) {}
+                    }
+                };
+
+                window.calculate = function() {
+                    const ii = document.getElementById('interestInput');
+                    const pr = document.getElementById('penaltyResult');
+                    if (!ii || !pr) return;
+
+                    const interest = parseFloat(ii.value) || 0;
+                    // Formula: interest * 2 / 20 (which is 0.1 * interest)
+                    const penalty = (interest * 2) / 20;
+
+                    pr.innerText = penalty.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+
+                window.resetCalc = function() {
+                    const ii = document.getElementById('interestInput');
+                    if (ii) {
+                        ii.value = '';
+                        calculate();
+                    }
+                }
+
+                // Initial run if already loaded
+            }
+        </script>
+    </main>
+
+
+    <script src="js/app.js?v=3.12"></script>
+<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

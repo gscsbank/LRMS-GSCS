@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycle Bin - LRMS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script src="https://cdn.tailwindcss.com"></script>
+                <script src="js/db.js?v=3.12"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.12">
+</head>
+
+<body>
+    
+
+    <!-- Main Content -->
+        <!-- Modern Top Navigation -->
+    <nav class="modern-top-nav">
+        <div class="nav-container">
+                        <div class="nav-logo">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+                <div class="brand-info">
+                    <span class="nav-brand">GSCS Bank</span>
+                    <span class="system-name">Loan Recovery System</span>
+                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                </div>
+            </div>
+            
+                        <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                
+                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
+                
+                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
+                    <div class="dropdown-menu">
+                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
+                        
+                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                
+                
+                <div class="nav-dropdown">
+                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+                    <div class="dropdown-menu align-right" style="width:220px">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+                        </div>
+                        <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main -->
+    <main class="main-content">
+        <header class="top-header">
+            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
+
+            <div style="display:flex;align-items:center;gap:16px">
+                
+                <div>
+                    <h2>Recycle Bin</h2>
+                    <p>Restore or permanently delete removed records</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="card" style="margin-bottom:20px;">
+                <div class="card-body">
+                    <div
+                        style="display:flex;gap:10px;margin-bottom:20px;border-bottom:1px solid #e5e7eb;padding-bottom:10px">
+                        <button id="tabCustomers" class="btn btn-primary" onclick="switchTab('customers')"
+                            style="border-radius:20px;padding:8px 20px;">Deleted Customers</button>
+                        <button id="tabActions" class="btn btn-ghost" onclick="switchTab('actions')"
+                            style="border-radius:20px;padding:8px 20px;">Deleted Actions</button>
+                    </div>
+
+                    <!-- Customers Container -->
+                    <div id="customersContainer" class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Acc No</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Deleted At</th>
+                                    <th style="text-align:right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deletedCustomersBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">Loading
+                                        deleted customers...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Actions Container -->
+                    <div id="actionsContainer" class="table-container" style="display:none;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Acc No</th>
+                                    <th>Action Type</th>
+                                    <th>Date</th>
+                                    <th>Deleted At</th>
+                                    <th style="text-align:right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deletedActionsBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">Loading
+                                        deleted actions...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <script>
+            {
+                window.initPage = async () => {
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                    loadDeletedCustomers();
+                    loadDeletedActions();
+                };
+
+                window.switchTab = function(tab) {
+                    const btnCustomers = document.getElementById('tabCustomers');
+                    const btnActions = document.getElementById('tabActions');
+                    const contCustomers = document.getElementById('customersContainer');
+                    const contActions = document.getElementById('actionsContainer');
+
+                    if (tab === 'customers') {
+                        if (btnCustomers) btnCustomers.className = 'btn btn-primary';
+                        if (btnActions) btnActions.className = 'btn btn-ghost';
+                        if (contCustomers) contCustomers.style.display = 'block';
+                        if (contActions) contActions.style.display = 'none';
+                        loadDeletedCustomers();
+                    } else {
+                        if (btnActions) btnActions.className = 'btn btn-primary';
+                        if (btnCustomers) btnCustomers.className = 'btn btn-ghost';
+                        if (contActions) contActions.style.display = 'block';
+                        if (contCustomers) contCustomers.style.display = 'none';
+                        loadDeletedActions();
+                    }
+                }
+
+                window.loadDeletedCustomers = async function() {
+                    const tbody = document.getElementById('deletedCustomersBody');
+                    if (!tbody) return;
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">Loading...</td></tr>';
+
+                    const customers = await getDeletedCustomers();
+
+                    if (customers.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">No deleted customers found.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = '';
+                    customers.forEach(c => {
+                        const deletedDate = c.deletedAt ? new Date(c.deletedAt).toLocaleString() : 'Unknown';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="font-weight:700;color:#1e293b">${c.accountNo}</td>
+                            <td style="font-weight:600">${c.name}</td>
+                            <td><span class="badge ${c.status === 'Loan Closed' ? 'badge-closed' : 'badge-normal'}">${c.status || 'N/A'}</span></td>
+                            <td style="color:#6b7280;font-size:0.85rem">${deletedDate}</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:8px;justify-content:flex-end">
+                                    <button onclick="handleRestoreCustomer('${c.id}')" class="btn btn-slate" style="padding:4px 8px;font-size:0.8rem" title="Restore">
+                                        <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Restore
+                                    </button>
+                                    <button onclick="handlePermanentDeleteCustomer('${c.id}', '${c.accountNo}')" class="btn btn-danger" style="padding:4px 8px;font-size:0.8rem;background:#ef4444;color:white" title="Delete Permanently">
+                                        <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                }
+
+                window.loadDeletedActions = async function() {
+                    const tbody = document.getElementById('deletedActionsBody');
+                    if (!tbody) return;
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">Loading...</td></tr>';
+
+                    const actions = await getDeletedActions();
+
+                    if (actions.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:20px;">No deleted actions found.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = '';
+                    actions.forEach(a => {
+                        const deletedDate = a.deletedAt ? new Date(a.deletedAt).toLocaleString() : 'Unknown';
+                        const actionDate = new Date(a.date).toLocaleDateString();
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="font-weight:700;color:#1e293b">${a.customerAccountNo}</td>
+                            <td style="font-weight:600">${a.actionType}</td>
+                            <td style="color:#6b7280">${actionDate}</td>
+                            <td style="color:#6b7280;font-size:0.85rem">${deletedDate}</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:8px;justify-content:flex-end">
+                                    <button onclick="handleRestoreAction('${a.id}')" class="btn btn-slate" style="padding:4px 8px;font-size:0.8rem" title="Restore">
+                                        <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Restore
+                                    </button>
+                                    <button onclick="handlePermanentDeleteAction('${a.id}')" class="btn btn-danger" style="padding:4px 8px;font-size:0.8rem;background:#ef4444;color:white" title="Delete Permanently">
+                                        <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                }
+
+                window.handleRestoreCustomer = async function(docId) {
+                    if (await lrmsConfirm("Restore this customer?")) {
+                        if (await restoreCustomer(docId)) {
+                            loadDeletedCustomers();
+                        } else {
+                            await lrmsAlert("Failed to restore customer.");
+                        }
+                    }
+                }
+
+                window.handlePermanentDeleteCustomer = async function(docId, accountNo) {
+                    if (await lrmsConfirm("WARNING: This will permanently delete the customer, all their actions, and documents. This cannot be undone. Are you sure?")) {
+                        if (await permanentlyDeleteCustomer(docId, accountNo)) {
+                            loadDeletedCustomers();
+                        } else {
+                            await lrmsAlert("Failed to delete customer.");
+                        }
+                    }
+                }
+
+                window.handleRestoreAction = async function(docId) {
+                    if (await lrmsConfirm("Restore this action?")) {
+                        if (await restoreAction(docId)) {
+                            loadDeletedActions();
+                        } else {
+                            await lrmsAlert("Failed to restore action.");
+                        }
+                    }
+                }
+
+                window.handlePermanentDeleteAction = async function(docId) {
+                    if (await lrmsConfirm("WARNING: This will permanently delete this action. This cannot be undone. Are you sure?")) {
+                        if (await permanentlyDeleteAction(docId)) {
+                            loadDeletedActions();
+                        } else {
+                            await lrmsAlert("Failed to delete action.");
+                        }
+                    }
+                }
+
+                // Initial run if already loaded
+            }
+        </script>
+    </main>
+
+
+    <script src="js/app.js?v=3.12"></script>
+<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

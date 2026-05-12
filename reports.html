@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - LRMS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/db.js?v=3.12"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.12">
+    <style>
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: 'Inter', sans-serif !important;
+                font-size: 10pt;
+                line-height: 1.4;
+            }
+
+            .sidebar,
+            .modern-top-nav,
+            .top-header,
+            .no-print,
+            #reportSummaryCards,
+            .card.no-print {
+                display: none !important;
+            }
+
+            .content-area {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            .premium-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                border: 1.5pt solid #000 !important;
+                margin-top: 10pt;
+            }
+
+            .premium-table th {
+                background: #f0f0f0 !important;
+                color: #000 !important;
+                border: 1pt solid #000 !important;
+                padding: 10pt 6pt !important;
+                text-transform: uppercase !important;
+                font-size: 9pt !important;
+                font-weight: 500 !important;
+                text-align: center !important;
+            }
+
+            .premium-table td {
+                border: 0.5pt solid #000 !important;
+                color: #000 !important;
+                padding: 8pt 6pt !important;
+                vertical-align: top !important;
+                font-size: 9pt !important;
+            }
+
+            .badge {
+                border: 1.5pt solid #000 !important;
+                background: transparent !important;
+                color: #000 !important;
+                padding: 2pt 6pt !important;
+                font-weight: 500 !important;
+                text-transform: uppercase !important;
+                font-size: 7.5pt !important;
+                border-radius: 0 !important;
+                display: inline-block !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            .signature-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 50pt;
+                text-align: center;
+                margin-top: 80pt;
+                font-size: 9pt;
+            }
+
+            /* Hide Status Date Column in Print */
+            .premium-table th:nth-child(5),
+            .premium-table td:nth-child(5) {
+                display: none !important;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 1.5cm;
+        }
+
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Main Content -->
+    <!-- Modern Top Navigation -->
+    <nav class="modern-top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+                <div class="brand-info">
+                    <span class="nav-brand">GSCS Bank</span>
+                    <span class="system-name">Loan Recovery System</span>
+                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                </div>
+            </div>
+
+                        <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                
+                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
+                
+                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
+                    <div class="dropdown-menu">
+                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
+                        
+                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                
+
+                <div class="nav-dropdown">
+                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+                    <div class="dropdown-menu align-right" style="width:220px">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+                        </div>
+                        <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i
+                                data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i>
+                            Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i
+                                data-lucide="settings"></i> Settings</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i>
+                            Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-header no-print">
+            <button class="mobile-toggle no-print" onclick="toggleSidebar()">
+                <i data-lucide="menu"></i>
+            </button>
+            <div>
+                <h2>System Reports</h2>
+                <p>Generate analytical summaries and progress tracking</p>
+            </div>
+            <button onclick="window.print()" class="btn btn-slate no-print">
+                <i data-lucide="printer"></i> Print Report
+            </button>
+        </header>
+
+        <!-- Print Header -->
+        <div class="print-only" style="padding: 0 0 10pt 0; border-bottom: 2pt solid #000; margin-bottom: 15pt;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15pt;">
+                    <img src="assets/logo.png" style="height: 48pt; filter: grayscale(100%);">
+                    <div>
+                        <h1 id="printBankName"
+                            style="font-size: 14pt; font-weight: 500; color: #000; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                            GALAPITIYAGAMA SANASA BANK</h1>
+                        <p style="font-size: 9pt; color: #000; margin: 1pt 0 0 0; font-weight: 500;">Loan Recovery
+                            Management System</p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <h2 style="font-size: 11pt; font-weight: 500; margin: 0; text-transform: uppercase;">Recovery Report
+                    </h2>
+                    <p style="font-size: 8pt; margin: 2pt 0 0 0; font-weight: 500;">Generated: <span
+                            id="printDate"></span></p>
+                </div>
+            </div>
+            <div
+                style="margin-top: 8pt; display: flex; gap: 30pt; font-size: 9pt; border-top: 1pt solid #000; padding-top: 8pt;">
+                <div><span style="font-weight: 500; text-transform: uppercase;">Status:</span> <span
+                        id="printFilterLabel" style="margin-left: 5pt;"></span></div>
+                <div><span style="font-weight: 500; text-transform: uppercase;">Target Month:</span> <span
+                        id="printMonthLabel" style="margin-left: 5pt;"></span></div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- Recovery Summary Cards -->
+            <div id="reportSummaryCards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 hidden">
+                <div class="card p-4 border-l-4 border-violet-500">
+                    <div class="text-xs font-bold text-gray-400 uppercase">Total Accounts</div>
+                    <div id="sumAccounts" class="text-xl font-extrabold text-violet-700">0</div>
+                </div>
+                <div class="card p-4 border-l-4 border-blue-500">
+                    <div class="text-xs font-bold text-gray-400 uppercase">Total Principle</div>
+                    <div id="sumPrinciple" class="text-xl font-extrabold text-blue-700">0</div>
+                </div>
+                <div class="card p-4 border-l-4 border-amber-500">
+                    <div class="text-xs font-bold text-gray-400 uppercase">High Risk</div>
+                    <div id="sumRisk" class="text-xl font-extrabold text-amber-700">0</div>
+                </div>
+                <div class="card p-4 border-l-4 border-emerald-500">
+                    <div class="text-xs font-bold text-gray-400 uppercase">Settled</div>
+                    <div id="sumSettled" class="text-xl font-extrabold text-emerald-700">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card no-print" style="margin-bottom:24px">
+                <div class="card-body">
+                    <div
+                        style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:20px;align-items:flex-end">
+                        <div>
+                            <label class="form-label">Filter by Status</label>
+                            <select id="reportFilter" class="form-select">
+                                <option value="All">All Categories</option>
+                                <option value="High Risk">High Risk Only</option>
+                                <option value="Legal Action - Cooperative Commissioner">Legal Action (Cooperative
+                                    Commissioner)</option>
+                                <option value="Legal Action - Courts">Legal Action (Courts)</option>
+                                <option value="Loan Closed">Loan Closed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Target Month</label>
+                            <input type="month" id="reportMonth" class="form-input">
+                        </div>
+                        <div style="display:flex;gap:10px">
+                            <button onclick="loadReport()" class="btn btn-primary" style="flex:1">Generate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="overflow-x:auto">
+                    <table class="premium-table">
+                        <thead>
+                            <tr style="background:var(--violet-50)">
+                                <th style="width:50px;text-align:center">#</th>
+                                <th>Account</th>
+                                <th>Loan Info</th>
+                                <th>Guarantors</th>
+                                <th style="text-align:center">Status Date</th>
+                                <th style="text-align:center">Current Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;padding:40px;color:#9ca3af">Generate a report
+                                    to see data.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="summaryFooter" class="card-footer hidden"
+                    style="justify-content:flex-end;font-weight: 500;font-size:0.9rem">
+                    Total Records: <span id="totalRecords" style="color:var(--violet-700);margin-left:8px">0</span>
+                </div>
+
+                <!-- Print Bottom Signatures -->
+                <div class="print-only signature-grid">
+                    <div>
+                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
+                        <p style="font-weight: 500">Prepared By (Officer)</p>
+                    </div>
+                    <div>
+                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
+                        <p style="font-weight: 500">Reviewed By (Manager)</p>
+                    </div>
+                    <div>
+                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
+                        <p style="font-weight: 500">Approved By (Chairman)</p>
+                    </div>
+                </div>
+                <div class="print-only"
+                    style="margin-top:80px;text-align:right;font-size:0.65rem;color:#666;font-style:italic">
+                    System Developed by : Iraasoft Solutions
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+
+        <script>
+            {
+                const printDateItem = document.getElementById('printDate');
+                if (printDateItem) {
+                    printDateItem.innerText = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+
+                window.initPage = async () => {
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                    if (sessionStorage.getItem('lrms_role') === 'admin') {
+                        document.getElementById('adminMenuLink')?.classList.remove('hidden');
+                        document.getElementById('settingsMenuLink')?.classList.remove('hidden');
+                    }
+                    setTimeout(() => loadReport(), 150);
+                };
+
+                window.loadReport = async function () {
+                    const rf = document.getElementById('reportFilter');
+                    const rm = document.getElementById('reportMonth');
+                    const pfl = document.getElementById('printFilterLabel');
+                    const pml = document.getElementById('printMonthLabel');
+
+                    if (!rf || !rm || !pfl || !pml) return;
+
+                    const fVal = rf.value;
+                    const mVal = rm.value;
+                    pfl.innerText = fVal;
+                    pml.innerText = mVal ? new Date(mVal + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'All Time';
+
+                    let customers = await getAllCustomers();
+                    if (fVal !== 'All') customers = customers.filter(c => c.status === fVal);
+                    if (mVal) customers = customers.filter(c => c.statusDate && c.statusDate.startsWith(mVal));
+
+                    const tbody = document.getElementById('reportTableBody');
+                    if (!tbody) return;
+                    tbody.innerHTML = '';
+                    const footer = document.getElementById('summaryFooter');
+
+                    if (customers.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:80px;color:#9ca3af;font-style:italic">No matching records.</td></tr>`;
+                        if (footer) footer.classList.add('hidden');
+                        return;
+                    }
+
+                    let totalPrinciple = 0;
+                    let totalRisk = 0;
+                    let totalSettled = 0;
+
+                    customers.forEach((c, idx) => {
+                        totalPrinciple += c.loanAmount;
+                        if (c.status.includes('High Risk')) totalRisk++;
+                        if (c.status === 'Loan Closed') totalSettled++;
+
+                        let badgeStyle = 'background:#f1f5f9;color:#475569';
+                        if (c.status.includes('High Risk')) badgeStyle = 'background:#fffbeb;color:#b45309';
+                        if (c.status.includes('Legal')) badgeStyle = 'background:#fff1f2;color:#be123c';
+                        if (c.status === 'Loan Closed') badgeStyle = 'background:#f0fdf4;color:#15803d';
+
+                        const amt = 'LKR ' + c.loanAmount.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const sDate = c.statusDate ? new Date(c.statusDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+                        const guar = [c.guarantor1, c.guarantor2].filter(Boolean).join(' | ');
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="text-align:center;color:var(--text-muted)">${idx + 1}</td>
+                            <td>
+                                <div style="font-weight: 500;color:var(--text-primary)">${c.name}</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary)">Acc: ${c.accountNo}</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;color:var(--text-primary)">${amt}</div>
+                                <div style="font-size:0.7rem;color:var(--text-muted)">${c.category} &bull; ${c.interestRate}%</div>
+                            </td>
+                            <td style="font-size:0.75rem;color:var(--text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${guar}">
+                                ${guar || 'None'}
+                            </td>
+                            <td style="text-align:center;font-weight: 500;color:var(--text-primary)">${sDate}</td>
+                            <td style="text-align:center">
+                                <span class="badge" style="${badgeStyle};padding:4px 10px;font-size:0.65rem;border:none">
+                                    ${c.status}
+                                </span>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    const totalRecordsElem = document.getElementById('totalRecords');
+                    if (totalRecordsElem) totalRecordsElem.innerText = customers.length;
+
+                    const sumAccountsElem = document.getElementById('sumAccounts');
+                    if (sumAccountsElem) sumAccountsElem.innerText = customers.length;
+
+                    const sumPrincipleElem = document.getElementById('sumPrinciple');
+                    if (sumPrincipleElem) sumPrincipleElem.innerText = 'LKR ' + totalPrinciple.toLocaleString();
+
+                    const sumRiskElem = document.getElementById('sumRisk');
+                    if (sumRiskElem) sumRiskElem.innerText = totalRisk;
+
+                    const sumSettledElem = document.getElementById('sumSettled');
+                    if (sumSettledElem) sumSettledElem.innerText = totalSettled;
+
+                    const rsc = document.getElementById('reportSummaryCards');
+                    if (rsc) rsc.classList.remove('hidden');
+
+                    if (footer) footer.classList.remove('hidden');
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                }
+
+                // Initial run if already loaded
+            }
+        </script>
+    </main>
+
+
+    <script src="js/app.js?v=3.12"></script>
+<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
