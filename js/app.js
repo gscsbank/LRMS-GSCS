@@ -1,5 +1,5 @@
-﻿// js/app.js
-console.log("LRMS Script Version: 3.5 - CACHE_ENABLED");
+// js/app.js
+console.log("LRMS Script Version: 3.14 - OFFLINE_STABLE");
 
 // Global Data Cache
 window.lrmsCache = {
@@ -54,15 +54,16 @@ function toggleSidebar() {
 }
 
 // Proactive Database Health Check
-async function checkFirestoreHealth() {
+async function checkDatabaseHealth() {
     console.log("Running Offline DB Health Check...");
     try {
+        if (!window.db) throw new Error("Database wrapper not found");
         await window.db.getDB();
         console.log("Offline DB Health: OK");
         return true;
     } catch (err) {
         console.error("Offline DB Health Check FAILED:", err);
-        setRestoreStatus("âŒ Database Error: " + err.message, true);
+        setRestoreStatus("❌ Database Error: " + err.message, true);
         return false;
     }
 }
@@ -306,8 +307,8 @@ window.checkAdmin = function () {
     }
 };
 
-// Initialize Firebase is handled in firebase-config.js
-// The global 'db' variable refers to firebase.firestore()
+// Initialize Local DB is handled in js/db.js
+// The global 'db' variable refers to the IndexedDB wrapper
 
 // Helper Function: Add new customer
 async function addCustomer(customerData) {
@@ -729,11 +730,11 @@ async function importDatabase(jsonData) {
             if (i % 100 === 0) setRestoreStatus(`Progress: ${i} / ${allItems.length}`);
         }
 
-        await lrmsAlert(`âœ… STEP 4: RESTORE COMPLETE!\nTotal: ${allItems.length} records updated.\nThe page will now reload.`);
+        await lrmsAlert(`✅ STEP 4: RESTORE COMPLETE!\nTotal: ${allItems.length} records updated.\nThe page will now reload.`);
         return true;
     } catch (err) {
         console.error("RESTORE FAILED:", err);
-        await lrmsAlert("âŒ RESTORE FAILED\n\nError: " + err.message);
+        await lrmsAlert("❌ RESTORE FAILED\n\nError: " + err.message);
         setRestoreStatus("Restore Failed.", true);
         return false;
     }
@@ -854,174 +855,190 @@ async function deleteDocument(id) {
 }
 
 // Show Admin Menu Links and Settings if authorized
-document.addEventListener('DOMContentLoaded', () => {
-    // Initial global icon render (handles Top Bar and layout)
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+if (!window.lrmsInitHandled) {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial global icon render (handles Top Bar and layout)
+        if (typeof lucide !== 'undefined') lucide.createIcons();
 
-    if (sessionStorage.getItem('lrms_role') === 'admin') {
-        document.getElementById('adminMenuLink')?.classList.remove('hidden');
-        document.getElementById('settingsMenuLink')?.classList.remove('hidden');
-    }
-
-    // Initialize charts if on dashboard
-    if (document.getElementById('statusChart')) {
-        setTimeout(initDashboardCharts, 500);
-    }
-
-    // Check for today's follow-ups
-    // checkTodayFollowUps removed
-
-    const savedSettingsStr = localStorage.getItem('lrms_settings');
-    if (savedSettingsStr) {
-        const s = JSON.parse(savedSettingsStr);
-        if (s.bankName) {
-            const v = document.getElementById('sidebarVersion');
-            if (v) v.innerText = s.bankName + ' v1.0';
-
-            const pb = document.getElementById('printBankName');
-            if (pb) pb.innerText = s.bankName.toUpperCase();
+        if (sessionStorage.getItem('lrms_role') === 'admin') {
+            document.getElementById('adminMenuLink')?.classList.remove('hidden');
+            document.getElementById('settingsMenuLink')?.classList.remove('hidden');
         }
-        if (s.systemName) {
-            const ps = document.getElementById('printSystemName');
-            if (ps) ps.innerText = s.systemName;
+
+        // Initialize charts if on dashboard
+        if (document.getElementById('statusChart')) {
+            setTimeout(initDashboardCharts, 500);
         }
-    }
-    // Call page-specific init if exists
-    if (typeof window.initPage === 'function') {
-        window.initPage();
-    }
 
-    // ---- SPA-lite Navigation System ----
-    window.navigate = async function (url, pushState = true) {
-        if (!url || url.startsWith('http') || url.startsWith('#')) return;
+        const savedSettingsStr = localStorage.getItem('lrms_settings');
+        if (savedSettingsStr) {
+            try {
+                const s = JSON.parse(savedSettingsStr);
+                if (s.bankName) {
+                    const v = document.getElementById('sidebarVersion');
+                    if (v) v.innerText = s.bankName + ' v1.0';
 
-        const mainContent = document.querySelector('.main-content');
-        if (!mainContent) { window.location.href = url; return; }
-
-        // Start fade-out
-        mainContent.classList.add('fade-out');
-
-        try {
-            const response = await fetch(url, { cache: 'no-store' });
-            if (!response.ok) throw new Error("Page not found");
-            const html = await response.text();
-
-            // Create a temporary element to parse HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newMain = doc.querySelector('.main-content');
-
-            if (!newMain) { window.location.href = url; return; }
-
-            // Swap content instantly
-            mainContent.innerHTML = newMain.innerHTML;
-            mainContent.className = newMain.className;
-
-            mainContent.classList.remove('fade-out');
-            mainContent.classList.add('fade-in');
-
-            // Update Page Title
-            document.title = doc.title;
-
-            // Update active link in sidebar
-            const currentPath = url.split('/').pop() || 'index.html';
-            document.querySelectorAll('.nav-link').forEach(l => {
-                const linkHref = l.getAttribute('href');
-                if (linkHref === currentPath) l.classList.add('active');
-                else l.classList.remove('active');
-            });
-
-            // Pre-cleanup for safe execution
-            window.initPage = null;
-
-            // Extract and Execute Scripts
-            const scripts = newMain.querySelectorAll('script');
-            scripts.forEach(oldScript => {
-                const newScript = document.createElement('script');
-                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                document.body.appendChild(newScript);
-                // Clean up immediately after execution if it's inline
-                if (!newScript.src) newScript.remove();
-            });
-
-            // Re-initialize for the new content
-            // Re-initialize only for the new content to prevent top bar flicker
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons({
-                    root: mainContent,
-                    attrs: { class: 'lucide-icon' }
-                });
+                    const pb = document.getElementById('printBankName');
+                    if (pb) pb.innerText = s.bankName.toUpperCase();
+                }
+                if (s.systemName) {
+                    const ps = document.getElementById('printSystemName');
+                    if (ps) ps.innerText = s.systemName;
+                }
+            } catch (e) {
+                console.warn("Failed to parse settings:", e);
             }
-            if (typeof window.checkAdmin === 'function') window.checkAdmin();
-            if (typeof window.initPage === 'function') window.initPage();
+        }
+        
+        // Call page-specific init if exists
+        if (typeof window.initPage === 'function') {
+            window.initPage();
+        }
 
-            // Handle History
-            if (pushState) {
-                try {
-                    history.pushState({ url }, doc.title, url);
-                    await loadPriorityReminders();
-                } catch (e) {
-                    console.warn("history.pushState failed (expected on file:// protocol):", e);
+        // Global Link Interceptor for Smooth Local Transitions
+        document.addEventListener("click", (e) => {
+            const link = e.target.closest("a");
+            if (!link) return;
+
+            const href = link.getAttribute("href");
+            const target = link.getAttribute("target");
+
+            // EMERGENCY FIX: Always prevent refresh for backup/restore links
+            if (link.getAttribute("onclick")) {
+                const oc = link.getAttribute("onclick");
+                if (oc.includes("handleBackup") || oc.includes("restoreFile") || href === "#") {
+                    e.preventDefault();
                 }
             }
 
-            // Close sidebar on mobile
-            const sidebar = document.querySelector('.sidebar');
-            if (sidebar && sidebar.classList.contains('open')) {
-                toggleSidebar();
-            }
-
-            // Scroll to top
-            window.scrollTo(0, 0);
-
-        } catch (err) {
-            console.error("Navigation failed:", err);
-            window.location.href = url; // Fallback to normal navigation
-        }
-    };
-
-    // Global Link Interceptor for Smooth Local Transitions
-    document.addEventListener("click", (e) => {
-        const link = e.target.closest("a");
-        if (!link) return;
-
-        const href = link.getAttribute("href");
-        const target = link.getAttribute("target");
-
-        // EMERGENCY FIX: Always prevent refresh for backup/restore links
-        if (link.getAttribute("onclick")) {
-            const oc = link.getAttribute("onclick");
-            if (oc.includes("handleBackup") || oc.includes("restoreFile") || href === "#") {
+            // Handle standard internal links
+            if (href && !href.startsWith('http') && !href.startsWith('#') && !target && !link.onclick) {
                 e.preventDefault();
+
+                // Instantly apply active state to nav-link for immediate feedback
+                if (link.classList.contains('nav-link') && !link.classList.contains('active')) {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+
+                // USE SPA NAVIGATION
+                if (typeof window.navigate === 'function') {
+                    window.navigate(href);
+                } else {
+                    window.location.href = href;
+                }
+            }
+        });
+
+        // Handle Browser Back/Forward natively
+        window.addEventListener('popstate', () => {
+            window.location.reload();
+        });
+    });
+    window.lrmsInitHandled = true;
+}
+
+// ---- SPA-lite Navigation System ----
+window.navigate = async function (url, pushState = true) {
+    if (!url || url.startsWith('http') || url.startsWith('#')) return;
+
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) { window.location.href = url; return; }
+
+    // Start fade-out
+    mainContent.classList.add('fade-out');
+
+    try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error("Page not found");
+        const html = await response.text();
+
+        // Create a temporary element to parse HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newMain = doc.querySelector('.main-content');
+
+        if (!newMain) { window.location.href = url; return; }
+
+        // Swap content instantly
+        mainContent.innerHTML = newMain.innerHTML;
+        mainContent.className = newMain.className;
+
+        mainContent.classList.remove('fade-out');
+        mainContent.classList.add('fade-in');
+
+        // Update Page Title
+        document.title = doc.title;
+
+        // Update active link in sidebar
+        const currentPath = url.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(l => {
+            const linkHref = l.getAttribute('href');
+            if (linkHref === currentPath) l.classList.add('active');
+            else l.classList.remove('active');
+        });
+
+        // Pre-cleanup for safe execution
+        window.initPage = null;
+
+        // Extract and Execute Page-Specific Inline Scripts Only
+        const scripts = newMain.querySelectorAll('script');
+        scripts.forEach(oldScript => {
+            // Skip core scripts that are already loaded to prevent duplicate logic/listeners
+            if (oldScript.src && (
+                oldScript.src.includes('app.js') || 
+                oldScript.src.includes('db.js') || 
+                oldScript.src.includes('lucide') || 
+                oldScript.src.includes('tailwind') ||
+                oldScript.src.includes('chart.js')
+            )) {
+                return;
+            }
+
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            document.body.appendChild(newScript);
+            
+            // Clean up immediately after execution if it's inline
+            if (!newScript.src) newScript.remove();
+        });
+
+        // Re-initialize for the new content
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons({
+                root: mainContent,
+                attrs: { class: 'lucide-icon' }
+            });
+        }
+        if (typeof window.checkAdmin === 'function') window.checkAdmin();
+        if (typeof window.initPage === 'function') window.initPage();
+
+        // Handle History
+        if (pushState) {
+            try {
+                history.pushState({ url }, doc.title, url);
+                await loadPriorityReminders();
+            } catch (e) {
+                console.warn("history.pushState failed (expected on file:// protocol):", e);
             }
         }
 
-        // Handle standard internal links
-        if (href && !href.startsWith('http') && !href.startsWith('#') && !target && !link.onclick) {
-            e.preventDefault();
-
-            // Instantly apply active state to nav-link for immediate feedback
-            // Instantly apply active state ONLY if it's not already correct
-            if (link.classList.contains('nav-link') && !link.classList.contains('active')) {
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            }
-
-            // USE SPA NAVIGATION
-            if (typeof window.navigate === 'function') {
-                window.navigate(href);
-            } else {
-                window.location.href = href;
-            }
+        // Close sidebar on mobile
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar && sidebar.classList.contains('open')) {
+            toggleSidebar();
         }
-    });
 
-    // Handle Browser Back/Forward natively
-    window.addEventListener('popstate', () => {
-        window.location.reload();
-    });
-});
+        // Scroll to top
+        window.scrollTo(0, 0);
+
+    } catch (err) {
+        console.error("Navigation failed:", err);
+        window.location.href = url; // Fallback to normal navigation
+    }
+};
+
 
 // ---- Activity Logging System ----
 async function logActivity(action, details, type = 'info') {

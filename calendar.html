@@ -9,9 +9,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
-                <script src="js/db.js?v=3.12"></script>
+    <script src="js/db.js?v=3.14"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.12">
+    <link rel="stylesheet" href="css/style.css?v=3.14">
     <style>
         .calendar-grid {
             display: grid;
@@ -124,7 +124,7 @@
 
             <div class="nav-right">
                 
-                
+
                 <div class="nav-dropdown">
                     <button class="nav-circle-btn"><i data-lucide="user"></i></button>
                     <div class="dropdown-menu align-right" style="width:220px">
@@ -133,36 +133,38 @@
                             <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
                         </div>
                         <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
-                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
-                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
-                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i
+                                data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i>
+                            Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i
+                                data-lucide="settings"></i> Settings</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i>
+                            Logout</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-    <!-- Main -->
     <main class="main-content">
-        <!-- Header -->
         <header class="top-header">
-            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
-
-            
+            <button class="mobile-toggle no-print" onclick="toggleSidebar()">
+                <i data-lucide="menu"></i>
+            </button>
             <div>
-                <h2 id="currentMonthYear">Loan Follow-up Calendar</h2>
-                <p>Scheduled recovery actions and promises</p>
+                <h2>Action Calendar</h2>
+                <p>Manage recovery schedules and follow-up activities</p>
             </div>
-            <div style="display:flex;gap:10px">
-                <button onclick="changeMonth(-1)" class="btn btn-slate"><i data-lucide="chevron-left"></i></button>
-                <button onclick="goToToday()" class="btn btn-slate">Today</button>
-                <button onclick="changeMonth(1)" class="btn btn-slate"><i data-lucide="chevron-right"></i></button>
+            <div style="display:flex;gap:12px">
+                <button onclick="changeMonth(-1)" class="btn btn-secondary"><i data-lucide="chevron-left"></i></button>
+                <h3 id="currentMonthYear" style="min-width:150px;text-align:center;align-self:center;font-weight:700"></h3>
+                <button onclick="changeMonth(1)" class="btn btn-secondary"><i data-lucide="chevron-right"></i></button>
             </div>
         </header>
 
         <div class="content-area">
-            <div class="card overflow-hidden">
+            <div class="card">
                 <div class="calendar-grid">
                     <div class="day-header">SUN</div>
                     <div class="day-header">MON</div>
@@ -172,117 +174,84 @@
                     <div class="day-header">FRI</div>
                     <div class="day-header">SAT</div>
                 </div>
-                <div id="calendarDays" class="calendar-grid">
-                    <!-- Days will be injected here -->
-                </div>
+                <div id="calendarDays" class="calendar-grid" style="border-top:none"></div>
             </div>
         </div>
+
         <script>
-            let currentYear, currentMonth;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            {
+                let currentDate = new Date();
 
-            window.initPage = async () => {
-                initCalendar();
-            };
+                window.changeMonth = (delta) => {
+                    currentDate.setMonth(currentDate.getMonth() + delta);
+                    renderCalendar();
+                };
 
-            async function initCalendar() {
-                const now = new Date();
-                currentYear = now.getFullYear();
-                currentMonth = now.getMonth();
-                renderCalendar();
-                lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
-            }
+                window.initCalendar = () => {
+                    renderCalendar();
+                };
 
-            async function renderCalendar() {
-                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-                const today = new Date();
+                async function renderCalendar() {
+                    const monthYearEl = document.getElementById('currentMonthYear');
+                    const daysContainer = document.getElementById('calendarDays');
+                    if (!monthYearEl || !daysContainer) return;
 
-                document.getElementById('currentMonthYear').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+                    const month = currentDate.getMonth();
+                    const year = currentDate.getFullYear();
+                    monthYearEl.innerText = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
-                const daysContainer = document.getElementById('calendarDays');
-                daysContainer.innerHTML = '';
+                    const firstDay = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    const prevMonthDays = new Date(year, month, 0).getDate();
 
-                // Get all actions for this month
-                const startStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
-                const endStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${daysInMonth}`;
+                    daysContainer.innerHTML = '';
 
-                const allActions = await window.db.getAll("actions");
-                const actions = allActions.filter(a => 
-                    !a.isDeleted && 
-                    a.followUpDate && 
-                    a.followUpDate >= startStr && 
-                    a.followUpDate <= endStr
-                );
+                    const allActions = await window.db.getAll("actions");
 
-                // Padding days
-                for (let i = 0; i < firstDay; i++) {
-                    const div = document.createElement('div');
-                    div.className = 'calendar-day bg-gray-50';
-                    daysContainer.appendChild(div);
-                }
-
-                // Month days
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    const div = document.createElement('div');
-                    div.className = 'calendar-day';
-                    if (today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d) {
-                        div.classList.add('today');
+                    // Padding days from previous month
+                    for (let i = firstDay - 1; i >= 0; i--) {
+                        const day = document.createElement('div');
+                        day.className = 'calendar-day';
+                        day.style.opacity = '0.3';
+                        day.innerHTML = `<div class="day-number">${prevMonthDays - i}</div>`;
+                        daysContainer.appendChild(day);
                     }
 
-                    div.innerHTML = `<div class="day-number font-bold text-sm mb-2">${d}</div>`;
+                    // Days of current month
+                    const today = new Date();
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const day = document.createElement('div');
+                        day.className = 'calendar-day';
+                        if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                            day.classList.add('today');
+                        }
 
-                    const dailyActions = actions.filter(a => a.followUpDate === dateStr);
-                    for (const action of dailyActions) {
-                        const customer = await getCustomerByAccountNo(action.customerAccountNo);
-                        const name = customer ? customer.name : 'Unknown';
-                        const typeClass = action.actionType.includes('Legal') ? 'event-legal' : (action.actionType.includes('High Risk') ? 'event-risk' : 'event-normal');
+                        let html = `<div class="day-number" style="font-weight:700;margin-bottom:8px">${i}</div>`;
 
-                        const span = document.createElement('span');
-                        span.className = `event-badge ${typeClass}`;
-                        span.innerText = name;
-                        span.title = `${name}: ${action.actionType}`;
-                        span.onclick = () => window.location.href = `customer-detail.html?accountNo=${action.customerAccountNo}`;
-                        div.appendChild(span);
+                        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                        const dayActions = allActions.filter(a => a.actionDate === dateStr);
+
+                        dayActions.forEach(action => {
+                            let typeClass = 'event-normal';
+                            if (action.actionType.includes('Legal')) typeClass = 'event-legal';
+                            if (action.actionType.includes('High Risk')) typeClass = 'event-risk';
+                            html += `<div class="event-badge ${typeClass}" onclick="window.navigate('customer-detail.html?accountNo=${action.customerAccountNo}')">${action.actionType}</div>`;
+                        });
+
+                        day.innerHTML = html;
+                        daysContainer.appendChild(day);
                     }
-
-                    daysContainer.appendChild(div);
                 }
-            }
 
-            function changeMonth(dir) {
-                currentMonth += dir;
-                if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-                if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-                renderCalendar();
-            }
-
-            function goToToday() {
-                const now = new Date();
-                currentYear = now.getFullYear();
-                currentMonth = now.getMonth();
-                renderCalendar();
+                window.initPage = async () => {
+                    initCalendar();
+                };
             }
         </script>
     </main>
 
-    <script src="js/app.js?v=3.12"></script>
-<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+    <script src="js/app.js?v=3.14"></script>
+    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
