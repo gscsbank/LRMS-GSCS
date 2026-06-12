@@ -769,6 +769,25 @@ async function loginUser(username, password) {
     }
 }
 
+async function ensureDefaultAdmin() {
+    try {
+        const users = await window.db.getAll("users");
+        if (users.length === 0 || !users.some(u => u.username === 'admin')) {
+            await window.db.add("users", {
+                id: "admin-default-id",
+                name: "Administrator",
+                username: "admin",
+                password: "Gscs@123",
+                role: "admin"
+            });
+            console.log("Default admin user created in IndexedDB.");
+        }
+    } catch (e) {
+        console.warn("Failed to check/create default admin:", e);
+    }
+}
+window.ensureDefaultAdmin = ensureDefaultAdmin;
+
 async function getAllUsers() {
     try {
         return await window.db.getAll("users");
@@ -782,14 +801,16 @@ async function addUser(userData) {
     try {
         const normalizedUsername = userData.username.trim().toLowerCase();
         const allUsers = await window.db.getAll("users");
-        if (allUsers.find(u => u.username === normalizedUsername)) return false;
+        if (allUsers.find(u => u.username === normalizedUsername)) {
+            return { success: false, error: "Username already exists." };
+        }
 
         userData.username = normalizedUsername;
         await window.db.add("users", userData);
-        return true;
+        return { success: true };
     } catch (error) {
         console.error("Error adding user:", error);
-        return false;
+        return { success: false, error: error.message };
     }
 }
 

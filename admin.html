@@ -9,9 +9,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
-                <script src="js/db.js?v=3.14"></script>
+                <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.14">
+    <link rel="stylesheet" href="css/style.css?v=3.15">
 </head>
 
 <body>
@@ -48,12 +48,13 @@
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
                     <div class="dropdown-menu">
                         <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
-                        
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <a href="backup.html" style="background:#f5f3ff;color:#7c3aed;font-weight:700"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
                 </div>
                 </div>
             </div>
+
 
             <div class="nav-right">
                 
@@ -67,6 +68,7 @@
                         </div>
                         <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
                         <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="backup.html"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
                         <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
@@ -81,8 +83,6 @@
         <!-- Header -->
         <header class="top-header">
             <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
-
-            
             <div>
                 <h2>User Management</h2>
                 <p>Manage system access and permissions</p>
@@ -110,8 +110,6 @@
                 </table>
             </div>
         </div>
-            </div>
-        </div>
 
         <script>
             {
@@ -123,20 +121,59 @@
                         return;
                     }
                     if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                    
+                    // Ensure the default admin exists so the list is not blank
+                    if (typeof ensureDefaultAdmin === 'function') {
+                        await ensureDefaultAdmin();
+                    }
+                    
                     renderUsers();
+
+                    // Attach form submit listeners here when DOM is fully ready
+                    const addUserForm = document.getElementById('addUserForm');
+                    if (addUserForm) {
+                        addUserForm.onsubmit = async (e) => {
+                            e.preventDefault();
+                            const data = {
+                                name: document.getElementById('addName').value,
+                                username: document.getElementById('addUsername').value.trim(),
+                                password: document.getElementById('addPassword').value,
+                                role: document.getElementById('addRole').value
+                            };
+                            const res = await addUser(data);
+                            if (res.success) { 
+                                toggleAddModal(); 
+                                renderUsers(); 
+                            } else { 
+                                await lrmsAlert("Error: " + res.error); 
+                            }
+                        };
+                    }
+
+                    const changePwForm = document.getElementById('changePwForm');
+                    if (changePwForm) {
+                        changePwForm.onsubmit = async (e) => {
+                            e.preventDefault();
+                            const id = document.getElementById('pwUserId').value;
+                            if (await changeUserPassword(id, document.getElementById('newPassword').value)) {
+                                await lrmsAlert("Saved.");
+                                togglePwModal();
+                            }
+                        };
+                    }
                 };
 
                 window.toggleAddModal = function() {
                     const m = document.getElementById('addModal');
                     if (!m) return;
-                    m.classList.toggle('hidden');
-                    if (!m.classList.contains('hidden')) m.querySelector('input')?.focus();
+                    m.classList.toggle('open');
+                    if (m.classList.contains('open')) m.querySelector('input')?.focus();
                 }
 
                 window.togglePwModal = function(id = null, username = '') {
                     const m = document.getElementById('pwModal');
                     if (!m) return;
-                    m.classList.toggle('hidden');
+                    m.classList.toggle('open');
                     if (id) {
                         const pwUserId = document.getElementById('pwUserId');
                         const pwModalUser = document.getElementById('pwModalUser');
@@ -182,37 +219,10 @@
                     if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
                 }
 
-                const addUserForm = document.getElementById('addUserForm');
-                if (addUserForm) {
-                    addUserForm.onsubmit = async (e) => {
-                        e.preventDefault();
-                        const data = {
-                            name: document.getElementById('addName').value,
-                            username: document.getElementById('addUsername').value.trim(),
-                            password: document.getElementById('addPassword').value,
-                            role: document.getElementById('addRole').value
-                        };
-                        if (await addUser(data)) { toggleAddModal(); renderUsers(); }
-                        else await lrmsAlert("Username exists.");
-                    };
-                }
-
                 window.handleDelete = async function(id) {
                     if (await lrmsConfirm("Delete user?")) {
                         if (await deleteUser(id)) renderUsers();
                     }
-                }
-
-                const changePwForm = document.getElementById('changePwForm');
-                if (changePwForm) {
-                    changePwForm.onsubmit = async (e) => {
-                        e.preventDefault();
-                        const id = document.getElementById('pwUserId').value;
-                        if (await changeUserPassword(id, document.getElementById('newPassword').value)) {
-                            await lrmsAlert("Saved.");
-                            togglePwModal();
-                        }
-                    };
                 }
 
                 // Initial run if already loaded
@@ -222,9 +232,9 @@
 
 
     <!-- Add Modal -->
-    <div id="addModal" class="modal hidden">
-        <div class="modal-overlay" onclick="toggleAddModal()"></div>
-        <div class="modal-content" style="max-width:420px">
+    <div id="addModal" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="toggleAddModal()"></div>
+        <div class="modal-box" style="max-width:420px">
             <div class="modal-header">
                 <h3>Add New User</h3>
                 <button class="modal-close" onclick="toggleAddModal()"><i data-lucide="x"></i></button>
@@ -250,19 +260,19 @@
                             <option value="admin">Administrator</option>
                         </select>
                     </div>
+                    <div class="modal-footer" style="padding:0;border:none;margin-top:20px;display:flex;justify-content:flex-end;gap:10px">
+                        <button type="button" onclick="toggleAddModal()" class="btn btn-ghost">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer" style="padding-top:20px">
-                <button type="submit" form="addUserForm" class="btn btn-primary w-full shadow-lg">Create
-                    Account</button>
             </div>
         </div>
     </div>
 
     <!-- PW Modal -->
-    <div id="pwModal" class="modal hidden">
-        <div class="modal-overlay" onclick="togglePwModal()"></div>
-        <div class="modal-content" style="max-width:380px">
+    <div id="pwModal" class="modal-wrapper">
+        <div class="modal-backdrop" onclick="togglePwModal()"></div>
+        <div class="modal-box" style="max-width:380px">
             <div class="modal-header">
                 <h3>Reset Password</h3>
                 <button class="modal-close" onclick="togglePwModal()"><i data-lucide="x"></i></button>
@@ -275,21 +285,19 @@
                         <label class="form-label">New Password</label>
                         <input type="password" id="newPassword" class="form-input" required>
                     </div>
+                    <div class="modal-footer" style="padding:0;border:none;margin-top:20px;display:flex;justify-content:flex-end;gap:10px">
+                        <button type="button" onclick="togglePwModal()" class="btn btn-ghost">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save PW</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer" style="padding-top:16px;gap:12px;display:grid;grid-template-columns:1fr 1fr">
-                <button onclick="togglePwModal()" class="btn btn-ghost">Cancel</button>
-                <button type="submit" form="changePwForm" class="btn btn-primary">Save PW</button>
             </div>
         </div>
     </div>
 
-    <script src="js/app.js?v=3.14"></script>
-<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+    <script src="js/app.js?v=3.15"></script>
+    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
-
 </html>
-
 
 
 

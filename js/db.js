@@ -2,7 +2,7 @@
 // Offline IndexedDB Wrapper for LRMS
 
 const DB_NAME = 'lrms_offline_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 window.db = {
     _db: null,

@@ -9,9 +9,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
-                <script src="js/db.js?v=3.14"></script>
+                <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.14">
+    <link rel="stylesheet" href="css/style.css?v=3.15">
 </head>
 
 <body>
@@ -50,6 +50,7 @@
                         <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
                         
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <a href="backup.html" style="background:#f5f3ff;color:#7c3aed;font-weight:700"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
                 </div>
                 </div>
@@ -67,6 +68,7 @@
                         </div>
                         <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
                         <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="backup.html"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
                         <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
@@ -298,7 +300,7 @@
     </main>
 
 
-    <script src="js/app.js?v=3.14"></script>
+    <script src="js/app.js?v=3.15"></script>
 <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
 
