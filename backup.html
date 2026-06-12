@@ -790,7 +790,16 @@
         if (typeof lucide !== 'undefined') lucide.createIcons({ root: wrap });
 
         try {
-            const resp = await fetch(url + '?action=list&folderId=' + GDRIVE_FOLDER_ID);
+            // Use POST to bypass CORS redirect blocks on GitHub Pages
+            const payload = {
+                action: 'list',
+                folderId: GDRIVE_FOLDER_ID
+            };
+            const resp = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: { 'Content-Type': 'text/plain' }
+            });
             const result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
 
             if (!result.success) throw new Error(result.error || 'Failed to load list');
@@ -855,7 +864,16 @@
         if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:13px;height:13px"></i> Restoring...'; if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn }); }
 
         try {
-            const resp = await fetch(url + '?action=download&fileId=' + fileId);
+            // Use POST to bypass CORS redirect blocks on GitHub Pages
+            const payload = {
+                action: 'download',
+                fileId: fileId
+            };
+            const resp = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: { 'Content-Type': 'text/plain' }
+            });
             const result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
             if (!result.success) throw new Error(result.error || 'Download failed');
 
@@ -866,6 +884,8 @@
             if (success) {
                 await logActivity('Cloud Restore', 'Restored from Google Drive: ' + fileName, 'success');
                 window.location.reload();
+            } else {
+                throw new Error('Database import failed.');
             }
         } catch(err) {
             if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="cloud-download" style="width:13px;height:13px"></i> RESTORE'; if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn }); }
@@ -927,6 +947,26 @@ function doPost(e) {
       const blob = Utilities.newBlob(content, 'application/json', fileName);
       const file = folder.createFile(blob);
       return ContentService.createTextOutput(JSON.stringify({ success: true, fileId: file.getId(), fileName: file.getName() })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (action === 'list') {
+      const folderId = payload.folderId || BACKUP_FOLDER_ID;
+      const folder = DriveApp.getFolderById(folderId);
+      const files = folder.getFiles();
+      const fileList = [];
+      while (files.hasNext()) {
+        const f = files.next();
+        fileList.push({ id: f.getId(), name: f.getName(), size: f.getSize(), createdTime: f.getDateCreated().toISOString() });
+      }
+      fileList.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+      return ContentService.createTextOutput(JSON.stringify({ success: true, files: fileList })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (action === 'download') {
+      const fileId = payload.fileId;
+      const file = DriveApp.getFileById(fileId);
+      const content = file.getBlob().getDataAsString();
+      return ContentService.createTextOutput(JSON.stringify({ success: true, content: content })).setMimeType(ContentService.MimeType.JSON);
     }
     
     return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'Unknown action' })).setMimeType(ContentService.MimeType.JSON);
