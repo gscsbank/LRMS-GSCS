@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -42,27 +42,25 @@
                 </div>
             </div>
             
-                        <div class="nav-links" id="topNavLinks">
+                                    <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
-                
-                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
-                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
-                
-                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
                     <div class="dropdown-menu">
+                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
                         <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
-                        
+                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
+                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
-                        <a href="backup.html" style="background:#f5f3ff;color:#7c3aed;font-weight:700"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                </div>
+                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
+                    </div>
                 </div>
             </div>
 
@@ -297,12 +295,20 @@
                 <form id="addCustomerForm" class="space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="form-label">Account Number <span style="color:#ef4444">*</span></label>
+                            <label class="form-label">Account Number (Member ID) <span style="color:#ef4444">*</span></label>
                             <input type="text" id="accNo" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Loan Account Number</label>
+                            <input type="text" id="loanAccNo" placeholder="e.g. 01-3030103-00022" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Customer Name <span style="color:#ef4444">*</span></label>
                             <input type="text" id="custName" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Customer Address</label>
+                            <input type="text" id="custAddress" placeholder="Customer Address" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Loan Granted Date <span style="color:#ef4444">*</span></label>
@@ -346,16 +352,24 @@
                             </select>
                         </div>
                         <div>
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="phoneNumber" placeholder="e.g. 077 123 4567" class="form-input">
+                        </div>
+                        <div>
                             <label class="form-label">Guarantor 1 (Name &amp; ID)</label>
                             <input type="text" id="guarantor1" placeholder="e.g. Nimal" class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Guarantor 1 Address</label>
+                            <input type="text" id="guarantor1Address" placeholder="Guarantor 1 Address" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Guarantor 2 (Name &amp; ID)</label>
                             <input type="text" id="guarantor2" placeholder="e.g. Kamal" class="form-input">
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" id="phoneNumber" placeholder="e.g. 077 123 4567" class="form-input">
+                        <div>
+                            <label class="form-label">Guarantor 2 Address</label>
+                            <input type="text" id="guarantor2Address" placeholder="Guarantor 2 Address" class="form-input">
                         </div>
                     </div>
 
@@ -396,7 +410,9 @@
                     e.preventDefault();
                     const customerData = {
                         accountNo: document.getElementById('accNo').value,
+                        loanAccountNo: document.getElementById('loanAccNo').value.trim() || document.getElementById('accNo').value,
                         name: document.getElementById('custName').value,
+                        address: document.getElementById('custAddress').value,
                         loanDate: document.getElementById('loanDate').value,
                         loanAmount: parseFloat(document.getElementById('loanAmount').value),
                         interestRate: parseFloat(document.getElementById('interestRate').value),
@@ -404,7 +420,9 @@
                         status: document.getElementById('initialStatus').value,
                         statusDate: new Date().toISOString().split('T')[0],
                         guarantor1: document.getElementById('guarantor1').value,
+                        guarantor1Address: document.getElementById('guarantor1Address').value,
                         guarantor2: document.getElementById('guarantor2').value,
+                        guarantor2Address: document.getElementById('guarantor2Address').value,
                         phone: document.getElementById('phoneNumber').value.trim()
                     };
                     const existing = await getCustomerByAccountNo(customerData.accountNo);

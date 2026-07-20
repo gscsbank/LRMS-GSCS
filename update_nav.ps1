@@ -5,6 +5,7 @@ $newNavLinks = @"
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>

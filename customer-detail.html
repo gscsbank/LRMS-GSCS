@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -224,27 +224,25 @@
                 </div>
             </div>
 
-            <div class="nav-links" id="topNavLinks">
+                        <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
-
-                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
-                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
-                
-                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
                     <div class="dropdown-menu">
+                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
                         <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
-                        
+                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
+                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
-                        <a href="backup.html" style="background:#f5f3ff;color:#7c3aed;font-weight:700"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                </div>
+                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
+                    </div>
                 </div>
             </div>
 
@@ -289,9 +287,14 @@
                     <p>Action tracking & history</p>
                 </div>
             </div>
-            <button onclick="window.print()" class="btn btn-slate">
-                <i data-lucide="printer"></i> Print History
-            </button>
+            <div style="display:flex;align-items:center;gap:8px">
+                <a id="generateLetterLink" href="#" class="btn btn-primary no-print">
+                    <i data-lucide="file-text"></i> Generate Letter
+                </a>
+                <button onclick="window.print()" class="btn btn-slate no-print">
+                    <i data-lucide="printer"></i> Print History
+                </button>
+            </div>
         </header>
 
         <!-- Modern Print Header (Sync with Reports) -->
@@ -328,8 +331,16 @@
                     <td id="printCustName" style="font-weight:700">--</td>
                 </tr>
                 <tr>
-                    <th>Account Number</th>
+                    <th>Customer Address</th>
+                    <td id="printCustAddress">--</td>
+                </tr>
+                <tr>
+                    <th>Account Number (Member ID)</th>
                     <td id="printCustAccNo" style="font-weight:700">--</td>
+                </tr>
+                <tr>
+                    <th>Loan Account Number</th>
+                    <td id="printCustLoanAccNo" style="font-weight:700">--</td>
                 </tr>
                 <tr>
                     <th>Phone Number</th>
@@ -352,8 +363,16 @@
                     <td id="printCustG1">--</td>
                 </tr>
                 <tr>
+                    <th>Guarantor 1 Address</th>
+                    <td id="printCustG1Address">--</td>
+                </tr>
+                <tr>
                     <th>Guarantor 2</th>
                     <td id="printCustG2">--</td>
+                </tr>
+                <tr>
+                    <th>Guarantor 2 Address</th>
+                    <td id="printCustG2Address">--</td>
                 </tr>
                 <tr>
                     <th>Current Status</th>
@@ -393,6 +412,14 @@
                             </div>
                         </div>
                         <div class="profile-info-grid">
+                            <div class="profile-info-tile">
+                                <div class="tile-label">Loan Account Number</div>
+                                <div class="tile-value" id="profileLoanAccNo">--</div>
+                            </div>
+                            <div class="profile-info-tile">
+                                <div class="tile-label">Customer Address</div>
+                                <div class="tile-value" id="profileAddress">--</div>
+                            </div>
                             <div class="profile-info-tile">
                                 <div class="tile-label">Granted Date</div>
                                 <div class="tile-value" id="profileLoanDate">--</div>
@@ -435,10 +462,12 @@
                             <div class="profile-info-tile">
                                 <div class="tile-label">Guarantor 1</div>
                                 <div class="tile-value" id="profileGuarantor1" title="--">--</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px" id="profileGuarantor1Address">--</div>
                             </div>
                             <div class="profile-info-tile">
                                 <div class="tile-label">Guarantor 2</div>
                                 <div class="tile-value" id="profileGuarantor2" title="--">--</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px" id="profileGuarantor2Address">--</div>
                             </div>
                         </div>
                     </div>
@@ -651,6 +680,14 @@
                         <input type="text" id="editCustName" required class="form-input">
                     </div>
                     <div>
+                        <label class="form-label">Customer Address</label>
+                        <input type="text" id="editAddress" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Loan Account Number</label>
+                        <input type="text" id="editLoanAccNo" class="form-input">
+                    </div>
+                    <div>
                         <label class="form-label">Loan Date</label>
                         <input type="date" id="editLoanDate" required class="form-input">
                     </div>
@@ -684,13 +721,21 @@
                         <label class="form-label">Phone</label>
                         <input type="tel" id="editPhone" class="form-input">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="form-label">Guarantor 1</label>
-                        <textarea id="editGuarantor1" rows="2" class="form-textarea"></textarea>
+                    <div>
+                        <label class="form-label">Guarantor 1 (Name &amp; ID)</label>
+                        <input type="text" id="editGuarantor1" class="form-input">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="form-label">Guarantor 2</label>
-                        <textarea id="editGuarantor2" rows="2" class="form-textarea"></textarea>
+                    <div>
+                        <label class="form-label">Guarantor 1 Address</label>
+                        <input type="text" id="editGuarantor1Address" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Guarantor 2 (Name &amp; ID)</label>
+                        <input type="text" id="editGuarantor2" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Guarantor 2 Address</label>
+                        <input type="text" id="editGuarantor2Address" class="form-input">
                     </div>
                     <div class="md:col-span-2 modal-footer" style="padding:0;border:none;margin-top:10px">
                         <button type="button" onclick="toggleEditModal()" class="btn btn-ghost">Cancel</button>
@@ -817,6 +862,12 @@
                 const profileAccNo = document.getElementById('profileAccNo');
                 if (profileAccNo) profileAccNo.innerText = customer.accountNo;
 
+                const profileLoanAccNo = document.getElementById('profileLoanAccNo');
+                if (profileLoanAccNo) profileLoanAccNo.innerText = customer.loanAccountNo || customer.accountNo || 'N/A';
+
+                const profileAddress = document.getElementById('profileAddress');
+                if (profileAddress) profileAddress.innerText = customer.address || 'N/A';
+
                 const profileLoanDate = document.getElementById('profileLoanDate');
                 if (profileLoanDate) profileLoanDate.innerText = customer.loanDate || 'N/A';
 
@@ -833,12 +884,21 @@
                 const profilePhone = document.getElementById('profilePhone');
                 if (profilePhone) profilePhone.innerText = phone || 'N/A';
 
+                const genLink = document.getElementById('generateLetterLink');
+                if (genLink) genLink.href = `letters.html?accountNo=${customer.accountNo}`;
+
                 // Populate Print-Only Table
                 const printCustName = document.getElementById('printCustName');
                 if (printCustName) printCustName.innerText = customer.name;
 
+                const printCustAddress = document.getElementById('printCustAddress');
+                if (printCustAddress) printCustAddress.innerText = customer.address || 'N/A';
+
                 const printCustAccNo = document.getElementById('printCustAccNo');
                 if (printCustAccNo) printCustAccNo.innerText = customer.accountNo;
+
+                const printCustLoanAccNo = document.getElementById('printCustLoanAccNo');
+                if (printCustLoanAccNo) printCustLoanAccNo.innerText = customer.loanAccountNo || customer.accountNo || 'N/A';
 
                 const printCustPhone = document.getElementById('printCustPhone');
                 if (printCustPhone) printCustPhone.innerText = phone || 'N/A';
@@ -855,8 +915,14 @@
                 const printCustG1 = document.getElementById('printCustG1');
                 if (printCustG1) printCustG1.innerText = customer.guarantor1 || 'None';
 
+                const printCustG1Address = document.getElementById('printCustG1Address');
+                if (printCustG1Address) printCustG1Address.innerText = customer.guarantor1Address || 'N/A';
+
                 const printCustG2 = document.getElementById('printCustG2');
                 if (printCustG2) printCustG2.innerText = customer.guarantor2 || 'None';
+
+                const printCustG2Address = document.getElementById('printCustG2Address');
+                if (printCustG2Address) printCustG2Address.innerText = customer.guarantor2Address || 'N/A';
 
                 const printCustStatus = document.getElementById('printCustStatus');
                 if (printCustStatus) printCustStatus.innerText = customer.status;
@@ -912,11 +978,21 @@
                     profileGuarantor1.title = g1;
                 }
 
+                const profileGuarantor1Address = document.getElementById('profileGuarantor1Address');
+                if (profileGuarantor1Address) {
+                    profileGuarantor1Address.innerText = customer.guarantor1Address || 'N/A';
+                }
+
                 const g2 = customer.guarantor2 || 'None';
                 const profileGuarantor2 = document.getElementById('profileGuarantor2');
                 if (profileGuarantor2) {
                     profileGuarantor2.innerText = g2;
                     profileGuarantor2.title = g2;
+                }
+
+                const profileGuarantor2Address = document.getElementById('profileGuarantor2Address');
+                if (profileGuarantor2Address) {
+                    profileGuarantor2Address.innerText = customer.guarantor2Address || 'N/A';
                 }
 
                 const badge = document.getElementById('profileStatusBadge');
@@ -1075,12 +1151,16 @@
                     getCustomerByAccountNo(currentAccountNo).then(c => {
                         if (!c) return;
                         document.getElementById('editCustName').value = c.name;
+                        document.getElementById('editAddress').value = c.address || '';
+                        document.getElementById('editLoanAccNo').value = c.loanAccountNo || '';
                         document.getElementById('editLoanDate').value = c.loanDate || '';
                         document.getElementById('editLoanAmount').value = c.loanAmount;
                         document.getElementById('editInterestRate').value = c.interestRate;
                         document.getElementById('editLoanCategory').value = c.category;
                         document.getElementById('editGuarantor1').value = c.guarantor1 || '';
+                        document.getElementById('editGuarantor1Address').value = c.guarantor1Address || '';
                         document.getElementById('editGuarantor2').value = c.guarantor2 || '';
+                        document.getElementById('editGuarantor2Address').value = c.guarantor2Address || '';
                         document.getElementById('editPhone').value = c.phone || '';
                     });
                 }
@@ -1092,12 +1172,16 @@
                     e.preventDefault();
                     const d = {
                         name: document.getElementById('editCustName').value,
+                        address: document.getElementById('editAddress').value.trim(),
+                        loanAccountNo: document.getElementById('editLoanAccNo').value.trim() || currentAccountNo,
                         loanDate: document.getElementById('editLoanDate').value,
                         loanAmount: parseFloat(document.getElementById('editLoanAmount').value),
                         interestRate: parseFloat(document.getElementById('editInterestRate').value),
                         category: document.getElementById('editLoanCategory').value,
                         guarantor1: document.getElementById('editGuarantor1').value,
+                        guarantor1Address: document.getElementById('editGuarantor1Address').value.trim(),
                         guarantor2: document.getElementById('editGuarantor2').value,
+                        guarantor2Address: document.getElementById('editGuarantor2Address').value.trim(),
                         phone: document.getElementById('editPhone').value.trim()
                     };
                     if (await updateCustomer(currentAccountNo, d)) { toggleEditModal(); loadCustomerDetails(); }
