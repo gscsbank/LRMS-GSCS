@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -276,9 +276,7 @@
     <main class="main-content">
         <!-- Header -->
         <header class="top-header no-print">
-            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
-
-            <div style="display:flex;align-items:center;gap:16px">
+            <div style="display:flex;align-items:center;gap:24px">
                 <button onclick="window.history.back()" class="btn btn-ghost" style="padding:8px">
                     <i data-lucide="arrow-left"></i>
                 </button>
@@ -286,8 +284,12 @@
                     <h2 id="headerName">Customer Profile</h2>
                     <p>Action tracking & history</p>
                 </div>
+                <div style="padding-left:24px; border-left:2px solid var(--border);" class="no-print">
+                    <div id="currentTime" style="font-size:1.2rem; font-weight:800; color:var(--text-primary)">00:00:00</div>
+                </div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
+            
+            <div style="display:flex;align-items:center;gap:8px; margin-left:auto;">
                 <a id="generateLetterLink" href="#" class="btn btn-primary no-print">
                     <i data-lucide="file-text"></i> Generate Letter
                 </a>
