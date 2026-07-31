@@ -6,6 +6,7 @@ $newNavLinks = @"
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
+                <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
@@ -16,6 +17,7 @@ $newNavLinks = @"
                         <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="support.html"><i data-lucide="headphones"></i> Customer Care</a>
                         <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
                     </div>
                 </div>

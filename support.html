@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="si">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Services & Customer Care Support - LRMS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/db.js?v=3.16"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.17">
+    <style>
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .support-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .support-stat-grid { grid-template-columns: 1fr; }
+        }
+
+        .support-stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .support-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #c7d2fe;
+        }
+
+        .stat-icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .channel-tile {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel-tile::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: transparent;
+            transition: background 0.25s;
+        }
+
+        .channel-tile:hover {
+            transform: translateY(-3px);
+            border-color: #a5b4fc;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.08);
+        }
+
+        .channel-tile.phone:hover::before { background: #7c3aed; }
+        .channel-tile.wa:hover::before { background: #25d366; }
+        .channel-tile.telegram:hover::before { background: #0088cc; }
+        .channel-tile.email:hover::before { background: #ea4335; }
+
+        .channel-tile-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .channel-tile-icon.phone { background: #f5f3ff; color: #7c3aed; }
+        .channel-tile-icon.wa { background: #f0fdf4; color: #16a34a; }
+        .channel-tile-icon.telegram { background: #f0f9ff; color: #0284c7; }
+        .channel-tile-icon.email { background: #fef2f2; color: #dc2626; }
+
+        .dev-profile-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            border: 1px solid #c7d2fe;
+            border-radius: var(--radius-md);
+            padding: 20px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .dev-badge-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.28);
+            flex-shrink: 0;
+        }
+
+        .service-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: #ffffff;
+            border: 1px solid #ddd6fe;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #6d28d9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Modern Top Navigation -->
+    <nav class="modern-top-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+                <div class="brand-info">
+                    <span class="nav-brand">GSCS Bank</span>
+                    <span class="system-name">Loan Recovery System</span>
+                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                </div>
+            </div>
+
+            <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
+                <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
+
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
+                    <div class="dropdown-menu">
+                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
+                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
+                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
+                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
+                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="support.html" class="active"><i data-lucide="headphones"></i> Customer Care</a>
+                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-dropdown">
+                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+                    <div class="dropdown-menu align-right" style="width:220px">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+                        </div>
+                        <a href="support.html"><i data-lucide="headphones"></i> Help &amp; Support</a>
+                        <a href="backup.html"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="top-header">
+            <div>
+                <h2>පද්ධති සේවා සහ සහාය</h2>
+                <p>System Services &amp; Customer Care Support — Iraasoft Solution</p>
+            </div>
+            <div style="margin-left:auto; display:flex; align-items:center; gap:10px">
+                <span class="pill pill-emerald" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;font-size:0.75rem;font-weight:700;border:1px solid #bbf7d0">
+                    <span class="status-dot"></span> SUPPORT DESK ONLINE
+                </span>
+            </div>
+        </header>
+
+
+        <!-- Support Overview Quick Stat Bar -->
+        <div class="support-stat-grid">
+            <div class="support-stat-card">
+                <div class="stat-icon-wrap" style="background:#ede9fe;color:#7c3aed">
+                    <i data-lucide="phone-call" style="width:22px;height:22px"></i>
+                </div>
+                <div>
+                    <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Hotline Support</div>
+                    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-top:2px">+94 75 289 5951</div>
+                </div>
+            </div>
+
+            <div class="support-stat-card">
+                <div class="stat-icon-wrap" style="background:#e0f2fe;color:#0284c7">
+                    <i data-lucide="clock" style="width:22px;height:22px"></i>
+                </div>
+                <div>
+                    <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Service Availability</div>
+                    <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-top:2px">8:00 AM – 10:00 PM (Daily)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main 2-Column Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Left: Contact Channels -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i data-lucide="headphone-off" style="width:18px;height:18px;color:#7c3aed"></i> සම්බන්ධීකරණ විස්තර <span style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-left:6px;text-transform:uppercase">CONTACT CHANNELS</span></h3>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Phone Call -->
+                    <a href="tel:+94752895951" class="channel-tile phone">
+                        <div class="channel-tile-icon phone">
+                            <i data-lucide="phone-call" style="width:22px;height:22px"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">PHONE CALL</div>
+                            <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-top:2px">+94 75 289 5951</div>
+                            <div style="font-size:0.75rem;color:#7c3aed;font-weight:600;margin-top:1px">Direct voice call support</div>
+                        </div>
+                        <button onclick="event.preventDefault(); copyText('+94752895951')" class="btn btn-ghost" style="padding:6px 10px;font-size:0.75rem" title="Copy Number">
+                            <i data-lucide="copy" style="width:14px;height:14px"></i>
+                        </button>
+                    </a>
+
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/94752895951?text=Hello%20Iraasoft%20Solution,%20I%20need%20technical%20support%20for%20LRMS%20System." target="_blank" class="channel-tile wa">
+                        <div class="channel-tile-icon wa">
+                            <i data-lucide="message-square" style="width:22px;height:22px"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">WHATSAPP</div>
+                            <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-top:2px">+94 75 289 5951</div>
+                            <div style="font-size:0.75rem;color:#16a34a;font-weight:600;margin-top:1px">Instant messaging &amp; screen sharing</div>
+                        </div>
+                        <span class="pill pill-emerald" style="font-size:0.7rem">Recommended</span>
+                    </a>
+
+                    <!-- Telegram -->
+                    <a href="https://t.me/INDUNILRATHNAYAKA" target="_blank" class="channel-tile telegram">
+                        <div class="channel-tile-icon telegram">
+                            <i data-lucide="send" style="width:22px;height:22px"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">TELEGRAM</div>
+                            <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-top:2px">@INDUNILRATHNAYAKA</div>
+                            <div style="font-size:0.75rem;color:#0284c7;font-weight:600;margin-top:1px">Direct developer telegram handle</div>
+                        </div>
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;color:var(--text-light)"></i>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:iraafxtrading@gmail.com" class="channel-tile email">
+                        <div class="channel-tile-icon email">
+                            <i data-lucide="mail" style="width:22px;height:22px"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">EMAIL ADDRESS</div>
+                            <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-top:2px">iraafxtrading@gmail.com</div>
+                            <div style="font-size:0.75rem;color:#dc2626;font-weight:600;margin-top:1px">Official support mail channel</div>
+                        </div>
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;color:var(--text-light)"></i>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Right: Service Developer -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i data-lucide="code-2" style="width:18px;height:18px;color:#7c3aed"></i> පද්ධති සේවා සපයන්නා <span style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-left:6px;text-transform:uppercase">SERVICE DEVELOPER</span></h3>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Dev Header -->
+                    <div class="dev-profile-header">
+                        <div class="dev-badge-avatar">I</div>
+                        <div>
+                            <div style="font-size:1.25rem;font-weight:800;color:#1e1b4b;display:flex;align-items:center;gap:8px">
+                                Iraasoft Solution
+                                <span class="badge badge-normal" style="font-size:0.68rem;background:#ede9fe;color:#6d28d9">Verified Developer</span>
+                            </div>
+                            <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;color:#4f46e5;letter-spacing:.06em;margin-top:2px">
+                                ENTERPRISE SOFTWARE DEVELOPMENT
+                            </div>
+                            <p style="font-size:0.86rem;color:var(--text-secondary);margin:12px 0 0 0;line-height:1.6;font-weight:500">
+                                පද්ධතියේ කිසියම් ගැටළුවක්, නව විශේෂාංග එකතු කිරීමක් (Customizations) හෝ තාක්ෂණික සහාය සඳහා ඉහත සඳහන් කළ ඕනෑම මාධ්‍යයක් ඔස්සේ අප හා සම්බන්ධ විය හැක.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Services Tags -->
+                    <div style="margin-bottom:20px">
+                        <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Available Support Services</div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
+                            <span class="service-tag"><i data-lucide="check" style="width:12px;height:12px"></i> Customizations</span>
+                            <span class="service-tag"><i data-lucide="check" style="width:12px;height:12px"></i> Bug Fixes</span>
+                            <span class="service-tag"><i data-lucide="check" style="width:12px;height:12px"></i> New Features</span>
+                            <span class="service-tag"><i data-lucide="check" style="width:12px;height:12px"></i> Database Sync</span>
+                            <span class="service-tag"><i data-lucide="check" style="width:12px;height:12px"></i> Data Backup</span>
+                        </div>
+                    </div>
+
+                    <!-- Working Hours Box -->
+                    <div style="background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px">
+                        <div style="font-size:0.74rem;font-weight:800;text-transform:uppercase;color:var(--text-muted);letter-spacing:.05em;display:flex;align-items:center;gap:6px">
+                            <i data-lucide="clock" style="width:14px;height:14px;color:#4f46e5"></i>
+                            WORKING HOURS / සේවා වේලාවන්
+                        </div>
+                        <ul style="list-style:none;padding:0;margin:12px 0 0 0">
+                            <li style="position:relative;padding-left:22px;font-size:0.86rem;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;font-weight:500">
+                                <span style="position:absolute;left:0;top:0;color:#10b981;font-weight:800">✓</span>
+                                සෑම දිනකම පෙ.ව. 8:00 සිට ප.ව. 10:00 දක්වා සේවා සහාය ලබාගත හැක.
+                            </li>
+                            <li style="position:relative;padding-left:22px;font-size:0.86rem;color:var(--text-secondary);margin-bottom:0;line-height:1.5;font-weight:500">
+                                <span style="position:absolute;left:0;top:0;color:#10b981;font-weight:800">✓</span>
+                                WhatsApp හෝ Telegram පණිවිඩයක් ඔස්සේ ක්ෂණික පිළිතුරු ලබා ගත හැක.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Quick Contact Buttons -->
+                    <div style="display:flex;gap:10px;margin-top:20px">
+                        <a href="https://wa.me/94752895951?text=Hello%20Iraasoft%20Solution,%20I%20need%20support%20for%20LRMS." target="_blank" class="btn btn-primary" style="flex:1;justify-content:center;background:#16a34a;border-color:#15803d;box-shadow:0 4px 14px rgba(22,163,74,.2)">
+                            <i data-lucide="message-square"></i> WhatsApp Chat
+                        </a>
+                        <a href="tel:+94752895951" class="btn btn-secondary" style="flex:1;justify-content:center">
+                            <i data-lucide="phone"></i> Call Now
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="js/app.js?v=3.17"></script>
+    <script>
+        lucide.createIcons();
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                lrmsAlert('Copied number: <b>' + text + '</b>');
+            });
+        }
+    </script>
+</body>
+
+</html>

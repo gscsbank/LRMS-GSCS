@@ -12,6 +12,9 @@
     <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css?v=3.17">
+    <!-- Leaflet Map for Location Picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* Toast Notification Styles */
         .toast-container {
@@ -24,6 +27,116 @@
             gap: 12px;
             pointer-events: none;
         }
+
+        /* Map Picker Modal */
+        #mapPickerModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+        }
+        #mapPickerModal.open { display: flex; }
+        .map-picker-box {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            width: min(720px, 96vw);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .map-picker-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+        }
+        .map-picker-header h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .map-search-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+        .map-search-input {
+            flex: 1;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            outline: none;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: border-color .2s;
+        }
+        .map-search-input:focus { border-color: #4f46e5; }
+        .map-search-btn {
+            padding: 8px 18px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .map-search-btn:hover { background: #4338ca; }
+        #mapPickerContainer {
+            flex: 1;
+            min-height: 350px;
+        }
+        .map-picker-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+            flex-wrap: wrap;
+        }
+        #mapSelectedAddr {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            min-width: 0;
+        }
+        .map-use-btn {
+            padding: 9px 22px;
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .map-use-btn:hover { background: #15803d; }
+        .map-use-btn:disabled { background: #9ca3af; cursor: not-allowed; }
 
         .toast {
             background: #1e1b4b;
@@ -224,13 +337,13 @@
                 </div>
             </div>
 
-            <div class="nav-links" id="topNavLinks">
+                        <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
-                <a href="letters.html" class="nav-link" id="genLetterLink"><i data-lucide="file-text"></i> <span>Letters</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
                 
                 <div class="nav-dropdown">
@@ -242,6 +355,7 @@
                         <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="support.html"><i data-lucide="headphones"></i> Customer Care</a>
                         <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
                     </div>
                 </div>
@@ -777,6 +891,22 @@
                         <label class="form-label">Guarantor 2 Address</label>
                         <input type="text" id="editGuarantor2Address" class="form-input">
                     </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label"><i data-lucide="map-pin" style="width:14px;height:14px;display:inline;vertical-align:middle;color:#7c3aed"></i> Location Link / Coordinates on Map</label>
+                        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+                            <input type="url" id="editMapLink" class="form-input" placeholder="Google Maps link or pinned location..." style="flex:1">
+                            <button type="button" onclick="openFormMapPicker('editMapLink', 'editAddress')" style="height:40px;padding:0 14px;background:#f0fdf4;color:#15803d;border:1.5px solid #86efac;border-radius:10px;cursor:pointer;font-weight:800;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
+                                <i data-lucide="map" style="width:16px;height:16px"></i> 🗺️ Mark on Map
+                            </button>
+                            <button type="button" onclick="getGpsLocation('editMapLink')" title="Get current GPS location" style="height:40px;padding:0 12px;background:#ede9fe;color:#7c3aed;border:1.5px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s">
+                                <i data-lucide="crosshair" style="width:15px;height:15px"></i> GPS
+                            </button>
+                            <button type="button" id="editOpenMapBtn" onclick="openMapLink('editMapLink')" title="Preview in Google Maps" style="height:40px;padding:0 12px;background:#f8fafc;color:#475569;border:1.5px solid #e2e8f0;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s">
+                                <i data-lucide="external-link" style="width:15px;height:15px"></i> Open
+                            </button>
+                        </div>
+                        <div style="font-size:.72rem;color:var(--text-muted);margin-top:5px">📍 Click <strong>🗺️ Mark on Map</strong> to visually search & pin customer house location on the interactive map.</div>
+                    </div>
                     <div class="md:col-span-2 modal-footer" style="padding:0;border:none;margin-top:10px">
                         <button type="button" onclick="toggleEditModal()" class="btn btn-ghost">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -1265,6 +1395,8 @@
                         document.getElementById('editGuarantor2Phone').value = c.guarantor2Phone || '';
                         document.getElementById('editGuarantor2Address').value = c.guarantor2Address || '';
                         document.getElementById('editPhone').value = c.phone || '';
+                        document.getElementById('editMapLink').value = c.mapLink || '';
+                        if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.getElementById('editModal') });
                     });
                 }
             }
@@ -1288,7 +1420,8 @@
                         guarantor2: document.getElementById('editGuarantor2').value,
                         guarantor2Phone: document.getElementById('editGuarantor2Phone').value.trim(),
                         guarantor2Address: document.getElementById('editGuarantor2Address').value.trim(),
-                        phone: document.getElementById('editPhone').value.trim()
+                        phone: document.getElementById('editPhone').value.trim(),
+                        mapLink: document.getElementById('editMapLink').value.trim()
                     };
                     if (await updateCustomer(currentAccountNo, d)) { 
                         if (d.accountNo && d.accountNo !== currentAccountNo) {
@@ -1301,6 +1434,49 @@
                     else await lrmsAlert("Failed update.");
                 });
             }
+
+            // ── GPS & Map Helper Functions ────────────────────────
+            window.getGpsLocation = function(inputId) {
+                const btn = event.currentTarget;
+                const origHTML = btn.innerHTML;
+                btn.innerHTML = '⏳ Getting...';
+                btn.disabled = true;
+
+                if (!navigator.geolocation) {
+                    lrmsAlert('Geolocation is not supported by this browser.');
+                    btn.innerHTML = origHTML; btn.disabled = false; return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude.toFixed(6);
+                        const lng = pos.coords.longitude.toFixed(6);
+                        const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                        const input = document.getElementById(inputId);
+                        if (input) {
+                            input.value = mapsLink;
+                            input.style.borderColor = '#22c55e';
+                            setTimeout(() => { input.style.borderColor = ''; }, 2500);
+                        }
+                        btn.innerHTML = origHTML; btn.disabled = false;
+                        if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn.parentElement });
+                    },
+                    () => {
+                        lrmsAlert('Could not get location. Please allow location access and try again.');
+                        btn.innerHTML = origHTML; btn.disabled = false;
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            };
+
+            window.openMapLink = function(inputId) {
+                const input = document.getElementById(inputId);
+                if (!input || !input.value.trim()) {
+                    lrmsAlert('Please paste a Google Maps link or click GPS first.');
+                    return;
+                }
+                window.open(input.value.trim(), '_blank');
+            };
+            // ─────────────────────────────────────────────────────
 
             window.openEditActionModal = async function (id) {
                 const customerActions = await getCustomerActions(currentAccountNo);
@@ -1491,11 +1667,162 @@
                     }
                 }, 6000);
             }
+            // ── Interactive Form Map Picker Functions ──────────────
+            let _formMapTargetInputId = null;
+            let _formMapLeaflet = null;
+            let _formMapMarker = null;
+            let _formMapLatLng = null;
+
+            window.openFormMapPicker = function(inputId, addressId) {
+                _formMapTargetInputId = inputId;
+                _formMapLatLng = null;
+                document.getElementById('mapSelectedAddr').textContent = 'Click anywhere on the map to pin customer location, or search above.';
+                document.getElementById('mapUseBtn').disabled = true;
+                document.getElementById('mapPickerModal').classList.add('open');
+
+                const targetInput = document.getElementById(inputId);
+                const currentVal = targetInput ? targetInput.value.trim() : '';
+                const addressVal = addressId ? (document.getElementById(addressId)?.value.trim() || '') : '';
+
+                if (currentVal) {
+                    const m = currentVal.match(/q=([\d.\-]+),([\d.\-]+)/);
+                    if (m) {
+                        _formMapLatLng = { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+                    }
+                }
+                if (addressVal) {
+                    document.getElementById('mapSearchInput').value = addressVal;
+                }
+
+                setTimeout(() => {
+                    if (!_formMapLeaflet) {
+                        _formMapLeaflet = L.map('mapPickerContainer').setView([7.8731, 80.7718], 8);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap contributors',
+                            maxZoom: 19
+                        }).addTo(_formMapLeaflet);
+
+                        _formMapLeaflet.on('click', function(ev) {
+                            const { lat, lng } = ev.latlng;
+                            _formMapLatLng = { lat, lng };
+                            if (_formMapMarker) _formMapMarker.setLatLng([lat, lng]);
+                            else _formMapMarker = L.marker([lat, lng], { draggable: true }).addTo(_formMapLeaflet);
+                            _formMapMarker.on('dragend', function(de) {
+                                const ll = de.target.getLatLng();
+                                _formMapLatLng = { lat: ll.lat, lng: ll.lng };
+                                fetchFormMapAddr(ll.lat, ll.lng);
+                            });
+                            fetchFormMapAddr(lat, lng);
+                            document.getElementById('mapUseBtn').disabled = false;
+                        });
+                    } else {
+                        _formMapLeaflet.invalidateSize();
+                    }
+
+                    if (_formMapLatLng) {
+                        if (_formMapMarker) _formMapMarker.setLatLng([_formMapLatLng.lat, _formMapLatLng.lng]);
+                        else _formMapMarker = L.marker([_formMapLatLng.lat, _formMapLatLng.lng], { draggable: true }).addTo(_formMapLeaflet);
+                        _formMapLeaflet.setView([_formMapLatLng.lat, _formMapLatLng.lng], 15);
+                        fetchFormMapAddr(_formMapLatLng.lat, _formMapLatLng.lng);
+                        document.getElementById('mapUseBtn').disabled = false;
+                    } else if (addressVal) {
+                        formMapSearch();
+                    }
+                }, 120);
+            };
+
+            window.closeFormMapPicker = function() {
+                document.getElementById('mapPickerModal').classList.remove('open');
+            };
+
+            function fetchFormMapAddr(lat, lng) {
+                document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)} — Loading address...`;
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                    .then(r => r.json())
+                    .then(d => {
+                        const addr = d.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + addr;
+                    }).catch(() => {
+                        document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                    });
+            }
+
+            window.formMapSearch = function() {
+                const q = document.getElementById('mapSearchInput').value.trim();
+                if (!q) return;
+                const btn = document.getElementById('mapSearchBtn');
+                btn.textContent = 'Searching...';
+                btn.disabled = true;
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`)
+                    .then(r => r.json())
+                    .then(results => {
+                        btn.textContent = 'Search';
+                        btn.disabled = false;
+                        if (!results.length) { lrmsAlert('Location not found. Try searching village or city name.'); return; }
+                        const r = results[0];
+                        const lat = parseFloat(r.lat), lng = parseFloat(r.lon);
+                        _formMapLatLng = { lat, lng };
+                        _formMapLeaflet.setView([lat, lng], 16);
+                        if (_formMapMarker) _formMapMarker.setLatLng([lat, lng]);
+                        else {
+                            _formMapMarker = L.marker([lat, lng], { draggable: true }).addTo(_formMapLeaflet);
+                            _formMapMarker.on('dragend', function(de) {
+                                const ll = de.target.getLatLng();
+                                _formMapLatLng = { lat: ll.lat, lng: ll.lng };
+                                fetchFormMapAddr(ll.lat, ll.lng);
+                            });
+                        }
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + r.display_name;
+                        document.getElementById('mapUseBtn').disabled = false;
+                    }).catch(() => {
+                        btn.textContent = 'Search'; btn.disabled = false;
+                        lrmsAlert('Search failed. Please check internet connection.');
+                    });
+            };
+
+            window.useFormMapLocation = function() {
+                if (!_formMapLatLng || !_formMapTargetInputId) return;
+                const { lat, lng } = _formMapLatLng;
+                const mapsLink = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+                const input = document.getElementById(_formMapTargetInputId);
+                if (input) {
+                    input.value = mapsLink;
+                    input.style.borderColor = '#22c55e';
+                    setTimeout(() => { input.style.borderColor = ''; }, 2500);
+                }
+                closeFormMapPicker();
+            };
+            // ────────────────────────────────────────────────────────
         }
     </script>
+
+    <!-- Map Picker Modal -->
+    <div id="mapPickerModal">
+        <div class="map-picker-box">
+            <div class="map-picker-header">
+                <h3>🗺️ Mark Customer Location on Map</h3>
+                <button type="button" class="btn btn-ghost" onclick="closeFormMapPicker()" style="padding:4px 8px"><i data-lucide="x"></i></button>
+            </div>
+            <div class="map-search-bar">
+                <input type="text" id="mapSearchInput" class="map-search-input" placeholder="Search village, town, address, or landmark..." onkeydown="if(event.key==='Enter') formMapSearch()">
+                <button type="button" id="mapSearchBtn" class="map-search-btn" onclick="formMapSearch()">Search</button>
+            </div>
+            <div id="mapPickerContainer"></div>
+            <div class="map-picker-footer">
+                <div id="mapSelectedAddr">Click anywhere on the map to pin customer location.</div>
+                <div style="display:flex;gap:8px">
+                    <button type="button" class="btn btn-ghost" onclick="closeFormMapPicker()">Cancel</button>
+                    <button type="button" id="mapUseBtn" class="map-use-btn" onclick="useFormMapLocation()" disabled>
+                        <i data-lucide="check"></i> Confirm Location Pin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
+
 
 
 

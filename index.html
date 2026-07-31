@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,6 +15,9 @@
     <!-- PDF.js for Client-Side PDF Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="css/style.css?v=3.17">
+    <!-- Leaflet Map for Location Picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .modal {
             transition: opacity 0.25s ease;
@@ -23,6 +26,116 @@
         body.modal-active {
             overflow: hidden !important;
         }
+
+        /* Map Picker Modal */
+        #mapPickerModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+        }
+        #mapPickerModal.open { display: flex; }
+        .map-picker-box {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            width: min(720px, 96vw);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .map-picker-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+        }
+        .map-picker-header h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .map-search-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+        .map-search-input {
+            flex: 1;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            outline: none;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: border-color .2s;
+        }
+        .map-search-input:focus { border-color: #4f46e5; }
+        .map-search-btn {
+            padding: 8px 18px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .map-search-btn:hover { background: #4338ca; }
+        #mapPickerContainer {
+            flex: 1;
+            min-height: 350px;
+        }
+        .map-picker-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+            flex-wrap: wrap;
+        }
+        #mapSelectedAddr {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            min-width: 0;
+        }
+        .map-use-btn {
+            padding: 9px 22px;
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .map-use-btn:hover { background: #15803d; }
+        .map-use-btn:disabled { background: #9ca3af; cursor: not-allowed; }
     </style>
 </head>
 
@@ -44,7 +157,7 @@
                 </div>
             </div>
             
-            <div class="nav-links" id="topNavLinks">
+                        <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
@@ -62,6 +175,7 @@
                         <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
                         <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
                         <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="support.html"><i data-lucide="headphones"></i> Customer Care</a>
                         <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
                     </div>
                 </div>
@@ -188,43 +302,74 @@
                 </div>
             </div>
 
-            <!-- Customer Table -->
+            <!-- Customer List Section -->
             <div class="card" style="margin-bottom:24px">
                 <div class="card-header">
-                    <h3><i data-lucide="list" style="width:18px;height:18px;color:#7c3aed"></i> Customer List</h3>
-                    <div class="search-wrap" style="width:250px">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search Name / Acc...">
-                    </div>
-                    <div class="filter-wrap" style="width:180px">
-                        <select id="statusFilter" class="form-select" onchange="loadTableData()"
-                            style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
-                            <option value="all">All Statuses</option>
-                            <option value="Normal">Normal</option>
-                            <option value="High Risk">High Risk</option>
-                            <option value="Legal Action">Legal Action</option>
-                            <option value="Loan Closed">Loan Closed</option>
-                        </select>
-                    </div>
-                    <div id="restoreStatus" style="font-size:0.75rem; color:#7c3aed; font-weight:700; margin-left:10px">
+                    <h3><i data-lucide="users" style="width:18px;height:18px;color:#7c3aed"></i> Customer List</h3>
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                        <div class="search-wrap" style="width:220px">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search Name / Acc...">
+                        </div>
+                        <div class="filter-wrap" style="width:160px">
+                            <select id="statusFilter" class="form-select" onchange="loadTableData()" style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
+                                <option value="all">All Statuses</option>
+                                <option value="Normal">Normal</option>
+                                <option value="High Risk">High Risk</option>
+                                <option value="Legal Action">Legal Action</option>
+                                <option value="Loan Closed">Loan Closed</option>
+                            </select>
+                        </div>
+                        <div class="filter-wrap" style="width:180px">
+                            <select id="categoryFilter" class="form-select" onchange="loadTableData()" style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
+                                <option value="all">All Categories</option>
+                                <option>Instant Loan</option>
+                                <option>General Loan</option>
+                                <option>Business Loan</option>
+                                <option>Long Term Loan</option>
+                                <option>Festival Loan</option>
+                                <option>Athwela Team Loan</option>
+                                <option>Athamaru Loan</option>
+                                <option>Swashakthi Loan 01</option>
+                                <option>Swashakthi Loan 02</option>
+                                <option>Sap Loan</option>
+                                <option>Suhuru Farm Loan</option>
+                                <option>Equipment Loan</option>
+                                <option>Usawigatha Loan</option>
+                            </select>
+                        </div>
+                        <!-- View toggle -->
+                        <div class="view-toggle-container" style="display:inline-flex;background:#f1f5f9;padding:4px;border-radius:99px;border:1px solid var(--border)">
+                            <button class="view-btn active" id="btnDashCard" onclick="setDashView('card')" style="padding:5px 14px;font-size:0.75rem;font-weight:700;border-radius:99px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.08)">
+                                <i data-lucide="grid-2x2" style="width:13px;height:13px"></i> Cards
+                            </button>
+                            <button class="view-btn" id="btnDashList" onclick="setDashView('list')" style="padding:5px 14px;font-size:0.75rem;font-weight:700;border-radius:99px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;background:transparent;color:var(--text-secondary)">
+                                <i data-lucide="table-2" style="width:13px;height:13px"></i> Table
+                            </button>
+                        </div>
+                        <div id="restoreStatus" style="font-size:0.75rem; color:#7c3aed; font-weight:700;"></div>
                     </div>
                 </div>
-                <div style="overflow-x:auto">
+                <!-- Card Grid View -->
+                <div id="dashCardGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:20px 24px">
+                    <div style="grid-column:1/-1;text-align:center;color:#9ca3af;padding:32px">Loading customers...</div>
+                </div>
+                <!-- Table View -->
+                <div id="dashTableView" style="display:none;overflow-x:auto">
                     <table class="premium-table">
                         <thead>
-                            <tr style="background:var(--violet-50)">
+                            <tr>
                                 <th style="width:40px;text-align:center"><input type="checkbox" id="selectAll"></th>
                                 <th style="width:50px;text-align:center">#</th>
                                 <th>Account</th>
+                                <th>Name</th>
                                 <th>Loan Info</th>
                                 <th style="text-align:center">Status</th>
                                 <th style="text-align:center" class="no-print">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="customerTableBody">
-                            <tr>
-                                <td colspan="6" style="text-align:center;padding:32px;color:#9ca3af">Loading data</td>
-                            </tr>
+                            <tr><td colspan="7" style="text-align:center;padding:32px;color:#9ca3af">Loading data</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -385,6 +530,22 @@
                             <label class="form-label">Guarantor 2 Address</label>
                             <input type="text" id="guarantor2Address" placeholder="Guarantor 2 Address" class="form-input">
                         </div>
+                        <div class="grid grid-cols-1" style="grid-column:1/-1">
+                            <label class="form-label"><i data-lucide="map-pin" style="width:13px;height:13px;display:inline;vertical-align:middle;color:#7c3aed"></i> Location Link / Coordinates on Map</label>
+                            <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+                                <input type="url" id="addMapLink" class="form-input" placeholder="Google Maps link or pinned location..." style="flex:1">
+                                <button type="button" onclick="openFormMapPicker('addMapLink', 'custAddress')" style="height:40px;padding:0 14px;background:#f0fdf4;color:#15803d;border:1.5px solid #86efac;border-radius:10px;cursor:pointer;font-weight:800;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
+                                    <i data-lucide="map" style="width:16px;height:16px"></i> 🗺️ Mark on Map
+                                </button>
+                                <button type="button" onclick="getGpsLocation('addMapLink')" style="height:40px;padding:0 12px;background:#ede9fe;color:#7c3aed;border:1.5px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap" title="Get current GPS location">
+                                    <i data-lucide="crosshair" style="width:15px;height:15px"></i> GPS
+                                </button>
+                                <button type="button" onclick="openMapLink('addMapLink')" style="height:40px;padding:0 12px;background:#f8fafc;color:#475569;border:1.5px solid #e2e8f0;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap" title="Preview in Google Maps">
+                                    <i data-lucide="external-link" style="width:15px;height:15px"></i> Open
+                                </button>
+                            </div>
+                            <div style="font-size:.72rem;color:#6b7280;margin-top:5px">📍 Click <strong>🗺️ Mark on Map</strong> to visually search & pin customer house location on the interactive map.</div>
+                        </div>
                     </div>
 
                     <div
@@ -439,7 +600,8 @@
                         guarantor2: document.getElementById('guarantor2').value,
                         guarantor2Phone: document.getElementById('guarantor2Phone').value.trim(),
                         guarantor2Address: document.getElementById('guarantor2Address').value,
-                        phone: document.getElementById('phoneNumber').value.trim()
+                        phone: document.getElementById('phoneNumber').value.trim(),
+                        mapLink: document.getElementById('addMapLink').value.trim()
                     };
                     const success = await addCustomer(customerData);
                     if (success) { toggleModal(); loadTableData(); }
@@ -460,23 +622,50 @@
                 }
             }
 
+            let dashViewMode = 'card';
+
+            window.setDashView = function(mode) {
+                dashViewMode = mode;
+                const btnCard = document.getElementById('btnDashCard');
+                const btnList = document.getElementById('btnDashList');
+                const cardGrid = document.getElementById('dashCardGrid');
+                const tableView = document.getElementById('dashTableView');
+                if (mode === 'card') {
+                    btnCard.style.background = '#fff';
+                    btnCard.style.color = 'var(--primary)';
+                    btnCard.style.boxShadow = '0 1px 4px rgba(0,0,0,.08)';
+                    btnList.style.background = 'transparent';
+                    btnList.style.color = 'var(--text-secondary)';
+                    btnList.style.boxShadow = 'none';
+                    cardGrid.style.display = 'grid';
+                    tableView.style.display = 'none';
+                } else {
+                    btnList.style.background = '#fff';
+                    btnList.style.color = 'var(--primary)';
+                    btnList.style.boxShadow = '0 1px 4px rgba(0,0,0,.08)';
+                    btnCard.style.background = 'transparent';
+                    btnCard.style.color = 'var(--text-secondary)';
+                    btnCard.style.boxShadow = 'none';
+                    cardGrid.style.display = 'none';
+                    tableView.style.display = 'block';
+                }
+                loadTableData();
+            };
+
             async function loadTableData() {
                 const customers = await getAllCustomers();
-                const tbody = document.getElementById('customerTableBody');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-                let total = 0, risk = 0, legal = 0;
-
                 const filterQuery = (document.getElementById('searchInput')?.value || '').toLowerCase();
                 const statusF = document.getElementById('statusFilter')?.value || 'all';
+                const categoryF = document.getElementById('categoryFilter')?.value || 'all';
+                let total = 0, risk = 0, legal = 0;
 
                 const filtered = customers.filter(c => {
                     const accStr = (c.accountNo || '').toString().toLowerCase();
                     const nameStr = (c.name || '').toString().toLowerCase();
                     const matchesSearch = accStr.includes(filterQuery) || nameStr.includes(filterQuery);
                     const matchesStatus = statusF === 'all' || (c.status || '').toLowerCase().includes(statusF.toLowerCase());
-
-                    const match = matchesSearch && matchesStatus;
+                    const matchesCategory = categoryF === 'all' || (c.category || '') === categoryF;
+                    const match = matchesSearch && matchesStatus && matchesCategory;
                     if (match) { total++; if (c.status.includes('High Risk')) risk++; if (c.status.includes('Legal Action')) legal++; }
                     return match;
                 });
@@ -488,18 +677,97 @@
                 if (statRisk) statRisk.innerText = risk;
                 if (statLegal) statLegal.innerText = legal;
 
-                if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:#9ca3af">No records found.</td></tr>`;
-                    loadFollowUps(); return;
+                if (dashViewMode === 'card') {
+                    renderDashCards(filtered);
+                } else {
+                    renderDashTable(filtered);
                 }
 
+                loadFollowUps();
+                lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                updateBulkSelection();
+            }
+
+            function renderDashCards(filtered) {
+                const grid = document.getElementById('dashCardGrid');
+                if (!grid) return;
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#9ca3af;padding:40px;font-style:italic">No customers found.</div>`;
+                    return;
+                }
+                grid.innerHTML = filtered.map((c, idx) => {
+                    let badgeClass = 'badge badge-normal';
+                    let arrColor = '#6b7280';
+                    if (c.status.includes('High Risk')) { badgeClass = 'badge badge-risk'; arrColor = '#d97706'; }
+                    if (c.status.includes('Legal Action')) { badgeClass = 'badge badge-legal'; arrColor = '#dc2626'; }
+                    if (c.status === 'Loan Closed') badgeClass = 'badge badge-closed';
+                    const amt = 'LKR ' + (c.loanAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const arr = parseFloat(c.arrearsInstallments) || 0;
+                    const mapsUrl = c.mapLink ? c.mapLink
+                        : c.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`
+                        : 'https://maps.google.com';
+                    const waUrl = c.phone ? `https://wa.me/94${c.phone.replace(/[^0-9]/g, '').slice(-9)}` : '#';
+                    const hasMapLink = !!(c.mapLink || c.address);
+                    return `
+                    <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:var(--transition);cursor:pointer" 
+                         onmouseover="this.style.boxShadow='0 8px 30px rgba(79,70,229,.12)';this.style.transform='translateY(-3px)';this.style.borderColor='#a5b4fc'"
+                         onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform='';this.style.borderColor='var(--border)'"
+                         onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')">
+                        <!-- Card Header -->
+                        <div style="padding:14px 18px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                            <div>
+                                <div style="font-weight:800;font-size:.92rem;color:var(--text-primary)">${c.name}</div>
+                                <div style="font-size:.72rem;font-weight:700;color:var(--text-muted);margin-top:1px;letter-spacing:.03em">${c.accountNo}</div>
+                            </div>
+                            <span class="${badgeClass}" style="white-space:nowrap;flex-shrink:0;font-size:.68rem">${c.status}</span>
+                        </div>
+                        <!-- Card Body -->
+                        <div style="padding:14px 18px;flex:1;display:flex;flex-direction:column;gap:8px">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                                <div>
+                                    <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Loan Amount</div>
+                                    <div style="font-size:.9rem;font-weight:700;color:var(--text-primary);margin-top:2px">${amt}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Arrears</div>
+                                    <div style="font-size:.9rem;font-weight:800;color:${arrColor};margin-top:2px">${arr > 0 ? arr + ' Installments' : 'None'}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Category</div>
+                                    <div style="font-size:.78rem;font-weight:600;color:var(--primary);margin-top:2px">${c.category || '—'}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Phone</div>
+                                    <div style="font-size:.78rem;font-weight:600;color:var(--text-primary);margin-top:2px">${c.phone || '—'}</div>
+                                </div>
+                            </div>
+                            ${c.address ? `<div style="display:flex;align-items:flex-start;gap:5px;font-size:.76rem;color:var(--text-secondary);margin-top:2px"><i data-lucide="map-pin" style="width:12px;height:12px;flex-shrink:0;margin-top:2px;color:var(--text-light)"></i>${c.address}</div>` : ''}
+                        </div>
+                        <!-- Card Footer Actions -->
+                        <div style="padding:10px 18px 14px;display:flex;gap:6px;border-top:1px solid var(--border-light);flex-wrap:wrap" onclick="event.stopPropagation()">
+                            ${c.phone ? `<a href="tel:${c.phone}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.73rem;font-weight:700;color:var(--text-secondary);text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#10b981';this.style.borderColor='#10b981'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'"><i data-lucide='phone-call' style='width:12px;height:12px'></i>Call</a>` : ''}
+                            ${c.phone ? `<a href="${waUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.73rem;font-weight:700;color:var(--text-secondary);text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#25d366';this.style.borderColor='#25d366'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'"><i data-lucide='message-square' style='width:12px;height:12px'></i>WhatsApp</a>` : ''}
+                            <a href="${mapsUrl}" target="_blank" title="${c.mapLink ? 'Saved map location' : c.address ? 'Search by address' : 'Open Google Maps'}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:${c.mapLink ? '#fef2f2' : 'var(--surface)'};border:1px solid ${c.mapLink ? '#fca5a5' : 'var(--border)'};border-radius:8px;font-size:.73rem;font-weight:700;color:${c.mapLink ? '#dc2626' : 'var(--text-secondary)'};text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#ea4335';this.style.borderColor='#ea4335';this.style.background='#fff1f0'" onmouseout="this.style.color='${c.mapLink ? '#dc2626' : 'var(--text-secondary)'}';this.style.borderColor='${c.mapLink ? '#fca5a5' : 'var(--border)'}';this.style.background='${c.mapLink ? '#fef2f2' : 'var(--surface)'}'"><i data-lucide='map-pin' style='width:12px;height:12px'></i>Locate${c.mapLink ? ' ★' : ''}</a>
+                            <button onclick="handleDeleteLocal(event, '${c.accountNo}')" title="Delete" style="margin-left:auto;padding:5px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'"><i data-lucide="trash-2" style="width:13px;height:13px"></i></button>
+                            <button onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" title="View" style="padding:5px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#f5f3ff'"><i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            function renderDashTable(filtered) {
+                const tbody = document.getElementById('customerTableBody');
+                if (!tbody) return;
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:#9ca3af">No records found.</td></tr>`;
+                    return;
+                }
                 filtered.forEach((c, idx) => {
                     let badgeClass = 'badge badge-normal';
                     if (c.status.includes('High Risk')) badgeClass = 'badge badge-risk';
                     if (c.status.includes('Legal Action')) badgeClass = 'badge badge-legal';
                     if (c.status === 'Loan Closed') badgeClass = 'badge badge-closed';
-
-                    const amt = 'LKR ' + c.loanAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const amt = 'LKR ' + (c.loanAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     const tr = document.createElement('tr');
                     tr.style.cursor = 'pointer';
                     tr.onclick = () => window.navigate(`customer-detail.html?accountNo=${c.accountNo}`);
@@ -516,24 +784,55 @@
                         </td>
                         <td><span class="${badgeClass}">${c.status}</span></td>
                         <td style="text-align:right">
-                            <button onclick="handleDeleteLocal(event, '${c.accountNo}')"
-                                style="padding:6px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;opacity:1;transition:all .2s;margin-right:4px"
-                                class="row-action-btn" title="Delete Customer">
-                                <i data-lucide="trash-2" style="width:15px;height:15px"></i>
-                            </button>
-                            <button onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')"
-                                style="padding:6px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;opacity:1;transition:all .2s"
-                                class="row-action-btn" title="View Profile">
-                                <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
-                            </button>
+                            <button onclick="handleDeleteLocal(event, '${c.accountNo}')" style="padding:6px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;transition:all .2s;margin-right:4px" title="Delete"><i data-lucide="trash-2" style="width:15px;height:15px"></i></button>
+                            <button onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" style="padding:6px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" title="View"><i data-lucide="arrow-right" style="width:15px;height:15px"></i></button>
                         </td>`;
                     tbody.appendChild(tr);
                 });
-
-                loadFollowUps();
-                lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
-                updateBulkSelection();
             }
+
+            // ── GPS & Map Helper Functions ────────────────────────
+            window.getGpsLocation = function(inputId) {
+                const btn = event.currentTarget;
+                const origHTML = btn.innerHTML;
+                btn.innerHTML = '⏳ Getting...';
+                btn.disabled = true;
+
+                if (!navigator.geolocation) {
+                    lrmsAlert('Geolocation is not supported by this browser.');
+                    btn.innerHTML = origHTML; btn.disabled = false; return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude.toFixed(6);
+                        const lng = pos.coords.longitude.toFixed(6);
+                        const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                        const input = document.getElementById(inputId);
+                        if (input) {
+                            input.value = mapsLink;
+                            input.style.borderColor = '#22c55e';
+                            setTimeout(() => { input.style.borderColor = ''; }, 2500);
+                        }
+                        btn.innerHTML = origHTML; btn.disabled = false;
+                        if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn.parentElement });
+                    },
+                    () => {
+                        lrmsAlert('Could not get location. Please allow location access in your browser and try again.');
+                        btn.innerHTML = origHTML; btn.disabled = false;
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            };
+
+            window.openMapLink = function(inputId) {
+                const input = document.getElementById(inputId);
+                if (!input || !input.value.trim()) {
+                    lrmsAlert('Please paste a Google Maps link or click GPS first.');
+                    return;
+                }
+                window.open(input.value.trim(), '_blank');
+            };
+            // ─────────────────────────────────────────────────────
 
             // ---- Bulk Actions ----
             function updateBulkSelection() {
@@ -690,6 +989,133 @@
             }
             setInterval(updateTime, 1000);
 
+            // ── Interactive Form Map Picker Functions ──────────────
+            let _formMapTargetInputId = null;
+            let _formMapLeaflet = null;
+            let _formMapMarker = null;
+            let _formMapLatLng = null;
+
+            window.openFormMapPicker = function(inputId, addressId) {
+                _formMapTargetInputId = inputId;
+                _formMapLatLng = null;
+                document.getElementById('mapSelectedAddr').textContent = 'Click anywhere on the map to pin customer location, or search above.';
+                document.getElementById('mapUseBtn').disabled = true;
+                document.getElementById('mapPickerModal').classList.add('open');
+
+                const targetInput = document.getElementById(inputId);
+                const currentVal = targetInput ? targetInput.value.trim() : '';
+                const addressVal = addressId ? (document.getElementById(addressId)?.value.trim() || '') : '';
+
+                if (currentVal) {
+                    const m = currentVal.match(/q=([\d.\-]+),([\d.\-]+)/);
+                    if (m) {
+                        _formMapLatLng = { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+                    }
+                }
+                if (addressVal) {
+                    document.getElementById('mapSearchInput').value = addressVal;
+                }
+
+                setTimeout(() => {
+                    if (!_formMapLeaflet) {
+                        _formMapLeaflet = L.map('mapPickerContainer').setView([7.8731, 80.7718], 8);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap contributors',
+                            maxZoom: 19
+                        }).addTo(_formMapLeaflet);
+
+                        _formMapLeaflet.on('click', function(ev) {
+                            const { lat, lng } = ev.latlng;
+                            _formMapLatLng = { lat, lng };
+                            if (_formMapMarker) _formMapMarker.setLatLng([lat, lng]);
+                            else _formMapMarker = L.marker([lat, lng], { draggable: true }).addTo(_formMapLeaflet);
+                            _formMapMarker.on('dragend', function(de) {
+                                const ll = de.target.getLatLng();
+                                _formMapLatLng = { lat: ll.lat, lng: ll.lng };
+                                fetchFormMapAddr(ll.lat, ll.lng);
+                            });
+                            fetchFormMapAddr(lat, lng);
+                            document.getElementById('mapUseBtn').disabled = false;
+                        });
+                    } else {
+                        _formMapLeaflet.invalidateSize();
+                    }
+
+                    if (_formMapLatLng) {
+                        if (_formMapMarker) _formMapMarker.setLatLng([_formMapLatLng.lat, _formMapLatLng.lng]);
+                        else _formMapMarker = L.marker([_formMapLatLng.lat, _formMapLatLng.lng], { draggable: true }).addTo(_formMapLeaflet);
+                        _formMapLeaflet.setView([_formMapLatLng.lat, _formMapLatLng.lng], 15);
+                        fetchFormMapAddr(_formMapLatLng.lat, _formMapLatLng.lng);
+                        document.getElementById('mapUseBtn').disabled = false;
+                    } else if (addressVal) {
+                        formMapSearch();
+                    }
+                }, 120);
+            };
+
+            window.closeFormMapPicker = function() {
+                document.getElementById('mapPickerModal').classList.remove('open');
+            };
+
+            function fetchFormMapAddr(lat, lng) {
+                document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)} — Loading address...`;
+                fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+                    .then(r => r.json())
+                    .then(d => {
+                        const addr = d.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + addr;
+                    }).catch(() => {
+                        document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                    });
+            }
+
+            window.formMapSearch = function() {
+                const q = document.getElementById('mapSearchInput').value.trim();
+                if (!q) return;
+                const btn = document.getElementById('mapSearchBtn');
+                btn.textContent = 'Searching...';
+                btn.disabled = true;
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`)
+                    .then(r => r.json())
+                    .then(results => {
+                        btn.textContent = 'Search';
+                        btn.disabled = false;
+                        if (!results.length) { lrmsAlert('Location not found. Try searching village or city name.'); return; }
+                        const r = results[0];
+                        const lat = parseFloat(r.lat), lng = parseFloat(r.lon);
+                        _formMapLatLng = { lat, lng };
+                        _formMapLeaflet.setView([lat, lng], 16);
+                        if (_formMapMarker) _formMapMarker.setLatLng([lat, lng]);
+                        else {
+                            _formMapMarker = L.marker([lat, lng], { draggable: true }).addTo(_formMapLeaflet);
+                            _formMapMarker.on('dragend', function(de) {
+                                const ll = de.target.getLatLng();
+                                _formMapLatLng = { lat: ll.lat, lng: ll.lng };
+                                fetchFormMapAddr(ll.lat, ll.lng);
+                            });
+                        }
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + r.display_name;
+                        document.getElementById('mapUseBtn').disabled = false;
+                    }).catch(() => {
+                        btn.textContent = 'Search'; btn.disabled = false;
+                        lrmsAlert('Search failed. Please check internet connection.');
+                    });
+            };
+
+            window.useFormMapLocation = function() {
+                if (!_formMapLatLng || !_formMapTargetInputId) return;
+                const { lat, lng } = _formMapLatLng;
+                const mapsLink = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+                const input = document.getElementById(_formMapTargetInputId);
+                if (input) {
+                    input.value = mapsLink;
+                    input.style.borderColor = '#22c55e';
+                    setTimeout(() => { input.style.borderColor = ''; }, 2500);
+                }
+                closeFormMapPicker();
+            };
+            // ────────────────────────────────────────────────────────
+
             window.initPage = async () => {
                 updateTime();
                 
@@ -730,7 +1156,32 @@
         <p id="pdfLoadingText" style="color:#6b7280; font-size: 0.9rem;">Please wait while the system extracts data from the PDF document.</p>
     </div>
 </div>
+
+<!-- Map Picker Modal -->
+<div id="mapPickerModal">
+    <div class="map-picker-box">
+        <div class="map-picker-header">
+            <h3>🗺️ Mark Customer Location on Map</h3>
+            <button type="button" class="btn btn-ghost" onclick="closeFormMapPicker()" style="padding:4px 8px"><i data-lucide="x"></i></button>
+        </div>
+        <div class="map-search-bar">
+            <input type="text" id="mapSearchInput" class="map-search-input" placeholder="Search village, town, address, or landmark..." onkeydown="if(event.key==='Enter') formMapSearch()">
+            <button type="button" id="mapSearchBtn" class="map-search-btn" onclick="formMapSearch()">Search</button>
+        </div>
+        <div id="mapPickerContainer"></div>
+        <div class="map-picker-footer">
+            <div id="mapSelectedAddr">Click anywhere on the map to pin customer location.</div>
+            <div style="display:flex;gap:8px">
+                <button type="button" class="btn btn-ghost" onclick="closeFormMapPicker()">Cancel</button>
+                <button type="button" id="mapUseBtn" class="map-use-btn" onclick="useFormMapLocation()" disabled>
+                    <i data-lucide="check"></i> Confirm Location Pin
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
 
 
 
