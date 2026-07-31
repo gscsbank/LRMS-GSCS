@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,7 +12,9 @@
     <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.15">
+    <!-- PDF.js for Client-Side PDF Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.17">
     <style>
         .modal {
             transition: opacity 0.25s ease;
@@ -42,13 +44,14 @@
                 </div>
             </div>
             
-                                    <div class="nav-links" id="topNavLinks">
+            <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
+                <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
@@ -102,6 +105,9 @@
                 <div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
+                <button onclick="document.getElementById('pdfUploadInput').click()" class="btn btn-secondary" style="background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe;">
+                    <i data-lucide="file-text"></i> Import Arrears PDF
+                </button>
                 <button onclick="toggleModal()" class="btn btn-primary">
                     <i data-lucide="user-plus"></i> Add Customer
                 </button>
@@ -360,12 +366,20 @@
                             <input type="text" id="guarantor1" placeholder="e.g. Nimal" class="form-input">
                         </div>
                         <div>
+                            <label class="form-label">Guarantor 1 Phone</label>
+                            <input type="tel" id="guarantor1Phone" placeholder="e.g. 077 123 4567" class="form-input">
+                        </div>
+                        <div>
                             <label class="form-label">Guarantor 1 Address</label>
                             <input type="text" id="guarantor1Address" placeholder="Guarantor 1 Address" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Guarantor 2 (Name &amp; ID)</label>
                             <input type="text" id="guarantor2" placeholder="e.g. Kamal" class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label">Guarantor 2 Phone</label>
+                            <input type="tel" id="guarantor2Phone" placeholder="e.g. 078 123 4567" class="form-input">
                         </div>
                         <div>
                             <label class="form-label">Guarantor 2 Address</label>
@@ -420,17 +434,30 @@
                         status: document.getElementById('initialStatus').value,
                         statusDate: new Date().toISOString().split('T')[0],
                         guarantor1: document.getElementById('guarantor1').value,
+                        guarantor1Phone: document.getElementById('guarantor1Phone').value.trim(),
                         guarantor1Address: document.getElementById('guarantor1Address').value,
                         guarantor2: document.getElementById('guarantor2').value,
+                        guarantor2Phone: document.getElementById('guarantor2Phone').value.trim(),
                         guarantor2Address: document.getElementById('guarantor2Address').value,
                         phone: document.getElementById('phoneNumber').value.trim()
                     };
-                    const existing = await getCustomerByAccountNo(customerData.accountNo);
-                    if (existing) { await lrmsAlert("Account Number already exists!"); return; }
                     const success = await addCustomer(customerData);
                     if (success) { toggleModal(); loadTableData(); }
                     else await lrmsAlert("Failed to add customer.");
                 });
+            }
+
+            async function handleFixDuplicates() {
+                if (typeof fixDuplicateCustomers !== 'function') {
+                    await lrmsAlert("Scanner script not loaded.");
+                    return;
+                }
+                const count = await fixDuplicateCustomers();
+                if (count > 0) {
+                    await lrmsAlert(`Cleaned up ${count} duplicate customer records!<br>Data has been merged into your main customer profiles.`);
+                } else {
+                    await lrmsAlert("No duplicate records found.");
+                }
             }
 
             async function loadTableData() {
@@ -687,9 +714,24 @@
         </script>
     </main>
 
-    <script src="js/app.js?v=3.15"></script>
+    <script src="js/app.js?v=3.17"></script>
+    <script src="js/pdf-scanner.js?v=2.3"></script>
 <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+<input type="file" id="pdfUploadInput" accept="application/pdf" style="display:none" onchange="handlePDFUpload(event)">
+
+<!-- PDF Parsing Modal Overlay -->
+<div id="pdfLoadingModal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-[60]">
+    <div class="modal-overlay absolute w-full h-full bg-slate-900/60 backdrop-blur-sm"></div>
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded-2xl shadow-2xl z-50 text-center p-8">
+        <div style="color:#7c3aed; display:flex; justify-content:center; margin-bottom: 20px;">
+            <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        </div>
+        <h3 style="font-family:'Poppins',sans-serif;font-size:1.25rem;font-weight:700;color:#1e1b4b;margin-bottom:8px">Scanning Arrears Report...</h3>
+        <p id="pdfLoadingText" style="color:#6b7280; font-size: 0.9rem;">Please wait while the system extracts data from the PDF document.</p>
+    </div>
+</div>
 </body>
+
 
 
 

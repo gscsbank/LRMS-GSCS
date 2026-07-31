@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Visit Report - LRMS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <script src="js/db.js?v=3.16"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css?v=3.17">
+    <style>
+        .fv-controls { display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:16px; box-shadow:0 2px 12px rgba(15,23,42,.06); }
+        .fv-cg { display:flex; flex-direction:column; gap:4px; }
+        .fv-cg label { font-size:.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; }
+        .fv-cg input, .fv-cg select { height:38px; padding:0 12px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.85rem; font-weight:500; color:#1e293b; background:#f8fafc; outline:none; min-width:150px; }
+        .fv-cg input:focus, .fv-cg select:focus { border-color:#7c3aed; background:#fff; }
+        .fv-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+        .fv-table th { background:#1e1b4b; color:#fff; padding:10px 12px; text-align:left; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+        .fv-table td { padding:8px 10px; border-bottom:1px solid #f1f5f9; vertical-align:top; color:#1e293b; font-size:.76rem; }
+        .fv-table tr:nth-child(even) td { background:#f8fafc; }
+        .sub-label { font-size:.75rem; color:#6b7280; font-weight:600; text-transform:uppercase; }
+        .sub-val { font-size:.88rem; color:#1e293b; font-weight:500; }
+        .badge-arr { display:inline-flex; align-items:center; justify-content:center; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; border-radius:8px; font-size:.75rem; font-weight:700; padding:2px 10px; min-width:36px; }
+        .visit-sel { padding:3px 6px; border:1.5px solid #e2e8f0; border-radius:8px; font-size:.72rem; font-weight:600; width:100%; min-width:140px; outline:none; cursor:pointer; background:#fff; }
+        .visit-sel.status-visited { border-color:#22c55e; background:#f0fdf4; color:#166534; }
+        .visit-sel.status-promised { border-color:#f59e0b; background:#fffbeb; color:#92400e; }
+        .visit-sel.status-nothome { border-color:#6366f1; background:#eef2ff; color:#3730a3; }
+        .visit-sel.status-refused { border-color:#ef4444; background:#fef2f2; color:#991b1b; }
+        .visit-sel.status-paid { border-color:#0ea5e9; background:#f0f9ff; color:#0c4a6e; }
+        .visit-note { width:100%; margin-top:4px; padding:4px 6px; border:1px solid #e2e8f0; border-radius:6px; font-size:.7rem; resize:none; height:38px; outline:none; font-family:inherit; }
+        .visit-note:focus { border-color:#7c3aed; }
+        .save-bar { display:flex; align-items:center; justify-content:space-between; background:linear-gradient(90deg,#1e1b4b,#4c1d95); border-radius:12px; padding:12px 20px; margin-bottom:16px; }
+        .date-tab { display:inline-flex; align-items:center; gap:6px; background:#fff; border-radius:8px; padding:4px 12px; font-size:.78rem; font-weight:700; color:#1e1b4b; }
+        .print-only { display:none !important; }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-shadow: none !important;
+            }
+            html, body {
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: black !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 9.5pt;
+            }
+            .no-print, .sidebar, .modern-top-nav, .top-header, .fv-controls, .save-bar {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .main-content, .content-area, #printHeader, #printHeader * {
+                background: #ffffff !important;
+                background-color: #ffffff !important;
+            }
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .content-area {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            #printHeader {
+                display: block !important;
+                background: #ffffff !important;
+            }
+            #fvTableCard {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                width: 100% !important;
+            }
+            .fv-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 9pt;
+            }
+            .fv-table thead {
+                display: table-header-group !important;
+            }
+            .fv-table tbody tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .fv-table th {
+                background: #000 !important;
+                color: #fff !important;
+                padding: 6pt 5pt;
+                font-size: 8.5pt;
+                border: 1pt solid #000;
+            }
+            .fv-table td {
+                padding: 6pt 5pt;
+                border: 0.5pt solid #666;
+                color: #000 !important;
+                background: white !important;
+                vertical-align: top;
+                word-wrap: break-word;
+                font-size: 9pt;
+            }
+            .sub-label { font-size: 7.8pt !important; color: #444 !important; }
+            .sub-val { font-size: 8.8pt !important; color: #000 !important; }
+            .fv-table tr:nth-child(even) td {
+                background: #f8f8f8 !important;
+            }
+            .badge-arr {
+                border: 1pt solid #000;
+                background: none !important;
+                color: #000 !important;
+                font-weight: 700;
+                padding: 1px 6px !important;
+            }
+            .cat-badge {
+                background: none !important;
+                color: #000 !important;
+                padding: 0 !important;
+                border: none !important;
+                font-weight: 700;
+            }
+            #recordCount {
+                display: none !important;
+            }
+            .print-lines {
+                border-bottom: 1pt dotted #555;
+                margin-top: 10pt;
+                height: 12pt;
+            }
+            .fv-table th:nth-child(5),
+            .fv-table td:nth-child(5) {
+                width: 90px !important;
+                max-width: 90px !important;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Top Navigation -->
+    <nav class="modern-top-nav no-print">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-wrapper">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+                <div class="brand-info">
+                    <span class="nav-brand">GSCS Bank</span>
+                    <span class="system-name">Loan Recovery System</span>
+                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                </div>
+            </div>
+            
+            <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
+                <a href="field-visit.html" class="nav-link active"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
+                    <div class="dropdown-menu">
+                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
+                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
+                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
+                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
+                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-dropdown">
+                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+                    <div class="dropdown-menu align-right" style="width:220px">
+                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+                        </div>
+                        <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('restoreFile').click()"><i data-lucide="upload-cloud"></i> Restore Data</a>
+                        <a href="backup.html"><i data-lucide="database-backup"></i> Backup &amp; Sync</a>
+                        <a href="admin.html" id="adminMenuLink" class="admin-only hidden"><i data-lucide="users"></i> Manage Users</a>
+                        <a href="settings.html" id="settingsMenuLink" class="admin-only hidden"><i data-lucide="settings"></i> Settings</a>
+                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-header no-print">
+            <div>
+                <h2>Field Visit Report</h2>
+                <p>Filter active overdue customers (Excludes Closed Loans, Legal Cases &amp; Arbitrations)</p>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <!-- Controls -->
+            <div class="fv-controls no-print">
+                <div class="fv-cg">
+                    <label>Visit Date (ක්ෂේත්‍ර නිරීක්ෂණ දිනය)</label>
+                    <input type="date" id="visitDate" onchange="onVisitDateChange()">
+                </div>
+                <div class="fv-cg">
+                    <label>Min. Arrears Installments</label>
+                    <select id="minArrears" onchange="generateReport()">
+                        <option value="1">1+ installments</option>
+                        <option value="2">2+ installments</option>
+                        <option value="3" selected>3+ installments</option>
+                        <option value="4">4+ installments</option>
+                        <option value="5">5+ installments</option>
+                        <option value="6">6+ installments</option>
+                    </select>
+                </div>
+                <div class="fv-cg">
+                    <label>Loan Category</label>
+                    <select id="categoryFilter" onchange="generateReport()">
+                        <option value="all">All Categories</option>
+                        <option>Instant Loan</option>
+                        <option>General Loan</option>
+                        <option>Business Loan</option>
+                        <option>Long Term Loan</option>
+                        <option>Festival Loan</option>
+                        <option>Athwela Team Loan</option>
+                        <option>Athamaru Loan</option>
+                        <option>Swashakthi Loan 01</option>
+                        <option>Swashakthi Loan 02</option>
+                        <option>Sap Loan</option>
+                        <option>Suhuru Farm Loan</option>
+                        <option>Equipment Loan</option>
+                        <option>Usawigatha Loan</option>
+                    </select>
+                </div>
+                <div class="fv-cg" style="justify-content:flex-end">
+                    <button onclick="generateReport()" class="btn btn-primary" style="height:38px">
+                        <i data-lucide="search"></i> Filter &amp; Generate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Save Bar -->
+            <div class="save-bar no-print" id="saveBar" style="display:none">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <i data-lucide="calendar-check" style="width:20px;height:20px;color:#a78bfa"></i>
+                    <div>
+                        <div style="color:#fff;font-weight:700;font-size:.85rem">Visit Date: <span id="saveBarDate" class="date-tab"></span></div>
+                        <div style="color:#c4b5fd;font-size:.72rem;margin-top:2px">Select each customer's visit outcome &amp; notes, then click Save Records</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px">
+                    <button onclick="saveVisitRecords()" style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:8px 18px;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
+                        <i data-lucide="save" style="width:14px;height:14px"></i> Save Records
+                    </button>
+                    <button onclick="window.print()" style="background:#7c3aed;color:#fff;border:none;border-radius:10px;padding:8px 18px;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
+                        <i data-lucide="printer" style="width:14px;height:14px"></i> Print A4
+                    </button>
+                </div>
+            </div>
+
+            <!-- Print Header -->
+            <div id="printHeader" style="display:none;margin-bottom:10pt">
+                <div style="text-align:center;border-bottom:2pt solid #000;padding-bottom:6pt;margin-bottom:6pt">
+                    <div style="font-size:13pt;font-weight:900">GALAPITIYAGAMA SANASA COOPERATIVE SOCIETY</div>
+                    <div style="font-size:8pt;margin-top:2pt">Field Visit / Loan Recovery Report &nbsp;|&nbsp; ක්ෂේත්‍ර නිරීක්ෂණ / ණය අයකර ගැනීමේ වාර්තාව</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:8pt;margin-bottom:4pt">
+                    <div><strong>Visit Date (නිරීක්ෂණ දිනය):</strong> <span id="printVisitDate">—</span></div>
+                    <div><strong>Filter:</strong> <span id="printFilter">—</span></div>
+                    <div><strong>Total Customers:</strong> <span id="printCount">0</span></div>
+                    <div><strong>Generated Date:</strong> <span id="printGenDate"></span></div>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="card" id="fvTableCard">
+                <div class="card-header no-print">
+                    <h3><i data-lucide="map-pin" style="width:18px;height:18px;color:#7c3aed"></i> Overdue Customer Visit List</h3>
+                    <span id="recordCount" style="font-size:.8rem;font-weight:700;color:#7c3aed;background:#eff6ff;padding:4px 12px;border-radius:20px">0 records</span>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="fv-table" id="fvTable">
+                        <thead>
+                            <tr>
+                                <th style="width:25px;text-align:center">#</th>
+                                <th style="width:110px;white-space:nowrap">Account No</th>
+                                <th style="width:130px">Name</th>
+                                <th style="width:90px">Address</th>
+                                <th style="width:90px">Phone</th>
+                                <th style="width:80px">Category</th>
+                                <th style="text-align:center;width:55px">Arrears</th>
+                                <th style="width:85px;white-space:nowrap">Last Paid</th>
+                                <th style="width:100px">Guarantor 1<br><span style="font-weight:400;font-size:.55rem;text-transform:none">(Name / Acc / Phone)</span></th>
+                                <th style="width:100px">Guarantor 2<br><span style="font-weight:400;font-size:.55rem;text-transform:none">(Name / Acc / Phone)</span></th>
+                                <th style="width:160px">Customer Response &amp; Remarks<br><span style="font-weight:400;font-size:.55rem;text-transform:none">(ණයගැතියාගේ පිළිතුර සහ සටහන්)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fvTableBody">
+                            <tr><td colspan="11" style="text-align:center;color:#9ca3af;padding:40px;font-style:italic">
+                                Select a date and click "Filter &amp; Generate".
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/app.js?v=3.17"></script>
+    <script>
+        // ── Helpers ───────────────────────────────────────────────
+        function toLocal(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+        function fmt(d) {
+            if (!d) return '—';
+            try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+            catch { return d; }
+        }
+
+        // ── LocalStorage visit records ─────────────────────────────
+        const LS_KEY = 'fvRecords';
+        function getRecordsForDate(date) {
+            try { return JSON.parse(localStorage.getItem(LS_KEY + '_' + date) || '{}'); }
+            catch { return {}; }
+        }
+        function saveRecordsForDate(date, records) {
+            localStorage.setItem(LS_KEY + '_' + date, JSON.stringify(records));
+        }
+
+        // ── Status colour mapping ─────────────────────────────────
+        const statusClass = {
+            'pending':'',
+            'visited-agreed':'status-visited',
+            'visited-paid':'status-paid',
+            'visited-nothome':'status-nothome',
+            'visited-refused':'status-refused',
+            'visited-promised':'status-promised'
+        };
+
+        const statusLabels = {
+            'visited-agreed':'✅ Visited - Agreed',
+            'visited-paid':'💰 Visited - Paid',
+            'visited-promised':'🤝 Visited - Promised',
+            'visited-nothome':'🚪 Visited - Not Home',
+            'visited-refused':'❌ Visited - Refused'
+        };
+
+        // ── Init ──────────────────────────────────────────────────
+        window.addEventListener('DOMContentLoaded', async () => {
+            const today = new Date();
+            document.getElementById('visitDate').value = toLocal(today);
+            document.getElementById('printGenDate').innerText = fmt(toLocal(today));
+            await generateReport();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        function onVisitDateChange() {
+            generateReport();
+        }
+
+        // ── Generate Report ───────────────────────────────────────
+        async function generateReport() {
+            const visitDate = document.getElementById('visitDate').value;
+            const minArr = parseFloat(document.getElementById('minArrears').value) || 3;
+            const catFilter = document.getElementById('categoryFilter').value;
+
+            document.getElementById('printVisitDate').innerText = fmt(visitDate);
+            document.getElementById('printFilter').innerText = `Arrears >= ${minArr}${catFilter!=='all'?' | '+catFilter:''}`;
+
+            // Update save bar
+            const saveBar = document.getElementById('saveBar');
+            const saveBarDate = document.getElementById('saveBarDate');
+            if (visitDate) {
+                saveBar.style.display = 'flex';
+                saveBarDate.innerText = fmt(visitDate);
+            }
+
+            // Load saved statuses for this visit date
+            const savedRecords = getRecordsForDate(visitDate);
+
+            const allCustomers = await getAllCustomers();
+            let filtered = allCustomers.filter(c => {
+                const arr = parseFloat(c.arrearsInstallments) || 0;
+                const status = (c.status || '').toLowerCase();
+                const isExcluded = c.isDeleted || 
+                                   status === 'loan closed' || 
+                                   status.includes('legal') || 
+                                   status.includes('thiraka') || 
+                                   status.includes('nadu') || 
+                                   status.includes('court') || 
+                                   status.includes('commissioner');
+                return !isExcluded && arr >= minArr && (catFilter === 'all' || (c.category || '') === catFilter);
+            }).sort((a,b) => (parseFloat(b.arrearsInstallments)||0) - (parseFloat(a.arrearsInstallments)||0));
+
+            document.getElementById('recordCount').innerText = filtered.length + ' records';
+            document.getElementById('printCount').innerText = filtered.length;
+
+            const tbody = document.getElementById('fvTableBody');
+            if (!filtered.length) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#9ca3af;padding:40px;font-style:italic">No customers match this filter.</td></tr>';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((c, i) => {
+                const arr = parseFloat(c.arrearsInstallments) || 0;
+                const arrStyle = arr >= 6 ? 'color:#dc2626;font-weight:800' : arr >= 3 ? 'color:#d97706;font-weight:700' : 'color:#374151;font-weight:600';
+                const saved = savedRecords[c.accountNo] || {};
+                const selVal = saved.status || 'pending';
+                const cls = statusClass[selVal] || '';
+                const notesText = (saved.notes || '').trim();
+                const statusText = statusLabels[selVal] || '';
+
+                const g1 = c.guarantor1 || '';
+                const g2 = c.guarantor2 || '';
+                const g1Acc = g1 ? (g1.match(/\b\d{6,}\b/)?.[0] || '—') : '—';
+                const g2Acc = g2 ? (g2.match(/\b\d{6,}\b/)?.[0] || '—') : '—';
+
+                // Print representation: if notes or status exist, print them! Otherwise print 3 blank writing lines.
+                let printContent = '';
+                if (statusText || notesText) {
+                    printContent = `<div style="font-weight:bold;margin-bottom:3pt">${statusText}</div><div>${notesText}</div>`;
+                } else {
+                    printContent = `<div class="print-lines"></div><div class="print-lines"></div><div class="print-lines"></div>`;
+                }
+
+                return `<tr>
+                    <td style="font-weight:700;color:#9ca3af;text-align:center">${i+1}</td>
+                    <td style="white-space:nowrap">
+                        <div style="font-weight:800;font-size:.92rem">${c.accountNo||'—'}</div>
+                        ${c.loanAccountNo && c.loanAccountNo !== c.accountNo ? `<div class="sub-label">${c.loanAccountNo}</div>` : ''}
+                    </td>
+                    <td style="font-weight:700;font-size:.95rem">${c.name||'—'}</td>
+                    <td class="sub-val">${c.address||'—'}</td>
+                    <td style="font-weight:600;font-size:.88rem">${c.phone||'—'}</td>
+                    <td><span class="cat-badge" style="background:#ede9fe;color:#5b21b6;padding:2px 7px;border-radius:6px;font-size:.82rem;font-weight:700">${c.category||'—'}</span></td>
+                    <td style="text-align:center"><span class="badge-arr" style="${arrStyle}">${arr}</span></td>
+                    <td style="font-weight:600;font-size:.88rem;white-space:nowrap">${fmt(c.lastPaidDate)}</td>
+                    <td>
+                        <div style="font-weight:600;font-size:.88rem">${g1||'—'}</div>
+                        <div class="sub-label">Acc: ${g1Acc}</div>
+                        <div class="sub-val">${c.guarantor1Phone||'—'}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight:600;font-size:.88rem">${g2||'—'}</div>
+                        <div class="sub-label">Acc: ${g2Acc}</div>
+                        <div class="sub-val">${c.guarantor2Phone||'—'}</div>
+                    </td>
+                    <td>
+                        <!-- Screen view: Dropdown + Textarea -->
+                        <div class="no-print">
+                            <select class="visit-sel ${cls}" data-acc="${c.accountNo}" onchange="onStatusChange(this)" id="sel_${c.accountNo}">
+                                <option value="pending" ${selVal==='pending'?'selected':''}>— Pending —</option>
+                                <option value="visited-agreed" ${selVal==='visited-agreed'?'selected':''}>✅ Visited - Agreed</option>
+                                <option value="visited-paid" ${selVal==='visited-paid'?'selected':''}>💰 Visited - Paid</option>
+                                <option value="visited-promised" ${selVal==='visited-promised'?'selected':''}>🤝 Visited - Promised</option>
+                                <option value="visited-nothome" ${selVal==='visited-nothome'?'selected':''}>🚪 Visited - Not Home</option>
+                                <option value="visited-refused" ${selVal==='visited-refused'?'selected':''}>❌ Visited - Refused</option>
+                            </select>
+                            <textarea class="visit-note" data-acc="${c.accountNo}" id="note_${c.accountNo}" placeholder="Response / notes...">${saved.notes||''}</textarea>
+                        </div>
+                        <!-- Print view: Printed response text OR blank writing lines -->
+                        <div class="print-only">
+                            ${printContent}
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function onStatusChange(sel) {
+            Object.values(statusClass).forEach(c => sel.classList.remove(c));
+            const cls = statusClass[sel.value] || '';
+            if (cls) sel.classList.add(cls);
+        }
+
+        // ── Save Records ──────────────────────────────────────────
+        async function saveVisitRecords() {
+            const visitDate = document.getElementById('visitDate').value;
+            if (!visitDate) { await lrmsAlert('Please select a Visit Date first.'); return; }
+
+            const selects = document.querySelectorAll('.visit-sel[data-acc]');
+            const records = {};
+            selects.forEach(sel => {
+                const acc = sel.dataset.acc;
+                const note = document.getElementById('note_' + acc);
+                records[acc] = {
+                    status: sel.value,
+                    notes: note ? note.value.trim() : ''
+                };
+            });
+            saveRecordsForDate(visitDate, records);
+
+            // Also log to customer action history
+            for (const [acc, rec] of Object.entries(records)) {
+                if (rec.status && rec.status !== 'pending') {
+                    const statusLabel = {
+                        'visited-agreed':'Field Visit - Agreed to Pay',
+                        'visited-paid':'Field Visit - Paid on Visit',
+                        'visited-promised':'Field Visit - Promised Payment',
+                        'visited-nothome':'Field Visit - Not at Home',
+                        'visited-refused':'Field Visit - Refused'
+                    }[rec.status] || 'Field Visit';
+                    try {
+                        await addAction({
+                            customerAccountNo: acc,
+                            actionType: statusLabel,
+                            date: visitDate,
+                            response: rec.notes || null,
+                            officerNote: `Field visit recorded on ${fmt(visitDate)}`,
+                            followUpDate: null
+                        });
+                    } catch(e) { console.warn('Could not log action for', acc, e); }
+                }
+            }
+
+            await lrmsAlert(`✅ Visit records saved for <b>${fmt(visitDate)}</b>!<br>Outcomes have been logged to each customer's action history.`);
+            generateReport(); // Refresh view so print-only representation stays synced
+        }
+    </script>
+</body>
+</html>
+

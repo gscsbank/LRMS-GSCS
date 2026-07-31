@@ -126,15 +126,18 @@ window.lrmsAlert = function (message, title = 'Notification') {
         const modalHtml = `
             <div class="modal-wrapper open" id="${modalId}" style="z-index: 9999;">
                 <div class="modal-backdrop" id="${modalId}-backdrop"></div>
-                <div class="modal-box" style="max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.95); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-                    <div class="modal-header" style="background: var(--violet-600); color: white; border: none; padding: 15px 20px;">
-                        <h3 style="color: white; margin: 0; font-weight: 600;"><i data-lucide="info" style="width:18px;height:18px"></i> ${title}</h3>
+                <div class="modal-box" style="max-width: 420px; text-align: center; border: none; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 60px -10px rgba(30,27,75,0.45);">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #1e1b4b 0%, #311b92 100%); color: white; border: none; padding: 18px 24px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 6px; display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="bell" style="width:20px;height:20px;color:#c4b5fd"></i>
+                        </div>
+                        <h3 style="color: white; margin: 0; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em;">${title}</h3>
                     </div>
-                    <div class="modal-body" style="padding: 30px 24px;">
-                        <p style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; margin: 0;">${message}</p>
+                    <div class="modal-body" style="padding: 28px 24px;">
+                        <p style="color: #1e293b; font-size: 0.95rem; line-height: 1.6; margin: 0; font-weight: 500;">${message}</p>
                     </div>
                     <div class="modal-footer" style="border: none; padding: 0 24px 24px; justify-content: center;">
-                        <button id="${modalId}-ok" class="btn btn-primary" style="min-width: 120px; justify-content: center; padding: 10px 24px;">OK</button>
+                        <button id="${modalId}-ok" class="btn" style="min-width: 140px; justify-content: center; padding: 10px 28px; background: linear-gradient(135deg, #7c3aed, #4c1d95); color: #ffffff; border: none; border-radius: 12px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 16px rgba(124,58,237,0.35); cursor: pointer;">OK</button>
                     </div>
                 </div>
             </div>
@@ -154,16 +157,19 @@ window.lrmsConfirm = function (message, title = 'Confirmation') {
         const modalHtml = `
             <div class="modal-wrapper open" id="${modalId}" style="z-index: 9999;">
                 <div class="modal-backdrop" id="${modalId}-backdrop"></div>
-                <div class="modal-box" style="max-width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.95); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-                    <div class="modal-header" style="background: var(--text-primary); color: white; border: none; padding: 15px 20px;">
-                        <h3 style="color: white; margin: 0; font-weight: 600;"><i data-lucide="help-circle" style="width:18px;height:18px"></i> ${title}</h3>
+                <div class="modal-box" style="max-width: 440px; text-align: center; border: none; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 60px -10px rgba(30,27,75,0.45);">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #1e1b4b 0%, #311b92 100%); color: white; border: none; padding: 18px 24px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 6px; display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="help-circle" style="width:20px;height:20px;color:#c4b5fd"></i>
+                        </div>
+                        <h3 style="color: white; margin: 0; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.02em;">${title}</h3>
                     </div>
-                    <div class="modal-body" style="padding: 30px 24px;">
-                        <p style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; margin: 0;">${message}</p>
+                    <div class="modal-body" style="padding: 28px 24px;">
+                        <p style="color: #1e293b; font-size: 0.95rem; line-height: 1.6; margin: 0; font-weight: 500;">${message}</p>
                     </div>
                     <div class="modal-footer" style="border: none; padding: 0 24px 24px; justify-content: center; gap: 12px;">
-                        <button id="${modalId}-cancel" class="btn" style="min-width: 100px; justify-content: center; background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;">Cancel</button>
-                        <button id="${modalId}-confirm" class="btn btn-primary" style="min-width: 100px; justify-content: center;">Confirm</button>
+                        <button id="${modalId}-cancel" class="btn" style="min-width: 110px; justify-content: center; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                        <button id="${modalId}-confirm" class="btn" style="min-width: 110px; justify-content: center; background: linear-gradient(135deg, #7c3aed, #4c1d95); color: #ffffff; border: none; border-radius: 12px; font-weight: 700; box-shadow: 0 4px 16px rgba(124,58,237,0.35); cursor: pointer;">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -312,18 +318,12 @@ window.checkAdmin = function () {
 
 // Helper Function: Add new customer
 async function addCustomer(customerData) {
-    console.log("Checking for duplicate before adding:", customerData.accountNo);
+    console.log("Adding customer record:", customerData.accountNo);
     try {
         if (customerData.accountNo) {
             customerData.accountNo = customerData.accountNo.toString().trim();
         }
 
-        const existing = await getCustomerByAccountNo(customerData.accountNo);
-        if (existing) {
-            console.warn("Duplicate found in DB:", existing);
-            await lrmsAlert(`Account Number [${customerData.accountNo}] already exists!\n(Record ID: ${existing.id})`);
-            return false;
-        }
         await window.db.add("customers", customerData);
         invalidateCache('customers');
         await logActivity("Add Customer", `Added customer: ${customerData.name} (${customerData.accountNo})`, "success");
@@ -465,7 +465,9 @@ async function updateCustomer(accountNo, updatedData) {
     try {
         const customer = await getCustomerByAccountNo(accountNo);
         if (customer) {
-            await window.db.update("customers", customer.id, updatedData);
+            // Merge: keep all existing fields, only overwrite what is in updatedData
+            const merged = { ...customer, ...updatedData };
+            await window.db.update("customers", customer.id, merged);
             invalidateCache('customers');
             return true;
         }
