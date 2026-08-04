@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -179,143 +179,6 @@
             color: white;
         }
 
-        @media print {
-            @page {
-                margin: 15mm;
-                size: portrait;
-            }
-
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                box-shadow: none !important;
-                text-shadow: none !important;
-            }
-
-            body {
-                background: white !important;
-                color: black !important;
-                font-family: 'Inter', sans-serif !important;
-                font-size: 10pt;
-                line-height: 1.4;
-            }
-
-            .sidebar,
-            .modern-top-nav,
-            .top-header,
-            .no-print,
-            .btn,
-            .modal-wrapper,
-            .toast-container,
-            #loadingState,
-            .wa-section,
-            .log-action-card,
-            .calc-section,
-            .docs-section {
-                display: none !important;
-            }
-
-            .main-content,
-            .content-area {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                overflow: visible !important;
-            }
-
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .print-only {
-                display: block !important;
-            }
-
-            /* Modern Report Header sync with reports.html */
-            .report-header-print {
-                padding: 0 0 10pt 0;
-                border-bottom: 2pt solid #000;
-                margin-bottom: 20pt;
-                display: block !important;
-            }
-
-            .premium-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                border: 1.5pt solid #000 !important;
-                margin: 10pt 0;
-            }
-
-            .premium-table th {
-                background: #f0f0f0 !important;
-                color: #000 !important;
-                border: 1pt solid #000 !important;
-                padding: 8pt 6pt !important;
-                font-size: 9pt !important;
-                font-weight: 500 !important;
-                text-align: left !important;
-            }
-
-            .premium-table td {
-                border: 0.5pt solid #000 !important;
-                color: #000 !important;
-                padding: 6pt 6pt !important;
-                font-size: 9pt !important;
-            }
-
-            .signature-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 40pt !important;
-                margin-top: 50pt !important;
-                border-top: 1pt solid #eee !important;
-                padding-top: 20pt !important;
-            }
-
-            .signature-box {
-                text-align: center !important;
-            }
-
-            .signature-line {
-                border-top: 1pt solid #000 !important;
-                margin-bottom: 5pt !important;
-                height: 1px !important;
-            }
-
-            .signature-box p {
-                font-size: 8pt !important;
-                font-weight: 500 !important;
-                margin: 0 !important;
-                text-transform: uppercase !important;
-            }
-
-            /* Custom for History */
-            .history-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 15pt;
-                border: 1pt solid #000;
-            }
-
-            .history-table th {
-                background: #f2f2f2 !important;
-                border: 1pt solid #000;
-                padding: 8pt;
-                font-weight: 500;
-                font-size: 9pt;
-                text-align: left;
-            }
-
-            .history-table td {
-                border: 1pt solid #000;
-                padding: 8pt;
-                font-size: 9pt;
-            }
-        }
-
         .print-only {
             display: none;
         }
@@ -414,96 +277,65 @@
             </div>
         </header>
 
-        <!-- Modern Print Header (Sync with Reports) -->
+        <!-- Print Header matching letter style -->
         <div class="report-header-print print-only">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 15pt;">
-                    <img src="assets/logo.png" style="height: 48pt; filter: grayscale(100%);">
-                    <div>
-                        <h1
-                            style="font-size: 14pt; font-weight: 500; color: #000; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
-                            GALAPITIYAGAMA SANASA BANK</h1>
-                        <p style="font-size: 9pt; color: #000; margin: 1pt 0 0 0; font-weight: 500;">Loan Recovery
-                            Management System</p>
+            <div style="border-bottom: 2px solid #000000; padding-bottom: 12px; margin-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 14px; width: 100%;">
+                    <!-- Left: B&W Logo with border box -->
+                    <div style="border: 1.5px solid #000000; padding: 4px 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 135px; height: 65px; box-sizing: border-box; background: #ffffff;">
+                        <img src="assets/logo.png" alt="GSCS Logo" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: grayscale(100%) contrast(150%) !important; -webkit-filter: grayscale(100%) contrast(150%) !important;">
                     </div>
-                </div>
-                <div style="text-align: right;">
-                    <h2 style="font-size: 11pt; font-weight: 500; margin: 0; text-transform: uppercase;">Customer Action
-                        History</h2>
-                    <p style="font-size: 8pt; margin: 2pt 0 0 0; font-weight: 500;">Generated: <span
-                            id="printDate"></span></p>
+                    <!-- Right Block: Society Name + Document Title & Date underneath -->
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 13.5px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.2; color: #000000; white-space: nowrap;">සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතිය</div>
+                        <div style="font-size: 11.5px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000; white-space: nowrap;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
+                        
+                        <!-- Sub-bar: Document Title & Date -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000000; padding-top: 4px; margin-top: 4px;">
+                            <span style="font-size: 10pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #000000;">CUSTOMER ACTION HISTORY</span>
+                            <span style="font-size: 8pt; font-weight: 600; color: #000000;">Generated: <span id="printDate"></span></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Print Customer Info Table -->
+        <!-- Print Customer Profile Section (Smart 2-Column Grid Table) -->
+        <!-- Print Customer Profile Section (Ultra-Clean Open Summary Blocks) -->
         <div class="print-only">
-            <div style="margin-bottom: 8pt; border-bottom: 1pt solid #000; padding-bottom: 4pt;">
-                <h3 style="font-size: 10pt; font-weight: 500; text-transform: uppercase; margin: 0;">Customer Profile
-                </h3>
+            <div class="print-section-header">CUSTOMER PROFILE SUMMARY</div>
+            
+            <div class="print-info-grid">
+                <!-- Column 1: Borrower Details -->
+                <div class="print-info-block">
+                    <div class="print-block-title">Borrower Details</div>
+                    <div class="print-info-row"><span class="print-lbl">Name:</span> <span class="print-val" id="printCustName" style="font-weight:700;">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Address:</span> <span class="print-val" id="printCustAddress">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Member ID:</span> <span class="print-val" id="printCustAccNo" style="font-weight:700;">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Phone:</span> <span class="print-val" id="printCustPhone">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Status:</span> <span class="print-val"><span id="printCustStatus" class="badge">--</span></span></div>
+                </div>
+
+                <!-- Column 2: Loan Details -->
+                <div class="print-info-block">
+                    <div class="print-block-title">Loan Details</div>
+                    <div class="print-info-row"><span class="print-lbl">Loan Acc No:</span> <span class="print-val" id="printCustLoanAccNo" style="font-weight:700;">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Category:</span> <span class="print-val" id="printCustCategory">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Granted Date:</span> <span class="print-val" id="printCustLoanDate">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Loan Amount:</span> <span class="print-val" id="printCustLoanAmount" style="font-weight:700;">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Arrears Inst.:</span> <span class="print-val" id="printCustArrearsInstallments">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Last Paid:</span> <span class="print-val" id="printCustLastPaidDate">--</span></div>
+                </div>
+
+                <!-- Column 3: Guarantor Details -->
+                <div class="print-info-block">
+                    <div class="print-block-title">Guarantors</div>
+                    <div class="print-info-row"><span class="print-lbl">Guarantor 1:</span> <span class="print-val" id="printCustG1">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">G1 Address:</span> <span class="print-val" id="printCustG1Address">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">Guarantor 2:</span> <span class="print-val" id="printCustG2">--</span></div>
+                    <div class="print-info-row"><span class="print-lbl">G2 Address:</span> <span class="print-val" id="printCustG2Address">--</span></div>
+                </div>
             </div>
-            <table class="premium-table">
-                <tr>
-                    <th style="width: 30%;">Account Holder Name</th>
-                    <td id="printCustName" style="font-weight:700">--</td>
-                </tr>
-                <tr>
-                    <th>Customer Address</th>
-                    <td id="printCustAddress">--</td>
-                </tr>
-                <tr>
-                    <th>Account Number (Member ID)</th>
-                    <td id="printCustAccNo" style="font-weight:700">--</td>
-                </tr>
-                <tr>
-                    <th>Loan Account Number</th>
-                    <td id="printCustLoanAccNo" style="font-weight:700">--</td>
-                </tr>
-                <tr>
-                    <th>Phone Number</th>
-                    <td id="printCustPhone">--</td>
-                </tr>
-                <tr>
-                    <th>Loan Category</th>
-                    <td id="printCustCategory">--</td>
-                </tr>
-                <tr>
-                    <th>Granted Date</th>
-                    <td id="printCustLoanDate">--</td>
-                </tr>
-                <tr>
-                    <th>Loan Amount</th>
-                    <td id="printCustLoanAmount">--</td>
-                </tr>
-                <tr>
-                    <th>Arrears Installments</th>
-                    <td id="printCustArrearsInstallments">--</td>
-                </tr>
-                <tr>
-                    <th>Last Paid Date</th>
-                    <td id="printCustLastPaidDate">--</td>
-                </tr>
-                <tr>
-                    <th>Guarantor 1</th>
-                    <td id="printCustG1">--</td>
-                </tr>
-                <tr>
-                    <th>Guarantor 1 Address</th>
-                    <td id="printCustG1Address">--</td>
-                </tr>
-                <tr>
-                    <th>Guarantor 2</th>
-                    <td id="printCustG2">--</td>
-                </tr>
-                <tr>
-                    <th>Guarantor 2 Address</th>
-                    <td id="printCustG2Address">--</td>
-                </tr>
-                <tr>
-                    <th>Current Status</th>
-                    <td id="printCustStatus">--</td>
-                </tr>
-            </table>
         </div>
 
         <div class="content-area">
@@ -708,15 +540,14 @@
 
                             <!-- Print History Table -->
                             <div class="print-only">
-                                <h3 style="margin-bottom:10px; border-bottom:1px solid #000; padding-bottom:5px">Action
-                                    History</h3>
-                                <table class="history-table">
+                                <div class="print-section-header">ACTION HISTORY TRACKING</div>
+                                <table class="print-history-table">
                                     <thead>
                                         <tr>
-                                            <th style="width:100px">Date</th>
-                                            <th style="width:150px">Action Type</th>
-                                            <th>Customer's Response / Officer Notes</th>
-                                            <th style="width:100px">Follow-up</th>
+                                            <th style="width:14%">Date</th>
+                                            <th style="width:24%">Action Type</th>
+                                            <th style="width:48%">Customer's Response / Officer Notes</th>
+                                            <th style="width:14%">Follow-up</th>
                                         </tr>
                                     </thead>
                                     <tbody id="printHistoryBody">
@@ -726,19 +557,28 @@
                             </div>
 
                             <!-- Print Signatures -->
-                            <div class="print-only signature-grid">
-                                <div class="signature-box">
-                                    <div class="signature-line"></div>
-                                    <p>Officer Signature</p>
+                            <div class="print-only print-signature-grid">
+                                <div class="sig-box">
+                                    <div class="sig-line"></div>
+                                    <p class="sig-title">Prepared By (Officer)</p>
+                                    <p class="sig-sub">Signature &amp; Date</p>
                                 </div>
-                                <div class="signature-box">
-                                    <div class="signature-line"></div>
-                                    <p>Manager Signature</p>
+                                <div class="sig-box">
+                                    <div class="sig-line"></div>
+                                    <p class="sig-title">Checked By (Manager)</p>
+                                    <p class="sig-sub">Signature &amp; Date</p>
                                 </div>
-                                <div class="signature-box">
-                                    <div class="signature-line"></div>
-                                    <p>Chairman/Board Signature</p>
+                                <div class="sig-box">
+                                    <div class="sig-line"></div>
+                                    <p class="sig-title">Authorised Signatory</p>
+                                    <p class="sig-sub">Chairman / Board Member</p>
                                 </div>
+                            </div>
+
+                            <!-- Print Footer -->
+                            <div class="print-only print-footer">
+                                <span>CONFIDENTIAL &bull; GALAPITIYAGAMA SANASA BANK LOAN RECOVERY SYSTEM</span>
+                                <span>Official System Generated Record</span>
                             </div>
                         </div>
                     </div>
@@ -979,14 +819,17 @@
             if (pdElem) pdElem.innerText = new Date().toLocaleString();
 
             let currentAccountNo = null;
+            let currentCustomerId = null;
 
             window.initPage = async () => {
                 const params = new URLSearchParams(window.location.search);
+                const idFromUrl = params.get('id');
                 const accFromUrl = params.get('accountNo');
+                if (idFromUrl) currentCustomerId = idFromUrl;
                 if (accFromUrl) currentAccountNo = accFromUrl;
-                
-                if (!currentAccountNo) {
-                    console.error("No Account Number found in URL");
+
+                if (!currentCustomerId && !currentAccountNo) {
+                    console.error("No Account Number or ID found in URL");
                     return;
                 }
 
@@ -1016,8 +859,16 @@
             };
 
             async function loadCustomerDetails() {
-                if (!currentAccountNo) return;
-                const customer = await getCustomerByAccountNo(currentAccountNo);
+                // Prefer lookup by unique internal ID when available (fixes multi-loan same accountNo bug)
+                let customer = null;
+                if (currentCustomerId && typeof getCustomerById === 'function') {
+                    customer = await getCustomerById(currentCustomerId);
+                    // Sync currentAccountNo from fetched record for compatibility
+                    if (customer) currentAccountNo = customer.accountNo;
+                }
+                if (!customer && currentAccountNo) {
+                    customer = await getCustomerByAccountNo(currentAccountNo);
+                }
                 if (!customer) {
                     await lrmsAlert("Customer not found in Database!");
                     return;
@@ -1320,10 +1171,10 @@
                         if (action.officerNote) notes.push(`<strong>Note:</strong> ${action.officerNote}`);
 
                         tr.innerHTML = `
-                                    <td>${dateStr}</td>
-                                    <td style="font-weight:700">${actionType}</td>
+                                    <td style="font-weight:600">${dateStr}</td>
+                                    <td><span class="badge" style="font-size:7.5pt;">${actionType}</span></td>
                                     <td>${notes.join('<br>') || '-'}</td>
-                                    <td>${action.followUpDate || '-'}</td>
+                                    <td style="font-weight:600">${action.followUpDate || '-'}</td>
                                 `;
                         printBody.appendChild(tr);
                     }
@@ -1425,7 +1276,8 @@
                     };
                     if (await updateCustomer(currentAccountNo, d)) { 
                         if (d.accountNo && d.accountNo !== currentAccountNo) {
-                            window.location.href = `customer-detail.html?accountNo=${encodeURIComponent(d.accountNo)}`;
+                            const idParam = currentCustomerId ? `&id=${encodeURIComponent(currentCustomerId)}` : '';
+                            window.location.href = `customer-detail.html?accountNo=${encodeURIComponent(d.accountNo)}${idParam}`;
                         } else {
                             toggleEditModal(); 
                             loadCustomerDetails(); 

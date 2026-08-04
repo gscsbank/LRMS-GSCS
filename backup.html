@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -715,7 +715,8 @@
                 content: dataStr
             };
 
-            const resp = await fetch(url, {
+            const postUrl = `${url}${url.includes('?') ? '&' : '?'}action=upload`;
+            const resp = await fetch(postUrl, {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers: { 'Content-Type': 'text/plain' }
@@ -765,19 +766,35 @@
         if (typeof lucide !== 'undefined') lucide.createIcons({ root: wrap });
 
         try {
-            // Use POST to bypass CORS redirect blocks on GitHub Pages
-            const payload = {
-                action: 'list',
-                folderId: GDRIVE_FOLDER_ID
-            };
-            const resp = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'text/plain' }
-            });
-            const result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
+            let result = null;
+            
+            // Try GET first (Google Apps Script preserves GET query parameters across 302 redirects)
+            try {
+                const getUrl = `${url}${url.includes('?') ? '&' : '?'}action=list&folderId=${encodeURIComponent(GDRIVE_FOLDER_ID)}`;
+                const getResp = await fetch(getUrl, { method: 'GET' });
+                if (getResp.ok) {
+                    result = await getResp.json().catch(() => null);
+                }
+            } catch(e) {
+                console.warn('GET list failed, attempting POST fallback:', e);
+            }
 
-            if (!result.success) throw new Error(result.error || 'Failed to load list');
+            // Fallback to POST if GET returned no valid response
+            if (!result || !result.success) {
+                const payload = {
+                    action: 'list',
+                    folderId: GDRIVE_FOLDER_ID
+                };
+                const postUrl = `${url}${url.includes('?') ? '&' : '?'}action=list`;
+                const resp = await fetch(postUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain' }
+                });
+                result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
+            }
+
+            if (!result || !result.success) throw new Error((result && result.error) || 'Failed to load list');
 
             const files = result.files || [];
             if (files.length === 0) {
@@ -839,18 +856,35 @@
         if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:13px;height:13px"></i> Restoring...'; if (typeof lucide !== 'undefined') lucide.createIcons({ root: btn }); }
 
         try {
-            // Use POST to bypass CORS redirect blocks on GitHub Pages
-            const payload = {
-                action: 'download',
-                fileId: fileId
-            };
-            const resp = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'text/plain' }
-            });
-            const result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
-            if (!result.success) throw new Error(result.error || 'Download failed');
+            let result = null;
+
+            // Try GET request first
+            try {
+                const getUrl = `${url}${url.includes('?') ? '&' : '?'}action=download&fileId=${encodeURIComponent(fileId)}`;
+                const getResp = await fetch(getUrl, { method: 'GET' });
+                if (getResp.ok) {
+                    result = await getResp.json().catch(() => null);
+                }
+            } catch(e) {
+                console.warn('GET download failed, attempting POST fallback:', e);
+            }
+
+            // Fallback to POST
+            if (!result || !result.success) {
+                const payload = {
+                    action: 'download',
+                    fileId: fileId
+                };
+                const postUrl = `${url}${url.includes('?') ? '&' : '?'}action=download`;
+                const resp = await fetch(postUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain' }
+                });
+                result = await resp.json().catch(() => ({ success: false, error: 'Invalid response' }));
+            }
+
+            if (!result || !result.success) throw new Error((result && result.error) || 'Download failed');
 
             const cleared = await clearDatabase();
             if (!cleared) throw new Error('Failed to clear existing data.');

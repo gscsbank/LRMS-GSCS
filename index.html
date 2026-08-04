@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -712,7 +712,7 @@
                     <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:var(--transition);cursor:pointer" 
                          onmouseover="this.style.boxShadow='0 8px 30px rgba(79,70,229,.12)';this.style.transform='translateY(-3px)';this.style.borderColor='#a5b4fc'"
                          onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform='';this.style.borderColor='var(--border)'"
-                         onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')">
+                         onclick="window.navigate('customer-detail.html?id=${c.id}&accountNo=${c.accountNo}')">
                         <!-- Card Header -->
                         <div style="padding:14px 18px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
                             <div>
@@ -749,7 +749,7 @@
                             ${c.phone ? `<a href="${waUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.73rem;font-weight:700;color:var(--text-secondary);text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#25d366';this.style.borderColor='#25d366'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'"><i data-lucide='message-square' style='width:12px;height:12px'></i>WhatsApp</a>` : ''}
                             <a href="${mapsUrl}" target="_blank" title="${c.mapLink ? 'Saved map location' : c.address ? 'Search by address' : 'Open Google Maps'}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:${c.mapLink ? '#fef2f2' : 'var(--surface)'};border:1px solid ${c.mapLink ? '#fca5a5' : 'var(--border)'};border-radius:8px;font-size:.73rem;font-weight:700;color:${c.mapLink ? '#dc2626' : 'var(--text-secondary)'};text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#ea4335';this.style.borderColor='#ea4335';this.style.background='#fff1f0'" onmouseout="this.style.color='${c.mapLink ? '#dc2626' : 'var(--text-secondary)'}';this.style.borderColor='${c.mapLink ? '#fca5a5' : 'var(--border)'}';this.style.background='${c.mapLink ? '#fef2f2' : 'var(--surface)'}'"><i data-lucide='map-pin' style='width:12px;height:12px'></i>Locate${c.mapLink ? ' ★' : ''}</a>
                             <button onclick="handleDeleteLocal(event, '${c.accountNo}')" title="Delete" style="margin-left:auto;padding:5px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'"><i data-lucide="trash-2" style="width:13px;height:13px"></i></button>
-                            <button onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" title="View" style="padding:5px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#f5f3ff'"><i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
+                            <button onclick="window.navigate('customer-detail.html?id=${c.id}')" title="View" style="padding:5px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#f5f3ff'"><i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
                         </div>
                     </div>`;
                 }).join('');
@@ -770,7 +770,7 @@
                     const amt = 'LKR ' + (c.loanAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     const tr = document.createElement('tr');
                     tr.style.cursor = 'pointer';
-                    tr.onclick = () => window.navigate(`customer-detail.html?accountNo=${c.accountNo}`);
+                    tr.onclick = () => window.navigate(`customer-detail.html?id=${c.id}`);
                     tr.innerHTML = `
                         <td style="text-align:center" onclick="event.stopPropagation()">
                             <input type="checkbox" class="customer-check" data-account="${c.accountNo}" onchange="updateBulkSelection()">
@@ -785,7 +785,7 @@
                         <td><span class="${badgeClass}">${c.status}</span></td>
                         <td style="text-align:right">
                             <button onclick="handleDeleteLocal(event, '${c.accountNo}')" style="padding:6px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;transition:all .2s;margin-right:4px" title="Delete"><i data-lucide="trash-2" style="width:15px;height:15px"></i></button>
-                            <button onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" style="padding:6px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" title="View"><i data-lucide="arrow-right" style="width:15px;height:15px"></i></button>
+                            <button onclick="window.navigate('customer-detail.html?id=${c.id}')" style="padding:6px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" title="View"><i data-lucide="arrow-right" style="width:15px;height:15px"></i></button>
                         </td>`;
                     tbody.appendChild(tr);
                 });

@@ -385,6 +385,24 @@ async function getCustomerByAccountNo(accountNo) {
     }
 }
 
+// Helper Function: Get customer by internal unique ID (for multi-loan customers with same accountNo)
+async function getCustomerById(id) {
+    if (!id) return null;
+    try {
+        // Check cache first
+        if (window.lrmsCache.customers) {
+            const found = window.lrmsCache.customers.find(c => c.id === id);
+            if (found) return found;
+        }
+        const record = await window.db.get("customers", id);
+        return (record && !record.isDeleted) ? record : null;
+    } catch (error) {
+        console.error("Error fetching customer by ID:", error);
+        return null;
+    }
+}
+
+
 // Helper Function: Add recovery action
 async function addAction(actionData) {
     try {

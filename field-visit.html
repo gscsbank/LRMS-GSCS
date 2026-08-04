@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -60,6 +60,10 @@
             border-color: var(--primary);
             background: #ffffff;
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .search-wrap .search-input {
+            padding-left: 38px !important;
         }
 
         /* View Toggle Switch */
@@ -862,9 +866,9 @@
                     </div>
                     <div class="fv-cg">
                         <label>Search Customer</label>
-                        <div class="search-wrap">
-                            <i data-lucide="search" style="width:15px;height:15px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)"></i>
-                            <input type="text" id="fvSearchInput" class="search-input" placeholder="Search name or acc..." style="padding-top:8px;padding-bottom:8px">
+                        <div class="search-wrap" style="position:relative">
+                            <i data-lucide="search" style="width:15px;height:15px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;z-index:2"></i>
+                            <input type="text" id="fvSearchInput" class="search-input" placeholder="Search name or acc..." style="padding-left:38px !important;padding-top:8px;padding-bottom:8px">
                         </div>
                     </div>
                 </div>
@@ -1047,13 +1051,18 @@
             currentCustomers = allCustomers.filter(c => {
                 const arr = parseFloat(c.arrearsInstallments) || 0;
                 const status = (c.status || '').toLowerCase();
+                const cat = (c.category || '').toLowerCase();
                 const isExcluded = c.isDeleted || 
                                    status === 'loan closed' || 
                                    status.includes('legal') || 
                                    status.includes('thiraka') || 
                                    status.includes('nadu') || 
                                    status.includes('court') || 
-                                   status.includes('commissioner');
+                                   status.includes('commissioner') ||
+                                   cat.includes('usawi') ||
+                                   cat.includes('usawigatha') ||
+                                   cat.includes('court') ||
+                                   cat.includes('nadu');
                 return !isExcluded && arr >= minArr && (catFilter === 'all' || (c.category || '') === catFilter);
             }).sort((a,b) => (parseFloat(b.arrearsInstallments)||0) - (parseFloat(a.arrearsInstallments)||0));
 

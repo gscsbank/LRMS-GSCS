@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -52,30 +52,87 @@
                 border-radius: 0 !important;
             }
 
-            .premium-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                border: 1.5pt solid #000 !important;
-                margin-top: 10pt;
+            .report-cards-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10pt !important;
+                margin-top: 12pt !important;
             }
 
-            .premium-table th {
-                background: #f0f0f0 !important;
-                color: #000 !important;
+            .report-card {
+                border: 1pt solid #000000 !important;
+                border-radius: 0 !important;
+                padding: 8pt 10pt !important;
+                background: #ffffff !important;
+                box-shadow: none !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6pt !important;
+            }
+
+            .report-card-header {
+                border-bottom: 1pt solid #000000 !important;
+                padding-bottom: 5pt !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: flex-start !important;
+            }
+
+            .report-card-num {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 18pt !important;
+                height: 18pt !important;
                 border: 1pt solid #000 !important;
-                padding: 10pt 6pt !important;
-                text-transform: uppercase !important;
-                font-size: 9pt !important;
-                font-weight: 500 !important;
-                text-align: center !important;
+                border-radius: 50% !important;
+                background: transparent !important;
+                color: #000 !important;
+                font-size: 8pt !important;
+                font-weight: 800 !important;
+                flex-shrink: 0 !important;
             }
 
-            .premium-table td {
-                border: 0.5pt solid #000 !important;
-                color: #000 !important;
-                padding: 8pt 6pt !important;
-                vertical-align: top !important;
-                font-size: 9pt !important;
+            .report-card-title {
+                font-size: 9.5pt !important;
+                font-weight: 800 !important;
+                color: #000000 !important;
+            }
+
+            .report-card-sub {
+                font-size: 8pt !important;
+                font-weight: 700 !important;
+                color: #000000 !important;
+            }
+
+            .report-card-body {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6pt !important;
+                font-size: 8.5pt !important;
+            }
+
+            .report-card-field-lbl {
+                font-size: 7pt !important;
+                font-weight: 800 !important;
+                color: #000000 !important;
+                text-transform: uppercase !important;
+            }
+
+            .report-card-field-val {
+                font-weight: 700 !important;
+                color: #000000 !important;
+            }
+
+            .report-card-guarantors {
+                grid-column: 1 / -1 !important;
+                border: 1pt solid #000000 !important;
+                padding: 4pt 6pt !important;
+                font-size: 8pt !important;
+                color: #000000 !important;
+                background: #ffffff !important;
             }
 
             .badge {
@@ -83,9 +140,9 @@
                 background: transparent !important;
                 color: #000 !important;
                 padding: 2pt 6pt !important;
-                font-weight: 500 !important;
+                font-weight: 700 !important;
                 text-transform: uppercase !important;
-                font-size: 7.5pt !important;
+                font-size: 7pt !important;
                 border-radius: 0 !important;
                 display: inline-block !important;
             }
@@ -95,19 +152,106 @@
             }
 
             .signature-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 50pt;
-                text-align: center;
-                margin-top: 80pt;
-                font-size: 9pt;
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: flex-end !important;
+                width: 100% !important;
+                gap: 20pt !important;
+                margin-top: 40pt !important;
             }
+        }
 
-            /* Hide Status Date Column in Print */
-            .premium-table th:nth-child(5),
-            .premium-table td:nth-child(5) {
-                display: none !important;
-            }
+        /* Screen Styles for Card Grid */
+        .report-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .report-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .report-card:hover {
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08);
+            border-color: #c4b5fd;
+            transform: translateY(-2px);
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .report-card-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #f3e8ff;
+            color: #7c3aed;
+            font-size: 0.75rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .report-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .report-card-sub {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .report-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .report-card-field-lbl {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .report-card-field-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .report-card-guarantors {
+            grid-column: 1 / -1;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            padding: 8px 10px;
         }
 
         @page {
@@ -205,32 +349,30 @@
             </button>
         </header>
 
-        <!-- Print Header -->
-        <div class="print-only hidden" style="padding: 0 0 10pt 0; border-bottom: 2pt solid #000; margin-bottom: 15pt;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 15pt;">
-                    <img src="assets/logo.png" style="height: 48pt; filter: grayscale(100%);">
-                    <div>
-                        <h1 id="printBankName"
-                            style="font-size: 14pt; font-weight: 500; color: #000; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
-                            GALAPITIYAGAMA SANASA BANK</h1>
-                        <p style="font-size: 9pt; color: #000; margin: 1pt 0 0 0; font-weight: 500;">Loan Recovery
-                            Management System</p>
+        <!-- Print Header matching letter style -->
+        <div class="report-header-print print-only hidden">
+            <div style="border-bottom: 2px solid #000000; padding-bottom: 12px; margin-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 14px; width: 100%;">
+                    <!-- Left: B&W Logo with border box -->
+                    <div style="border: 1.5px solid #000000; padding: 4px 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 135px; height: 65px; box-sizing: border-box; background: #ffffff;">
+                        <img src="assets/logo.png" alt="GSCS Logo" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: grayscale(100%) contrast(150%) !important; -webkit-filter: grayscale(100%) contrast(150%) !important;">
+                    </div>
+                    <!-- Right Block: Society Name + Document Title & Date underneath -->
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 13.5px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.2; color: #000000; white-space: nowrap;">සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතිය</div>
+                        <div style="font-size: 11.5px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000; white-space: nowrap;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
+                        
+                        <!-- Sub-bar: Document Title & Date -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #000000; padding-top: 4px; margin-top: 4px;">
+                            <span style="font-size: 10pt; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #000000;">RECOVERY REPORT</span>
+                            <span style="font-size: 8pt; font-weight: 600; color: #000000;">Generated: <span id="printDate"></span></span>
+                        </div>
                     </div>
                 </div>
-                <div style="text-align: right;">
-                    <h2 style="font-size: 11pt; font-weight: 500; margin: 0; text-transform: uppercase;">Recovery Report
-                    </h2>
-                    <p style="font-size: 8pt; margin: 2pt 0 0 0; font-weight: 500;">Generated: <span
-                            id="printDate"></span></p>
-                </div>
             </div>
-            <div
-                style="margin-top: 8pt; display: flex; gap: 30pt; font-size: 9pt; border-top: 1pt solid #000; padding-top: 8pt;">
-                <div><span style="font-weight: 500; text-transform: uppercase;">Status:</span> <span
-                        id="printFilterLabel" style="margin-left: 5pt;"></span></div>
-                <div><span style="font-weight: 500; text-transform: uppercase;">Target Month:</span> <span
-                        id="printMonthLabel" style="margin-left: 5pt;"></span></div>
+            <div style="margin-top: 8pt; display: flex; gap: 20pt; font-size: 8.5pt; border-top: 0.5pt solid #cbd5e1; padding-top: 6pt; font-weight: 600;">
+                <div><span style="text-transform: uppercase; color: #475569;">Status Filter:</span> <span id="printFilterLabel" style="color: #0f172a;"></span></div>
+                <div><span style="text-transform: uppercase; color: #475569;">Target Month:</span> <span id="printMonthLabel" style="color: #0f172a;"></span></div>
             </div>
         </div>
 
@@ -284,26 +426,11 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div style="overflow-x:auto">
-                    <table class="premium-table">
-                        <thead>
-                            <tr style="background:var(--violet-50)">
-                                <th style="width:50px;text-align:center">#</th>
-                                <th>Account</th>
-                                <th>Loan Info</th>
-                                <th>Guarantors</th>
-                                <th style="text-align:center">Status Date</th>
-                                <th style="text-align:center">Current Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="reportTableBody">
-                            <tr>
-                                <td colspan="6" style="text-align:center;padding:40px;color:#9ca3af">Generate a report
-                                    to see data.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="card" style="padding:0">
+                <div id="reportCardsContainer" class="report-cards-grid">
+                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;font-style:italic">
+                        Generate a report to see data.
+                    </div>
                 </div>
 
                 <div id="summaryFooter" class="card-footer hidden"
@@ -312,18 +439,21 @@
                 </div>
 
                 <!-- Print Bottom Signatures -->
-                <div class="print-only signature-grid">
-                    <div>
-                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
-                        <p style="font-weight: 500">Prepared By (Officer)</p>
+                <div class="print-only print-signature-grid" style="display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: flex-end !important; width: 100% !important; gap: 30px !important; margin-top: 40px !important; page-break-inside: avoid !important; break-inside: avoid !important;">
+                    <div class="sig-box" style="flex: 1 !important; text-align: center !important;">
+                        <div class="sig-line" style="border-top: 1.5px solid #000000 !important; margin-bottom: 6px !important; width: 100% !important;"></div>
+                        <p class="sig-title" style="font-size: 8pt !important; font-weight: 800 !important; margin: 0 !important; text-transform: uppercase !important; color: #000000 !important;">PREPARED BY (OFFICER)</p>
+                        <p class="sig-sub" style="font-size: 7pt !important; color: #475569 !important; margin: 2px 0 0 0 !important; font-weight: 500 !important;">Signature &amp; Date</p>
                     </div>
-                    <div>
-                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
-                        <p style="font-weight: 500">Reviewed By (Manager)</p>
+                    <div class="sig-box" style="flex: 1 !important; text-align: center !important;">
+                        <div class="sig-line" style="border-top: 1.5px solid #000000 !important; margin-bottom: 6px !important; width: 100% !important;"></div>
+                        <p class="sig-title" style="font-size: 8pt !important; font-weight: 800 !important; margin: 0 !important; text-transform: uppercase !important; color: #000000 !important;">CHECKED BY (MANAGER)</p>
+                        <p class="sig-sub" style="font-size: 7pt !important; color: #475569 !important; margin: 2px 0 0 0 !important; font-weight: 500 !important;">Signature &amp; Date</p>
                     </div>
-                    <div>
-                        <div style="border-top:1px solid #000;margin-bottom:5px"></div>
-                        <p style="font-weight: 500">Approved By (Chairman)</p>
+                    <div class="sig-box" style="flex: 1 !important; text-align: center !important;">
+                        <div class="sig-line" style="border-top: 1.5px solid #000000 !important; margin-bottom: 6px !important; width: 100% !important;"></div>
+                        <p class="sig-title" style="font-size: 8pt !important; font-weight: 800 !important; margin: 0 !important; text-transform: uppercase !important; color: #000000 !important;">AUTHORISED SIGNATORY</p>
+                        <p class="sig-sub" style="font-size: 7pt !important; color: #475569 !important; margin: 2px 0 0 0 !important; font-weight: 500 !important;">Chairman / Board Member</p>
                     </div>
                 </div>
                 <div class="print-only"
@@ -372,13 +502,13 @@
                     if (fVal !== 'All') customers = customers.filter(c => c.status === fVal);
                     if (mVal) customers = customers.filter(c => c.statusDate && c.statusDate.startsWith(mVal));
 
-                    const tbody = document.getElementById('reportTableBody');
-                    if (!tbody) return;
-                    tbody.innerHTML = '';
+                    const container = document.getElementById('reportCardsContainer');
+                    if (!container) return;
+                    container.innerHTML = '';
                     const footer = document.getElementById('summaryFooter');
 
                     if (customers.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:80px;color:#9ca3af;font-style:italic">No matching records.</td></tr>`;
+                        container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#9ca3af;font-style:italic">No matching records found.</div>`;
                         if (footer) footer.classList.add('hidden');
                         return;
                     }
@@ -388,41 +518,72 @@
                     let totalSettled = 0;
 
                     customers.forEach((c, idx) => {
-                        totalPrinciple += c.loanAmount;
+                        totalPrinciple += (c.loanAmount || 0);
                         if (c.status.includes('High Risk')) totalRisk++;
                         if (c.status === 'Loan Closed') totalSettled++;
 
-                        let badgeStyle = 'background:#f1f5f9;color:#475569';
-                        if (c.status.includes('High Risk')) badgeStyle = 'background:#fffbeb;color:#b45309';
-                        if (c.status.includes('Legal')) badgeStyle = 'background:#fff1f2;color:#be123c';
-                        if (c.status === 'Loan Closed') badgeStyle = 'background:#f0fdf4;color:#15803d';
+                        let badgeStyle = 'background:#f1f5f9;color:#475569;border:1px solid #cbd5e1';
+                        if (c.status.includes('High Risk')) badgeStyle = 'background:#fffbeb;color:#b45309;border:1px solid #fde68a';
+                        if (c.status.includes('Legal')) badgeStyle = 'background:#fff1f2;color:#be123c;border:1px solid #fecdd3';
+                        if (c.status === 'Loan Closed') badgeStyle = 'background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0';
 
-                        const amt = 'LKR ' + c.loanAmount.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const amt = 'LKR ' + (c.loanAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         const sDate = c.statusDate ? new Date(c.statusDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
-                        const guar = [c.guarantor1, c.guarantor2].filter(Boolean).join(' | ');
+                        const guar = [c.guarantor1, c.guarantor2].filter(Boolean).join(' | ') || 'None';
 
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td style="text-align:center;color:var(--text-muted)">${idx + 1}</td>
-                            <td>
-                                <div style="font-weight: 500;color:var(--text-primary)">${c.name}</div>
-                                <div style="font-size:0.75rem;color:var(--text-secondary)">Acc: ${c.accountNo}</div>
-                            </td>
-                            <td>
-                                <div style="font-weight: 500;color:var(--text-primary)">${amt}</div>
-                                <div style="font-size:0.7rem;color:var(--text-muted)">${c.category} &bull; ${c.interestRate}%</div>
-                            </td>
-                            <td style="font-size:0.75rem;color:var(--text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${guar}">
-                                ${guar || 'None'}
-                            </td>
-                            <td style="text-align:center;font-weight: 500;color:var(--text-primary)">${sDate}</td>
-                            <td style="text-align:center">
-                                <span class="badge" style="${badgeStyle};padding:4px 10px;font-size:0.65rem;border:none">
+                        const card = document.createElement('div');
+                        card.className = 'report-card';
+                        card.style.cursor = 'pointer';
+                        card.onclick = () => {
+                            const navUrl = c.id ? `customer-detail.html?id=${c.id}&accountNo=${c.accountNo}` : `customer-detail.html?accountNo=${c.accountNo}`;
+                            window.location.href = navUrl;
+                        };
+
+                        const arrVal = parseFloat(c.arrearsInstallments) || 0;
+                        const arrTxt = arrVal > 0 ? `${arrVal} Installments` : 'None';
+                        const arrColor = arrVal > 0 ? '#d97706' : 'var(--text-primary,#1e293b)';
+
+                        card.innerHTML = `
+                            <div class="report-card-header">
+                                <div style="display:flex;align-items:flex-start;gap:10px">
+                                    <span class="report-card-num">${idx + 1}</span>
+                                    <div>
+                                        <div class="report-card-title">${c.name}</div>
+                                        <div class="report-card-sub">Acc: ${c.accountNo}</div>
+                                    </div>
+                                </div>
+                                <span class="badge" style="${badgeStyle};padding:4px 10px;font-size:0.65rem;border-radius:6px;font-weight:700">
                                     ${c.status}
                                 </span>
-                            </td>
+                            </div>
+                            <div class="report-card-body">
+                                <div>
+                                    <div class="report-card-field-lbl">Loan Amount</div>
+                                    <div class="report-card-field-val" style="color:var(--primary,#7c3aed);font-size:0.88rem">${amt}</div>
+                                </div>
+                                <div>
+                                    <div class="report-card-field-lbl">Arrears</div>
+                                    <div class="report-card-field-val" style="color:${arrColor}">${arrTxt}</div>
+                                </div>
+                                <div>
+                                    <div class="report-card-field-lbl">Category & Rate</div>
+                                    <div class="report-card-field-val">${c.category || '—'} (${c.interestRate || 0}%)</div>
+                                </div>
+                                <div>
+                                    <div class="report-card-field-lbl">Status Date</div>
+                                    <div class="report-card-field-val">${sDate}</div>
+                                </div>
+                                <div>
+                                    <div class="report-card-field-lbl">Phone</div>
+                                    <div class="report-card-field-val">${c.phone || '—'}</div>
+                                </div>
+                                <div class="report-card-guarantors">
+                                    <div class="report-card-field-lbl" style="margin-bottom:2px">Guarantors</div>
+                                    <div style="font-weight:600;color:var(--text-primary,#1e293b)">${guar}</div>
+                                </div>
+                            </div>
                         `;
-                        tbody.appendChild(tr);
+                        container.appendChild(card);
                     });
 
                     const totalRecordsElem = document.getElementById('totalRecords');

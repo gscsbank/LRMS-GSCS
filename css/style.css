@@ -1236,14 +1236,17 @@ body > * {
 }
 
 /* =====================================================
-   PRINT OPTIMIZATION (Official A4 Black & White Look)
+   PRINT OPTIMIZATION (Ultra-Clean Bank Statement Style)
    ===================================================== */
 @media print {
-    /* Global style resets for printing */
+    @page {
+        size: A4 portrait;
+        margin: 10mm 12mm 12mm 12mm;
+    }
+
     * {
         color: #000000 !important;
-        background-color: transparent !important;
-        background-image: none !important;
+        background-color: transparent;
         box-shadow: none !important;
         text-shadow: none !important;
         transition: none !important;
@@ -1252,10 +1255,9 @@ body > * {
         print-color-adjust: exact !important;
     }
 
-    /* Force images, logos, and SVGs to print in clean grayscale */
     img, svg, picture, canvas {
-        filter: grayscale(100%) !important;
-        -webkit-filter: grayscale(100%) !important;
+        filter: none !important;
+        -webkit-filter: none !important;
     }
 
     body.modern-body,
@@ -1266,12 +1268,13 @@ body > * {
         padding: 0 !important;
         height: auto !important;
         overflow: visible !important;
-        font-weight: 500;
-        font-size: 10pt;
-        font-family: 'Inter', Arial, sans-serif !important;
+        font-weight: 400;
+        font-size: 8.5pt;
+        line-height: 1.35;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
 
-    /* Hide nav bars, headers, sidebar menu toggles, and any interactive controls */
+    /* Hide screen controls */
     .modern-top-nav,
     .top-header,
     .no-print,
@@ -1287,11 +1290,17 @@ body > * {
     input[type="submit"],
     .form-select,
     .filter-wrap,
-    .search-wrap {
+    .search-wrap,
+    .modal-wrapper,
+    .toast-container,
+    #loadingState,
+    .wa-section,
+    .log-action-card,
+    .calc-section,
+    .docs-section {
         display: none !important;
     }
 
-    /* Make content fill page width */
     .main-content,
     .content-area {
         height: auto !important;
@@ -1303,34 +1312,187 @@ body > * {
         display: block !important;
     }
 
-    /* Format all tables to look like clean, official bank reports */
-    .premium-table, .fv-table, .history-table, table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        border: 1.5pt solid #000000 !important;
-        margin-top: 12pt !important;
-        margin-bottom: 12pt !important;
-        border-radius: 0 !important;
+    .print-only {
+        display: block !important;
     }
 
-    .premium-table th, .fv-table th, .history-table th, table th {
-        background-color: #f1f5f9 !important; /* Will print as a clean light grey */
+    /* Executive Letterhead Header */
+    .report-header-print {
+        padding-bottom: 4pt !important;
+        border-bottom: none !important;
+        margin-bottom: 12pt !important;
+        display: block !important;
+    }
+
+    .report-header-container {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .report-header-logo-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12pt !important;
+    }
+
+    .report-header-logo {
+        max-height: 55px !important;
+        max-width: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        filter: grayscale(100%) contrast(150%) !important;
+        -webkit-filter: grayscale(100%) contrast(150%) !important;
+        mix-blend-mode: normal !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        object-fit: contain !important;
+    }
+
+    .report-bank-title {
+        font-size: 13pt !important;
+        font-weight: 800 !important;
         color: #000000 !important;
-        border: 1pt solid #000000 !important;
-        padding: 8pt 6pt !important;
+        margin: 0 !important;
         text-transform: uppercase !important;
-        font-size: 8.5pt !important;
+        letter-spacing: 0.5px !important;
+        line-height: 1.1 !important;
+    }
+
+    .report-bank-sub {
+        font-size: 8pt !important;
+        color: #333333 !important;
+        margin: 2pt 0 0 0 !important;
+        font-weight: 600 !important;
+    }
+
+    .report-meta-box {
+        text-align: right !important;
+    }
+
+    .report-doc-title {
+        font-size: 11pt !important;
+        font-weight: 800 !important;
+        margin: 0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: #000000 !important;
+    }
+
+    .report-doc-date {
+        font-size: 7.5pt !important;
+        margin: 2pt 0 0 0 !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+    }
+
+    /* Modern Open Summary Cards Grid (No Tables) */
+    .print-section-header {
+        font-size: 9pt !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        color: #000000 !important;
+        margin-top: 10pt !important;
+        margin-bottom: 6pt !important;
+        padding-bottom: 3pt !important;
+        border-bottom: 1.5px solid #000000 !important;
+    }
+
+    .print-info-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8pt !important;
+        margin-bottom: 12pt !important;
+    }
+
+    .print-info-block {
+        background-color: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 4px !important;
+        padding: 6pt 8pt !important;
+    }
+
+    .print-block-title {
+        font-size: 7.5pt !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: #1e293b !important;
+        margin-bottom: 4pt !important;
+        padding-bottom: 2pt !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+    }
+
+    .print-info-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        font-size: 7.8pt !important;
+        margin-bottom: 2.5pt !important;
+        line-height: 1.25 !important;
+    }
+
+    .print-lbl {
+        color: #475569 !important;
+        font-weight: 600 !important;
+        width: 42% !important;
+        flex-shrink: 0 !important;
+    }
+
+    .print-val {
+        color: #000000 !important;
         font-weight: 700 !important;
+        text-align: right !important;
+        width: 58% !important;
+        word-break: break-word !important;
+    }
+
+    /* Statement Style Open Data Table (No Vertical Grids) */
+    .premium-table, .fv-table, .history-table, .print-history-table, table.data-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        border-top: 2px solid #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        border-left: none !important;
+        border-right: none !important;
+        margin-top: 6pt !important;
+        margin-bottom: 12pt !important;
+    }
+
+    .premium-table th, .fv-table th, .history-table th, .print-history-table th, table.data-table th {
+        background-color: #f1f5f9 !important;
+        color: #000000 !important;
+        border-bottom: 1.5px solid #000000 !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        padding: 5pt 6pt !important;
+        font-weight: 800 !important;
+        font-size: 8pt !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
         text-align: left !important;
     }
 
-    .premium-table td, .fv-table td, .history-table td, table td {
-        border: 0.5pt solid #000000 !important;
+    .premium-table td, .fv-table td, .history-table td, .print-history-table td, table.data-table td {
+        border-bottom: 0.5px solid #e2e8f0 !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        padding: 5pt 6pt !important;
+        font-size: 8pt !important;
         color: #000000 !important;
-        padding: 6pt 6pt !important;
-        font-size: 8.5pt !important;
-        vertical-align: middle !important;
-        background: transparent !important;
+        vertical-align: top !important;
+    }
+
+    .premium-table tbody tr:nth-child(even) td, 
+    .history-table tbody tr:nth-child(even) td, 
+    .print-history-table tbody tr:nth-child(even) td {
+        background-color: #fafafa !important;
     }
 
     .premium-table tbody tr, .fv-table tbody tr, table tbody tr {
@@ -1338,48 +1500,80 @@ body > * {
         break-inside: avoid !important;
     }
 
-    /* Format card containers for print view */
-    .card {
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 0 20pt 0 !important;
-        background: transparent !important;
-        width: 100% !important;
-        border-radius: 0 !important;
-    }
-
-    .card-header {
-        border-bottom: 1.5pt solid #000000 !important;
-        padding: 8pt 0 !important;
-        background: transparent !important;
-    }
-
-    .card-header h3 {
-        font-size: 11pt !important;
-        font-weight: 700 !important;
-        color: #000000 !important;
-    }
-
-    .card-body {
-        padding: 10pt 0 !important;
-    }
-
-    /* Grayscale badge outlines for printing */
+    /* Clean Badge */
     .badge {
-        border: 1pt solid #000000 !important;
-        background: transparent !important;
-        color: #000000 !important;
-        border-radius: 4px !important;
-        padding: 2pt 6pt !important;
-        font-size: 7.5pt !important;
+        border: 1px solid #334155 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-radius: 2px !important;
+        padding: 1pt 4pt !important;
+        font-size: 7pt !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
+        display: inline-block !important;
     }
 
-    /* Print page setups */
-    @page {
-        size: A4;
-        margin: 15mm;
+    /* Bulletproof Flexbox Signature Row */
+    .signature-grid, .print-signature-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        width: 100% !important;
+        gap: 20pt !important;
+        margin-top: 30pt !important;
+        margin-bottom: 10pt !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .signature-box, .sig-box {
+        flex: 1 1 0% !important;
+        width: 30% !important;
+        text-align: center !important;
+    }
+
+    .signature-line, .sig-line {
+        border-top: 1.5px solid #000000 !important;
+        margin-bottom: 5pt !important;
+        height: 0 !important;
+        width: 100% !important;
+    }
+
+    .signature-box p, .sig-title {
+        font-size: 8pt !important;
+        font-weight: 800 !important;
+        margin: 0 !important;
+        text-transform: uppercase !important;
+        color: #000000 !important;
+    }
+
+    .sig-sub {
+        font-size: 7pt !important;
+        color: #475569 !important;
+        margin: 2pt 0 0 0 !important;
+        font-weight: 500 !important;
+    }
+
+    .sig-sub {
+        font-size: 7pt !important;
+        color: #475569 !important;
+        margin: 1pt 0 0 0 !important;
+    }
+
+    /* Statement Footer */
+    .print-footer {
+        margin-top: 15pt !important;
+        padding-top: 4pt !important;
+        border-top: 0.5px solid #cbd5e1 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 7pt !important;
+        color: #475569 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+        page-break-inside: avoid !important;
     }
 }
