@@ -992,17 +992,18 @@
                 const title = lang === 'sin' ? 'නීති අංශය වෙත යොමු කිරීම සම්බන්ධවයි.!' : 'REFERRAL TO LEGAL DEPARTMENT!';
                 
                 const titleBlock = `
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 10px 0 8px 0;">
-                        <!-- Left decoration: coop logo -->
-                        <img src="assets/coop_logo.png" alt="Coop" style="height: 80px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2); flex-shrink: 0;">
-                        <!-- Center: White text inside black box (standalone, separate) -->
-                        <div style="flex: 1; display: flex; justify-content: center;">
-                            <span class="print-title-box" style="margin: 0; display: block; text-align: center; line-height: 1.4; white-space: nowrap; font-size: 10.5pt;">
+                    <div style="margin: 8px 0 10px 0;">
+                        <!-- Top row: coop logo left, lady justice right -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                            <img src="assets/coop_logo.png" alt="Coop" style="height: 70px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
+                            <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 70px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <!-- Bottom row: full-width title box, never wraps -->
+                        <div style="text-align: center;">
+                            <span class="print-title-box" style="margin: 0; display: block; text-align: center; font-size: 11pt; white-space: nowrap; padding: 5px 20px;">
                                 ${title}
                             </span>
                         </div>
-                        <!-- Right decoration: Lady Justice -->
-                        <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 80px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2); flex-shrink: 0;">
                     </div>
                 `;
 
