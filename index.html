@@ -155,14 +155,13 @@
                     <span class="system-name">Loan Recovery System</span>
                     <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
                 </div>
-            </div>
-            
-                        <div class="nav-links" id="topNavLinks">
+            <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                <a href="monthly-report.html" class="nav-link"><i data-lucide="book-open"></i> <span>Monthly Report</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
                 
@@ -242,6 +241,15 @@
                         <div class="stat-value" id="stat-total">0</div>
                     </div>
                 </div>
+                <div class="stat-card emerald" style="cursor:pointer" onclick="filterAddedToday()" title="Click to view today's new accounts">
+                    <div class="stat-icon emerald">
+                        <i data-lucide="sparkles" style="width:22px;height:22px"></i>
+                    </div>
+                    <div>
+                        <div class="stat-label">Added Today</div>
+                        <div class="stat-value" id="stat-today" style="color:#059669">0</div>
+                    </div>
+                </div>
                 <div class="stat-card amber">
                     <div class="stat-icon amber">
                         <i data-lucide="alert-triangle" style="width:22px;height:22px"></i>
@@ -311,9 +319,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                             <input type="text" id="searchInput" class="search-input" placeholder="Search Name / Acc...">
                         </div>
-                        <div class="filter-wrap" style="width:160px">
+                        <div class="filter-wrap" style="width:200px">
                             <select id="statusFilter" class="form-select" onchange="loadTableData()" style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
                                 <option value="all">All Statuses</option>
+                                <option value="added_today">✨ Added Today (අද එක් වූ)</option>
                                 <option value="Normal">Normal</option>
                                 <option value="High Risk">High Risk</option>
                                 <option value="Legal Action">Legal Action</option>
@@ -652,30 +661,57 @@
                 loadTableData();
             };
 
+            window.filterAddedToday = function() {
+                const statusSelect = document.getElementById('statusFilter');
+                if (statusSelect) {
+                    statusSelect.value = 'added_today';
+                    loadTableData();
+                }
+            };
+
             async function loadTableData() {
                 const customers = await getAllCustomers();
                 const filterQuery = (document.getElementById('searchInput')?.value || '').toLowerCase();
                 const statusF = document.getElementById('statusFilter')?.value || 'all';
                 const categoryF = document.getElementById('categoryFilter')?.value || 'all';
-                let total = 0, risk = 0, legal = 0;
+                const todayStr = new Date().toISOString().split('T')[0];
+                let total = 0, risk = 0, legal = 0, todayCount = 0;
+
+                // Count total added today among all active customers
+                customers.forEach(c => {
+                    if (c.addedDate === todayStr || c.createdDate === todayStr) {
+                        todayCount++;
+                    }
+                });
 
                 const filtered = customers.filter(c => {
                     const accStr = (c.accountNo || '').toString().toLowerCase();
                     const nameStr = (c.name || '').toString().toLowerCase();
                     const matchesSearch = accStr.includes(filterQuery) || nameStr.includes(filterQuery);
-                    const matchesStatus = statusF === 'all' || (c.status || '').toLowerCase().includes(statusF.toLowerCase());
+
+                    let matchesStatus = false;
+                    if (statusF === 'all') {
+                        matchesStatus = true;
+                    } else if (statusF === 'added_today') {
+                        matchesStatus = (c.addedDate === todayStr || c.createdDate === todayStr);
+                    } else {
+                        matchesStatus = (c.status || '').toLowerCase().includes(statusF.toLowerCase());
+                    }
+
                     const matchesCategory = categoryF === 'all' || (c.category || '') === categoryF;
                     const match = matchesSearch && matchesStatus && matchesCategory;
-                    if (match) { total++; if (c.status.includes('High Risk')) risk++; if (c.status.includes('Legal Action')) legal++; }
+                    if (match) { total++; if ((c.status || '').includes('High Risk')) risk++; if ((c.status || '').includes('Legal Action')) legal++; }
                     return match;
                 });
 
                 const statTotal = document.getElementById('stat-total');
                 const statRisk = document.getElementById('stat-risk');
                 const statLegal = document.getElementById('stat-legal');
+                const statToday = document.getElementById('stat-today');
                 if (statTotal) statTotal.innerText = total;
                 if (statRisk) statRisk.innerText = risk;
                 if (statLegal) statLegal.innerText = legal;
+                if (statToday) statToday.innerText = todayCount;
 
                 if (dashViewMode === 'card') {
                     renderDashCards(filtered);
@@ -695,6 +731,7 @@
                     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#9ca3af;padding:40px;font-style:italic">No customers found.</div>`;
                     return;
                 }
+                const todayStr = new Date().toISOString().split('T')[0];
                 grid.innerHTML = filtered.map((c, idx) => {
                     let badgeClass = 'badge badge-normal';
                     let arrColor = '#6b7280';
@@ -707,19 +744,28 @@
                         : c.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`
                         : 'https://maps.google.com';
                     const waUrl = c.phone ? `https://wa.me/94${c.phone.replace(/[^0-9]/g, '').slice(-9)}` : '#';
-                    const hasMapLink = !!(c.mapLink || c.address);
+                    const isAddedToday = (c.addedDate === todayStr || c.createdDate === todayStr);
+
+                    const cardBorder = isAddedToday ? 'border-left:5px solid #10b981;box-shadow:0 4px 20px rgba(16,185,129,0.15)' : '';
+                    const todayBadgeHtml = isAddedToday ? `<span class="badge badge-new" style="white-space:nowrap;flex-shrink:0;font-size:.65rem;margin-left:4px">✨ NEW TODAY</span>` : '';
+
                     return `
-                    <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:var(--transition);cursor:pointer" 
+                    <div style="background:#fff;border:1px solid var(--border);${cardBorder};border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:var(--transition);cursor:pointer" 
                          onmouseover="this.style.boxShadow='0 8px 30px rgba(79,70,229,.12)';this.style.transform='translateY(-3px)';this.style.borderColor='#a5b4fc'"
                          onmouseout="this.style.boxShadow='var(--shadow-sm)';this.style.transform='';this.style.borderColor='var(--border)'"
                          onclick="window.navigate('customer-detail.html?id=${c.id}&accountNo=${c.accountNo}')">
                         <!-- Card Header -->
-                        <div style="padding:14px 18px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                        <div style="padding:14px 18px;background:${isAddedToday ? '#f0fdf4' : '#f8fafc'};border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
                             <div>
-                                <div style="font-weight:800;font-size:.92rem;color:var(--text-primary)">${c.name}</div>
+                                <div style="font-weight:800;font-size:.92rem;color:var(--text-primary);display:flex;align-items:center;gap:6px">
+                                    ${c.name}
+                                </div>
                                 <div style="font-size:.72rem;font-weight:700;color:var(--text-muted);margin-top:1px;letter-spacing:.03em">${c.accountNo}</div>
                             </div>
-                            <span class="${badgeClass}" style="white-space:nowrap;flex-shrink:0;font-size:.68rem">${c.status}</span>
+                            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+                                <span class="${badgeClass}" style="white-space:nowrap;flex-shrink:0;font-size:.68rem">${c.status}</span>
+                                ${todayBadgeHtml}
+                            </div>
                         </div>
                         <!-- Card Body -->
                         <div style="padding:14px 18px;flex:1;display:flex;flex-direction:column;gap:8px">
@@ -762,14 +808,21 @@
                     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:#9ca3af">No records found.</td></tr>`;
                     return;
                 }
+                const todayStr = new Date().toISOString().split('T')[0];
+                tbody.innerHTML = '';
                 filtered.forEach((c, idx) => {
                     let badgeClass = 'badge badge-normal';
                     if (c.status.includes('High Risk')) badgeClass = 'badge badge-risk';
                     if (c.status.includes('Legal Action')) badgeClass = 'badge badge-legal';
                     if (c.status === 'Loan Closed') badgeClass = 'badge badge-closed';
                     const amt = 'LKR ' + (c.loanAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const isAddedToday = (c.addedDate === todayStr || c.createdDate === todayStr);
+
                     const tr = document.createElement('tr');
                     tr.style.cursor = 'pointer';
+                    if (isAddedToday) {
+                        tr.style.background = '#f0fdf4';
+                    }
                     tr.onclick = () => window.navigate(`customer-detail.html?id=${c.id}`);
                     tr.innerHTML = `
                         <td style="text-align:center" onclick="event.stopPropagation()">
@@ -777,7 +830,10 @@
                         </td>
                         <td style="text-align:center;color:#9ca3af;font-size:0.8rem">${idx + 1}</td>
                         <td style="font-weight:700;color:#1e1b4b">${c.accountNo}</td>
-                        <td style="font-weight:500">${c.name}</td>
+                        <td style="font-weight:500">
+                            ${c.name}
+                            ${isAddedToday ? `<span class="badge badge-new" style="font-size:0.65rem;padding:2px 7px;margin-left:6px">✨ NEW TODAY</span>` : ''}
+                        </td>
                         <td>
                             <div style="font-weight:600;color:#1e1b4b">${amt}</div>
                             <div style="font-size:0.75rem;color:#6b7280">${c.category} &bull; ${c.interestRate}% Int.</div>
@@ -940,7 +996,7 @@
 
                     const el = document.createElement('div');
                     el.className = cardClass;
-                    el.onclick = () => window.navigate(`customer-detail.html?accountNo=${action.customerAccountNo}`);
+                    el.onclick = () => window.navigate(action.customerId ? `customer-detail.html?id=${action.customerId}&accountNo=${action.customerAccountNo}` : `customer-detail.html?accountNo=${action.customerAccountNo}`);
                     el.innerHTML = `
                         <div style="background:#ede9fe;border-radius:10px;padding:10px;color:#7c3aed;flex-shrink:0">
                             <i data-lucide="calendar-clock" style="width:20px;height:20px"></i>

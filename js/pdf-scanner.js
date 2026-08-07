@@ -161,6 +161,8 @@ async function handlePDFUpload(event) {
                                 category            : currentCategory,
                                 status              : "High Risk",
                                 statusDate          : new Date().toISOString().split('T')[0],
+                                addedDate           : new Date().toISOString().split('T')[0],
+                                createdDate         : new Date().toISOString().split('T')[0],
                                 phone               : '',
                                 address             : '',
                                 guarantor1          : '',
@@ -169,11 +171,24 @@ async function handlePDFUpload(event) {
                                 guarantor2Address   : ''
                             };
                             extractedCustomers.push(lastCustomer);
-                        } else if (lastCustomer && lineStr.match(/w[a-z]+mlre/i)) {
-                            const gMatch = lineStr.match(guarantorRegex);
-                            if (gMatch) {
-                                lastCustomer.guarantor1 = gMatch[1] + ' ' + (gMatch[2] || '').trim();
-                                if (gMatch[3]) lastCustomer.guarantor2 = gMatch[3] + ' ' + (gMatch[4] || '').trim();
+                        } else if (lastCustomer && (lineStr.match(/01\s*[-:]/i) || lineStr.match(/w[a-z]+|æp|ඇප|guarantor/i))) {
+                            // Extract Guarantor 1 & 2 (ID & Name)
+                            const g1Match = lineStr.match(/01\s*[-:]\s*(\d+)\s+(.*?)(?=\s*02\s*[-:]|\bw[a-z]+|\bæp|\bඇප|$)/i);
+                            if (g1Match) {
+                                const id1 = g1Match[1].trim();
+                                let name1 = g1Match[2].replace(/^(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?/gi, '').trim();
+                                name1 = name1.replace(/\s*(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?.*$/gi, '').trim();
+                                if (id1 && name1) {
+                                    lastCustomer.guarantor1 = id1 + ' ' + name1;
+                                }
+                            }
+                            const g2Match = lineStr.match(/02\s*[-:]\s*(\d+)\s+(.*?)$/i);
+                            if (g2Match) {
+                                const id2 = g2Match[1].trim();
+                                let name2 = g2Match[2].replace(/^(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?/gi, '').trim();
+                                if (id2 && name2) {
+                                    lastCustomer.guarantor2 = id2 + ' ' + name2;
+                                }
                             }
                         }
                     }
@@ -201,9 +216,9 @@ async function handlePDFUpload(event) {
                             match.balanceAmount       = c.balanceAmount;
                             match.arrearsAmount       = c.arrearsAmount;
                             match.arrearsInstallments = c.arrearsInstallments;
-                            if (c.lastPaidDate)                     match.lastPaidDate = c.lastPaidDate;
-                            if (c.guarantor1 && !match.guarantor1)  match.guarantor1   = c.guarantor1;
-                            if (c.guarantor2 && !match.guarantor2)  match.guarantor2   = c.guarantor2;
+                            if (c.lastPaidDate)  match.lastPaidDate = c.lastPaidDate;
+                            if (c.guarantor1)    match.guarantor1   = c.guarantor1;
+                            if (c.guarantor2)    match.guarantor2   = c.guarantor2;
                             if (c.arrearsInstallments > 3 && match.status === 'Normal') {
                                 match.status = 'High Risk';
                             }
@@ -211,6 +226,8 @@ async function handlePDFUpload(event) {
                         } else {
                             newCount++;
                             if (c.arrearsInstallments <= 3) c.status = 'Normal';
+                            c.addedDate = c.addedDate || new Date().toISOString().split('T')[0];
+                            c.createdDate = c.createdDate || new Date().toISOString().split('T')[0];
                             await window.db.add('customers', c);
                         }
                     } catch (rowErr) {

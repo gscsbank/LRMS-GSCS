@@ -323,6 +323,9 @@ async function addCustomer(customerData) {
         if (customerData.accountNo) {
             customerData.accountNo = customerData.accountNo.toString().trim();
         }
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (!customerData.addedDate) customerData.addedDate = todayStr;
+        if (!customerData.createdDate) customerData.createdDate = todayStr;
 
         await window.db.add("customers", customerData);
         invalidateCache('customers');
@@ -417,31 +420,55 @@ async function addAction(actionData) {
     }
 }
 
-// Helper Function: Get actions for a customer
-async function getCustomerActions(accountNo, forceRefresh = false) {
-    if (!accountNo) return [];
-    const cleanAcc = accountNo.toString().trim();
+// Helper Function: Get actions for a customer (supports multi-loan separation via customerId / loanAccountNo)
+async function getCustomerActions(accountNo, customerId = null, loanAccountNo = null, forceRefresh = false) {
+    if (!accountNo && !customerId) return [];
+    const cleanAcc = (accountNo || '').toString().trim();
+    const cacheKey = customerId ? `${cleanAcc}_${customerId}` : cleanAcc;
 
-    if (!forceRefresh && window.lrmsCache.actions[cleanAcc]) {
-        console.log("Cache Hit: getCustomerActions", cleanAcc);
-        return window.lrmsCache.actions[cleanAcc];
+    if (!forceRefresh && window.lrmsCache.actions[cacheKey]) {
+        console.log("Cache Hit: getCustomerActions", cacheKey);
+        return window.lrmsCache.actions[cacheKey];
     }
 
     try {
-        console.log("Fetching Actions from DB:", cleanAcc);
-        const allActions = await window.db.getByIndex("actions", "customerAccountNo", cleanAcc);
-        const numCleanAcc = isNaN(cleanAcc) || cleanAcc === "" ? null : Number(cleanAcc);
-        let actions = allActions;
+        console.log("Fetching Actions from DB:", cleanAcc, customerId);
+        let actions = [];
+        if (cleanAcc) {
+            const allActions = await window.db.getByIndex("actions", "customerAccountNo", cleanAcc);
+            const numCleanAcc = isNaN(cleanAcc) || cleanAcc === "" ? null : Number(cleanAcc);
+            actions = allActions;
 
-        if (numCleanAcc !== null) {
-            const numActions = await window.db.getByIndex("actions", "customerAccountNo", numCleanAcc);
-            actions = [...allActions, ...numActions];
+            if (numCleanAcc !== null) {
+                const numActions = await window.db.getByIndex("actions", "customerAccountNo", numCleanAcc);
+                actions = [...allActions, ...numActions];
+            }
+        } else {
+            actions = await window.db.getAll("actions");
         }
 
-        actions = actions.filter(a => !a.isDeleted);
+        // Deduplicate by action ID
+        const actionMap = new Map();
+        actions.forEach(a => { if (!a.isDeleted) actionMap.set(a.id, a); });
+        actions = Array.from(actionMap.values());
+
+        // Separate actions per loan if customerId or loanAccountNo is provided
+        if (customerId || loanAccountNo) {
+            actions = actions.filter(a => {
+                if (a.customerId) {
+                    return a.customerId === customerId;
+                }
+                if (a.loanAccountNo && loanAccountNo) {
+                    return a.loanAccountNo === loanAccountNo;
+                }
+                // Backward compatibility for legacy actions without customerId
+                return true;
+            });
+        }
+
         actions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        window.lrmsCache.actions[cleanAcc] = actions;
+        window.lrmsCache.actions[cacheKey] = actions;
         return actions;
     } catch (error) {
         console.error("Error fetching actions:", error);

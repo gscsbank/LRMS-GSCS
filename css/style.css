@@ -803,6 +803,12 @@ body > * {
     border-color: #cbd5e1;
 }
 
+.badge-new {
+    background: #ecfdf5;
+    color: #047857;
+    border-color: #a7f3d0;
+}
+
 /* Pills (mini badges) */
 .pill {
     display: inline-flex;

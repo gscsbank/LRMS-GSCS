@@ -1098,7 +1098,11 @@
             }
 
             async function loadTimeline() {
-                const actions = await getCustomerActions(currentAccountNo);
+                const customer = (currentCustomerId && typeof getCustomerById === 'function')
+                    ? await getCustomerById(currentCustomerId)
+                    : null;
+                const loanAcc = customer ? (customer.loanAccountNo || customer.accountNo) : null;
+                const actions = await getCustomerActions(currentAccountNo, currentCustomerId, loanAcc);
                 const container = document.getElementById('timelineContainer');
                 const printBody = document.getElementById('printHistoryBody');
                 const actionCount = document.getElementById('actionCount');
@@ -1186,7 +1190,12 @@
             if (actionForm) {
                 actionForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    const customer = (currentCustomerId && typeof getCustomerById === 'function')
+                        ? await getCustomerById(currentCustomerId)
+                        : null;
                     const actionData = {
+                        customerId: currentCustomerId,
+                        loanAccountNo: customer ? (customer.loanAccountNo || customer.accountNo) : currentAccountNo,
                         customerAccountNo: currentAccountNo,
                         actionType: document.getElementById('actionType').value,
                         date: document.getElementById('actionDate').value,
@@ -1331,7 +1340,7 @@
             // ─────────────────────────────────────────────────────
 
             window.openEditActionModal = async function (id) {
-                const customerActions = await getCustomerActions(currentAccountNo);
+                const customerActions = await getCustomerActions(currentAccountNo, currentCustomerId);
                 const a = customerActions.find(item => item.id === id);
                 if (!a) return;
                 document.getElementById('editActionId').value = id;
