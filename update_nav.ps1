@@ -7,6 +7,7 @@ $newNavLinks = @"
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
+                <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
@@ -27,27 +28,6 @@ $newNavLinks = @"
 $htmlFiles = Get-ChildItem -Filter *.html
 foreach ($file in $htmlFiles) {
     $content = [System.IO.File]::ReadAllText($file.FullName)
-    # Target the entire nav-links block using regex to handle variations in content/whitespace
-    $pattern = '(?si)<div class="nav-links" id="topNavLinks">.*?</div>\s*</div>\s*</div>'
-    # Wait, the closing tags might be different. Let's match up to the end of the nav-links div carefully.
-    # The block ends with </div> (nav-links) then </div> (nav-dropdown menu) then </div> (nav-dropdown container)
-    # Actually, let's match specifically the nav-links div content.
-    
-    $pattern = '(?si)<div class="nav-links" id="topNavLinks">.*?</div>\s*</div>'
-    # Re-checking the structure in index.html:
-    # <div class="nav-links" id="topNavLinks">
-    #   ... links ...
-    #   <div class="nav-dropdown">
-    #     <button>...More...</button>
-    #     <div class="dropdown-menu">
-    #        ... dropdown links ...
-    #     </div>
-    #   </div>
-    # </div>
-    
-    # Correct regex to match the outermost <div class="nav-links"> and its balanced content.
-    # Since we know the structure is fairly consistent, we can match up to the specific closing of the nav-links div.
-    
     $pattern = '(?si)<div class="nav-links" id="topNavLinks">.*?(<div class="nav-dropdown">.*?</div>\s*</div>)\s*</div>'
     
     if ($content -match $pattern) {

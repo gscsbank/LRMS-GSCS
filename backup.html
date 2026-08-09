@@ -11,7 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.17">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
     <style>
         /* ---- Backup Page Specific Styles ---- */
         .backup-section-title {
@@ -425,7 +425,7 @@
                 </div>
             </div>
 
-                                    <div class="nav-links" id="topNavLinks">
+                                                <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
@@ -433,6 +433,7 @@
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
+                <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
                 
                 <div class="nav-dropdown">
                     <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
@@ -670,14 +671,14 @@
             const resp = await fetch(url + '?action=ping', { method: 'GET' });
             const text = await resp.text();
             if (text.includes('pong') || resp.ok) {
-                setSyncStatus('✅ Connection successful!', '#22c55e');
-                await lrmsAlert('Connection to Google Drive is working correctly! ✅');
+                setSyncStatus('? Connection successful!', '#22c55e');
+                await lrmsAlert('Connection to Google Drive is working correctly! ?');
             } else {
-                setSyncStatus('❌ Unexpected response from server.', '#ef4444');
+                setSyncStatus('? Unexpected response from server.', '#ef4444');
                 await lrmsAlert('Unexpected response: ' + text.substring(0, 200));
             }
         } catch(err) {
-            setSyncStatus('❌ Connection failed: ' + err.message, '#ef4444');
+            setSyncStatus('? Connection failed: ' + err.message, '#ef4444');
             await lrmsAlert('Connection failed. Check the URL and try again.\n\nError: ' + err.message);
         }
 
@@ -704,7 +705,7 @@
             const now = new Date();
             const pad = n => String(n).padStart(2, '0');
             const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-            const fileName = `Arunalu_Backup_${dateStr}.json`;
+            const fileName = `lmrs_Backup_${dateStr}.json`;
 
             setSyncStatus('Uploading to Google Drive...');
 
@@ -729,15 +730,15 @@
                 localStorage.setItem(LAST_SYNC_KEY, syncTime);
                 document.getElementById('lastSyncText').textContent = 'LAST SYNC: ' + syncTime;
                 document.getElementById('lastSyncBadge').style.color = '#22c55e';
-                setSyncStatus('✅ Synced successfully! File: ' + fileName, '#22c55e');
-                await lrmsAlert('✅ Sync Complete!\n\nBackup saved to Google Drive as:\n' + fileName);
+                setSyncStatus('? Synced successfully! File: ' + fileName, '#22c55e');
+                await lrmsAlert('? Sync Complete!\n\nBackup saved to Google Drive as:\n' + fileName);
                 await logActivity('Google Drive Sync', 'Backup uploaded: ' + fileName, 'success');
                 await loadCloudBackupList();
             } else {
                 throw new Error(result.error || 'Upload failed');
             }
         } catch(err) {
-            setSyncStatus('❌ Sync failed: ' + err.message, '#ef4444');
+            setSyncStatus('? Sync failed: ' + err.message, '#ef4444');
             await lrmsAlert('Sync failed.\n\nError: ' + err.message + '\n\nPlease check your Web App URL and ensure it is deployed correctly.');
         }
 
@@ -985,7 +986,7 @@ function doPost(e) {
 }`;
 
         navigator.clipboard.writeText(script).then(() => {
-            lrmsAlert('✅ Script code copied to clipboard!\n\nNow paste it into Google Apps Script Editor.');
+            lrmsAlert('? Script code copied to clipboard!\n\nNow paste it into Google Apps Script Editor.');
         }).catch(() => {
             const ta = document.createElement('textarea');
             ta.value = script;
@@ -993,7 +994,7 @@ function doPost(e) {
             ta.select();
             document.execCommand('copy');
             document.body.removeChild(ta);
-            lrmsAlert('✅ Script code copied to clipboard!\n\nNow paste it into Google Apps Script Editor.');
+            lrmsAlert('? Script code copied to clipboard!\n\nNow paste it into Google Apps Script Editor.');
         });
     };
 

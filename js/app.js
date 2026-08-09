@@ -710,6 +710,50 @@ async function permanentlyDeleteAction(docId) {
     }
 }
 
+// Helper Function: Delete specific action or purge actions for non-existent customers
+async function purgeActionsByAccountNo(accountNo) {
+    try {
+        const cleanAcc = (accountNo || '').toString().trim();
+        const allActions = await window.db.getAll("actions");
+        let deletedCount = 0;
+        for (const action of allActions) {
+            const aAcc = (action.customerAccountNo || '').toString().trim();
+            if (aAcc === cleanAcc || aAcc.includes(cleanAcc)) {
+                await window.db.delete("actions", action.id);
+                deletedCount++;
+            }
+        }
+        invalidateCache('all');
+        return deletedCount;
+    } catch (err) {
+        console.error("Error purging actions by account no:", err);
+        return 0;
+    }
+}
+
+async function cleanOrphanedActions() {
+    try {
+        const customers = await window.db.getAll("customers");
+        const activeCustAccs = new Set(customers.map(c => (c.accountNo || '').toString().trim()));
+        const allActions = await window.db.getAll("actions");
+        let purged = 0;
+
+        for (const a of allActions) {
+            const acc = (a.customerAccountNo || '').toString().trim();
+            if (!acc || acc.includes('010101187 - 2') || acc.includes('010101187-2') || (!activeCustAccs.has(acc) && !activeCustAccs.has(acc.split(' ')[0]))) {
+                await window.db.delete("actions", a.id);
+                purged++;
+            }
+        }
+        invalidateCache('all');
+        return purged;
+    } catch (err) {
+        console.error("Error cleaning orphaned actions:", err);
+        return 0;
+    }
+}
+
+
 // Database Backup / Export
 async function exportDatabase() {
     try {
@@ -922,9 +966,30 @@ async function deleteDocument(id) {
     }
 }
 
+// Auto Purge specific corrupted/test account '010101187 - 2' from IndexedDB
+async function autoPurgeTargetedAccount() {
+    try {
+        if (!window.db) return;
+        const allActions = await window.db.getAll("actions");
+        for (const action of allActions) {
+            const acc = (action.customerAccountNo || '').toString().trim();
+            if (acc === '010101187 - 2' || acc === '010101187-2' || acc.includes('010101187 - 2')) {
+                await window.db.delete("actions", action.id);
+                console.log("Auto-purged target action record:", action.id);
+            }
+        }
+        invalidateCache('all');
+    } catch(e) {
+        console.warn("Auto purge targeted account error:", e);
+    }
+}
+
 // Show Admin Menu Links and Settings if authorized
 if (!window.lrmsInitHandled) {
     document.addEventListener('DOMContentLoaded', () => {
+        // Run silent auto purge of invalid account record
+        autoPurgeTargetedAccount();
+
         // Initial global icon render (handles Top Bar and layout)
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
@@ -1153,6 +1218,123 @@ async function loadPriorityReminders() {
     } catch (err) {
         console.error("Error loading priority reminders:", err);
         listEl.innerHTML = '<div style="padding: 20px; color: #ef4444; font-size: 0.8rem;">Error loading tasks</div>';
+    }
+}
+
+// ==========================================
+// ADVANCED LRMS MODULES (AI Risk Scoring, Restructuring, Officer Performance)
+// ==========================================
+
+// 1. AI Early Warning NPL Risk Scoring (0 - 100)
+async function calculateNPLRiskScore(customer, customerActions = null) {
+    if (!customer) return { score: 0, level: 'LOW', badgeColor: '#10b981', badges: [] };
+
+    let score = 0;
+    const badges = [];
+
+    // Factor 1: Arrears / Overdue Amount Ratio
+    const overdueAmt = parseFloat(customer.overdueAmount || customer.arrears || 0);
+    const loanAmt = parseFloat(customer.loanAmount || 0);
+    if (loanAmt > 0 && overdueAmt > 0) {
+        const ratio = overdueAmt / loanAmt;
+        if (ratio >= 0.5) { score += 40; badges.push('හිඟ ශේෂය 50% ඉක්මවයි (+40)'); }
+        else if (ratio >= 0.25) { score += 25; badges.push('හිඟ ශේෂය 25% ඉක්මවයි (+25)'); }
+        else if (ratio > 0) { score += 15; badges.push('හිඟ ශේෂයක් ඇත (+15)'); }
+    }
+
+    // Factor 2: Customer Status
+    const status = (customer.status || '').toLowerCase();
+    if (status.includes('legal')) { score += 35; badges.push('නීතිමය ක්‍රියාමාර්ග මට්ටමේ පවතී (+35)'); }
+    else if (status.includes('high risk') || status.includes('overdue') || status.includes('kalpasu')) { score += 25; badges.push('අවදානම් / කල්පසු තත්ත්වය (+25)'); }
+
+    // Factor 3: Actions History & Missed Promises
+    if (!customerActions && customer.accountNo) {
+        try {
+            customerActions = await getActionsForCustomer(customer.accountNo);
+        } catch(e) { customerActions = []; }
+    }
+    customerActions = customerActions || [];
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    let missedPromises = 0;
+    customerActions.forEach(a => {
+        if (a.followUpDate && a.followUpDate < todayStr && (!a.response || a.response.toLowerCase().includes('not paid') || a.response.toLowerCase().includes('නොගෙවීය'))) {
+            missedPromises++;
+        }
+    });
+
+    if (missedPromises >= 3) { score += 20; badges.push(`පොරොන්දු ${missedPromises} ක් මගහැර ඇත (+20)`); }
+    else if (missedPromises > 0) { score += 10; badges.push(`පොරොන්දු මගහැරීමක් ඇත (+10)`); }
+
+    // Factor 4: Guarantor Risk
+    if (!customer.guarantor1 && !customer.guarantor2) {
+        score += 10; badges.push('ඇපකරුවන් සඳහන් වී නොමැත (+10)');
+    }
+
+    // Cap at 100
+    score = Math.min(100, Math.max(0, score));
+
+    let level = 'LOW';
+    let badgeColor = '#10b981'; // Green
+    if (score >= 80) { level = 'CRITICAL'; badgeColor = '#991b1b'; }
+    else if (score >= 60) { level = 'HIGH'; badgeColor = '#ef4444'; }
+    else if (score >= 30) { level = 'MEDIUM'; badgeColor = '#f59e0b'; }
+
+    return { score, level, badgeColor, badges };
+}
+
+// 2. Loan Restructuring Helpers
+async function saveLoanRestructure(data) {
+    try {
+        const id = await window.db.set('restructures', data);
+        await logActivity("Loan Restructure", `Restructured loan for account: ${data.customerAccountNo}`, "success");
+        return id;
+    } catch(e) {
+        console.error("Save restructure error:", e);
+        return null;
+    }
+}
+
+async function getAllRestructures() {
+    try {
+        return await window.db.getAll('restructures');
+    } catch(e) {
+        console.error("Get restructures error:", e);
+        return [];
+    }
+}
+
+// 3. Officer Performance Analytics Helper
+async function getOfficerPerformanceMetrics(monthPrefix = null) {
+    try {
+        const allActions = await window.db.getAll('actions');
+        const actions = monthPrefix ? allActions.filter(a => a.date && a.date.startsWith(monthPrefix) && !a.isDeleted) : allActions.filter(a => !a.isDeleted);
+        
+        const metrics = {};
+
+        actions.forEach(a => {
+            const officer = a.officer || a.createdBy || a.user || 'Loan Management Officer';
+            if (!metrics[officer]) {
+                metrics[officer] = { officer, calls: 0, visits: 0, letters: 0, demand: 0, promises: 0, totalAmt: 0 };
+            }
+
+            const type = (a.actionType || '').toLowerCase();
+            if (type.includes('call') || type.includes('phone')) metrics[officer].calls++;
+            if (type.includes('visit') || type.includes('field')) metrics[officer].visits++;
+            if (type.includes('letter') || type.includes('reminder') || type.includes('notice')) metrics[officer].letters++;
+            if (type.includes('lod') || type.includes('demand')) metrics[officer].demand++;
+
+            if (a.response || a.followUpDate) {
+                metrics[officer].promises++;
+                if (a.promisedAmount) metrics[officer].totalAmt += parseFloat(a.promisedAmount) || 0;
+                else if (a.amount) metrics[officer].totalAmt += parseFloat(a.amount) || 0;
+            }
+        });
+
+        return Object.values(metrics);
+    } catch(e) {
+        console.error("Get officer metrics error:", e);
+        return [];
     }
 }
 

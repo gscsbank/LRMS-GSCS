@@ -237,37 +237,50 @@ body > * {
     text-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
 }
 
-/* Nav links styling */
+/* Nav links styling - Full All-Tabs Horizontal Bar */
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 4px 0;
+    max-width: calc(100vw - 360px);
+}
+
+.nav-links::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-links .nav-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 20px;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 14px;
     color: var(--text-secondary);
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 0.8rem;
     text-decoration: none;
     transition: var(--transition);
     background: transparent;
     border: 1px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .nav-links .nav-link:hover {
     background: var(--border-light);
-    color: var(--text-primary);
+    color: var(--primary);
+    border-color: var(--border);
 }
 
 .nav-links .nav-link.active {
     background: var(--violet-50);
     color: var(--primary);
     border: 1px solid var(--violet-200);
+    font-weight: 700;
 }
 
 .nav-links .nav-link svg,

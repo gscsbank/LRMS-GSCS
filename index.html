@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- PDF.js for Client-Side PDF Parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.17">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
     <!-- Leaflet Map for Location Picker -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -155,8 +155,8 @@
                     <span class="system-name">Loan Recovery System</span>
                     <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
                 </div>
-            <div class="nav-links" id="topNavLinks">
-                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+                                    <div class="nav-links" id="topNavLinks">
+                <a href="index.html" class="nav-link active"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
@@ -164,20 +164,10 @@
                 <a href="monthly-report.html" class="nav-link"><i data-lucide="book-open"></i> <span>Monthly Report</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
-                
-                <div class="nav-dropdown">
-                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
-                    <div class="dropdown-menu">
-                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
-                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
-                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
-                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
-                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
-                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                        <a href="support.html"><i data-lucide="headphones"></i> Customer Care</a>
-                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
-                    </div>
-                </div>
+                <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
+                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
             </div>
 
             <div class="nav-right">
@@ -322,7 +312,7 @@
                         <div class="filter-wrap" style="width:200px">
                             <select id="statusFilter" class="form-select" onchange="loadTableData()" style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
                                 <option value="all">All Statuses</option>
-                                <option value="added_today">✨ Added Today (අද එක් වූ)</option>
+                                <option value="added_today">Added Today (අද එක් වූ)</option>
                                 <option value="Normal">Normal</option>
                                 <option value="High Risk">High Risk</option>
                                 <option value="Legal Action">Legal Action</option>
@@ -425,6 +415,22 @@
                     <div id="followUpContainer">
                         <div style="color:#9ca3af;font-size:0.875rem;text-align:center;padding:16px;font-style:italic">
                             No follow-ups due today.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Early Warning NPL Risk Watchlist -->
+            <div class="card" id="nplWatchlistCard" style="border-left: 4px solid #ef4444;">
+                <div class="card-header">
+                    <h3><i data-lucide="alert-triangle" style="width:18px;height:18px;color:#ef4444"></i> කල්තියා අවදානම් ඇඟවීම (Early Warning NPL Risk)</h3>
+                    <span class="pill" style="background:#fee2e2; color:#991b1b; font-size:0.72rem" id="nplWatchCount">0 Accounts</span>
+                </div>
+                <div class="card-body" style="padding:0">
+                    <div id="nplWatchlistBody" style="max-height:260px; overflow-y:auto">
+                        <div style="padding:20px; text-align:center; color:#9ca3af; font-size:0.85rem; font-style:italic">Loading risk assessment...</div>
+                    </div>
+                    <div style="padding:10px 16px; border-top:1px solid #f3f4f6; text-align:right">
+                        <a href="reports.html" style="font-size:0.78rem; font-weight:700; color:#7c3aed; text-decoration:none">රිපෝර්ටුවේ බලන්න &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -544,7 +550,7 @@
                             <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
                                 <input type="url" id="addMapLink" class="form-input" placeholder="Google Maps link or pinned location..." style="flex:1">
                                 <button type="button" onclick="openFormMapPicker('addMapLink', 'custAddress')" style="height:40px;padding:0 14px;background:#f0fdf4;color:#15803d;border:1.5px solid #86efac;border-radius:10px;cursor:pointer;font-weight:800;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
-                                    <i data-lucide="map" style="width:16px;height:16px"></i> 🗺️ Mark on Map
+                                    <i data-lucide="map" style="width:16px;height:16px"></i> Mark on Map
                                 </button>
                                 <button type="button" onclick="getGpsLocation('addMapLink')" style="height:40px;padding:0 12px;background:#ede9fe;color:#7c3aed;border:1.5px solid #c4b5fd;border-radius:10px;cursor:pointer;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:6px;white-space:nowrap" title="Get current GPS location">
                                     <i data-lucide="crosshair" style="width:15px;height:15px"></i> GPS
@@ -553,7 +559,7 @@
                                     <i data-lucide="external-link" style="width:15px;height:15px"></i> Open
                                 </button>
                             </div>
-                            <div style="font-size:.72rem;color:#6b7280;margin-top:5px">📍 Click <strong>🗺️ Mark on Map</strong> to visually search & pin customer house location on the interactive map.</div>
+                            <div style="font-size:.72rem;color:#6b7280;margin-top:5px">Click <strong>Mark on Map</strong> to visually search & pin customer house location on the interactive map.</div>
                         </div>
                     </div>
 
@@ -720,6 +726,7 @@
                 }
 
                 loadFollowUps();
+                loadNPLWatchlist();
                 lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
                 updateBulkSelection();
             }
@@ -747,7 +754,7 @@
                     const isAddedToday = (c.addedDate === todayStr || c.createdDate === todayStr);
 
                     const cardBorder = isAddedToday ? 'border-left:5px solid #10b981;box-shadow:0 4px 20px rgba(16,185,129,0.15)' : '';
-                    const todayBadgeHtml = isAddedToday ? `<span class="badge badge-new" style="white-space:nowrap;flex-shrink:0;font-size:.65rem;margin-left:4px">✨ NEW TODAY</span>` : '';
+                    const todayBadgeHtml = isAddedToday ? `<span class="badge badge-new" style="white-space:nowrap;flex-shrink:0;font-size:.65rem;margin-left:4px">NEW TODAY</span>` : '';
 
                     return `
                     <div style="background:#fff;border:1px solid var(--border);${cardBorder};border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:var(--transition);cursor:pointer" 
@@ -1027,6 +1034,48 @@
                     if (success) loadFollowUps();
                     else await lrmsAlert("Failed to dismiss.");
                 }
+            }
+
+            async function loadNPLWatchlist() {
+                const customers = await getAllCustomers();
+                const container = document.getElementById('nplWatchlistBody');
+                const countEl = document.getElementById('nplWatchCount');
+                if (!container) return;
+
+                const highRiskList = [];
+                for (const c of customers) {
+                    if (c.isDeleted || c.status === 'Loan Closed') continue;
+                    const actions = await getActionsForCustomer(c.accountNo);
+                    const risk = await calculateNPLRiskScore(c, actions);
+                    if (risk.score >= 40) {
+                        highRiskList.push({ customer: c, risk });
+                    }
+                }
+
+                highRiskList.sort((a, b) => b.risk.score - a.risk.score);
+                if (countEl) countEl.innerText = `${highRiskList.length} Accounts`;
+
+                if (highRiskList.length === 0) {
+                    container.innerHTML = `<div style="padding:20px; text-align:center; color:#10b981; font-weight:700; font-size:0.85rem">✅ කල්තියා අවදානම් සහිත ගිණුම් නොමැත. (No High NPL Risk Accounts)</div>`;
+                    return;
+                }
+
+                container.innerHTML = highRiskList.map(item => {
+                    const c = item.customer;
+                    const r = item.risk;
+                    const badgesHtml = r.badges.map(b => `<span style="display:inline-block; background:#fee2e2; color:#991b1b; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600; margin-right:4px; margin-top:2px;">${b}</span>`).join('');
+                    return `
+                        <div onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" style="padding:10px 16px; border-bottom:1px solid #f3f4f6; cursor:pointer; display:flex; align-items:center; justify-content:space-between; transition:background 0.2s;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
+                            <div>
+                                <div style="font-weight:700; font-size:0.85rem; color:#1e1b4b">${c.name} <span style="color:#6b7280; font-weight:500">(${c.accountNo})</span></div>
+                                <div style="margin-top:2px">${badgesHtml}</div>
+                            </div>
+                            <div style="text-align:right; flex-shrink:0">
+                                <span style="background:${r.badgeColor}; color:#fff; font-weight:900; font-size:0.78rem; padding:3px 10px; border-radius:99px; display:inline-block">${r.score}% ${r.level}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
 
             const searchInput = document.getElementById('searchInput');

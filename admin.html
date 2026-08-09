@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,19 +9,17 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
-                <script src="js/db.js?v=3.15"></script>
+    <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.17">
+    <link rel="stylesheet" href="css/style.css?v=4.2">
 </head>
 
 <body>
-    
 
-    <!-- Main -->
-        <!-- Modern Top Navigation -->
+    <!-- Modern Top Navigation -->
     <nav class="modern-top-nav">
         <div class="nav-container">
-                        <div class="nav-logo">
+            <div class="nav-logo">
                 <div class="logo-wrapper">
                     <img src="assets/logo.png" alt="Logo">
                 </div>
@@ -31,36 +29,23 @@
                     <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
                 </div>
             </div>
-            
-                                                <div class="nav-links" id="topNavLinks">
+
+            <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
                 <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
                 <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+                <a href="monthly-report.html" class="nav-link"><i data-lucide="book-open"></i> <span>Monthly Report</span></a>
                 <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
                 <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
-                
-                <div class="nav-dropdown">
-                    <button class="nav-link dropdown-toggle"><i data-lucide="grid"></i> <span>More</span></button>
-                    <div class="dropdown-menu">
-                        <a href="reminders.html"><i data-lucide="bell"></i> Reminders</a>
-                        <a href="calculator.html"><i data-lucide="calculator"></i> Calculator</a>
-                        <a href="legal-actions.html"><i data-lucide="scale"></i> Legal Actions</a>
-                        <a href="closed-loans.html"><i data-lucide="archive"></i> Closed Loans</a>
-                        <a href="activity-log.html"><i data-lucide="list"></i> Activity Log</a>
-                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                        <a href="support.html"><i data-lucide="headphones"></i> Customer Care</a>
-                        <a href="recycle-bin.html"><i data-lucide="trash-2"></i> Recycle Bin</a>
-                    </div>
-                </div>
+                <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
+                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
             </div>
-            </div>
-
 
             <div class="nav-right">
-                
-                
                 <div class="nav-dropdown">
                     <button class="nav-circle-btn"><i data-lucide="user"></i></button>
                     <div class="dropdown-menu align-right" style="width:220px">
@@ -80,18 +65,41 @@
             </div>
         </div>
     </nav>
+
     <!-- Main -->
     <main class="main-content">
         <!-- Header -->
         <header class="top-header">
-            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
+            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print">
+                <div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div>
+            </div>
             <div>
                 <h2>User Management</h2>
                 <p>Manage system access and permissions</p>
             </div>
-            <button onclick="toggleAddModal()" class="btn btn-primary">
-                <i data-lucide="user-plus"></i> Add New User
-            </button>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <a href="activity-log.html"
+                   style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:inline-flex;align-items:center;gap:7px;font-weight:700;border:none;padding:9px 18px;border-radius:12px;text-decoration:none;font-size:0.85rem;box-shadow:0 4px 15px rgba(99,102,241,0.3);transition:all 0.2s;"
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(99,102,241,0.45)'"
+                   onmouseout="this.style.transform='';this.style.boxShadow='0 4px 15px rgba(99,102,241,0.3)'">
+                    <i data-lucide="list" style="width:16px;height:16px;"></i> Activity Log
+                </a>
+                <a href="support.html"
+                   style="background:linear-gradient(135deg,#0891b2,#06b6d4);color:#fff;display:inline-flex;align-items:center;gap:7px;font-weight:700;border:none;padding:9px 18px;border-radius:12px;text-decoration:none;font-size:0.85rem;box-shadow:0 4px 15px rgba(8,145,178,0.3);transition:all 0.2s;"
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(8,145,178,0.45)'"
+                   onmouseout="this.style.transform='';this.style.boxShadow='0 4px 15px rgba(8,145,178,0.3)'">
+                    <i data-lucide="headphones" style="width:16px;height:16px;"></i> Support
+                </a>
+                <a href="recycle-bin.html"
+                   style="background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;display:inline-flex;align-items:center;gap:7px;font-weight:700;border:none;padding:9px 18px;border-radius:12px;text-decoration:none;font-size:0.85rem;box-shadow:0 4px 15px rgba(220,38,38,0.3);transition:all 0.2s;"
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(220,38,38,0.45)'"
+                   onmouseout="this.style.transform='';this.style.boxShadow='0 4px 15px rgba(220,38,38,0.3)'">
+                    <i data-lucide="trash-2" style="width:16px;height:16px;"></i> Recycle Bin
+                </a>
+                <button onclick="toggleAddModal()" class="btn btn-primary">
+                    <i data-lucide="user-plus"></i> Add New User
+                </button>
+            </div>
         </header>
 
         <!-- Content Area -->
@@ -107,7 +115,7 @@
                         </tr>
                     </thead>
                     <tbody id="userTableBody">
-                        <!-- Populated -->
+                        <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
@@ -123,12 +131,12 @@
                         return;
                     }
                     if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
-                    
+
                     // Ensure the default admin exists so the list is not blank
                     if (typeof ensureDefaultAdmin === 'function') {
                         await ensureDefaultAdmin();
                     }
-                    
+
                     renderUsers();
 
                     // Attach form submit listeners here when DOM is fully ready
@@ -143,11 +151,11 @@
                                 role: document.getElementById('addRole').value
                             };
                             const res = await addUser(data);
-                            if (res.success) { 
-                                toggleAddModal(); 
-                                renderUsers(); 
-                            } else { 
-                                await lrmsAlert("Error: " + res.error); 
+                            if (res.success) {
+                                toggleAddModal();
+                                renderUsers();
+                            } else {
+                                await lrmsAlert("Error: " + res.error);
                             }
                         };
                     }
@@ -300,18 +308,3 @@
     <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
