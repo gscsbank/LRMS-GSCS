@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -363,7 +363,7 @@
                 if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
             }
 
-            window.dispatchNextRecipient = function() {
+            window.dispatchNextRecipient = async function() {
                 if (dispatchIndex >= dispatchQueue.length) return;
 
                 const c = dispatchQueue[dispatchIndex];
@@ -391,6 +391,33 @@
                     const separator = (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? '&' : '?';
                     window.open(`sms:${cleanPhone}${separator}body=${encodedMsg}`, '_blank');
                 }
+
+                // ── Save to Action History ──────────────────────────────────────────
+                try {
+                    const actionType = dispatchType === 'whatsapp'
+                        ? 'WhatsApp Reminder (Scheduled)'
+                        : 'SMS Reminder (Scheduled)';
+                    const today = new Date().toISOString().split('T')[0];
+                    const actionRecord = {
+                        customerAccountNo: (c.accountNo || c.loanAccountNo || '').toString().trim(),
+                        customerName: c.name || '',
+                        actionType: actionType,
+                        date: today,
+                        response: '',
+                        officerNote: `ස්වයංක්‍රීය ${dispatchType === 'whatsapp' ? 'WhatsApp' : 'SMS'} සිහිකැඳවීමක් (Scheduled Reminder) යවන ලදී.`,
+                        remarks: personalizedMsg.slice(0, 200),
+                        isDeleted: false
+                    };
+                    if (typeof addAction === 'function') {
+                        await addAction(actionRecord);
+                    } else if (window.db) {
+                        actionRecord.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+                        await window.db.set('actions', actionRecord);
+                    }
+                } catch(logErr) {
+                    console.warn('Could not save action log for bulk message:', logErr);
+                }
+                // ───────────────────────────────────────────────────────────────────
 
                 dispatchIndex++;
                 updateDispatchUI();
