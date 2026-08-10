@@ -907,10 +907,11 @@
                     if (isClosedLoan(c.status)) return false;
                     if (c.isClosed || c.closed || c.isSettled) return false;
 
+                    const loanAmt = parseFloat(c.loanAmount || c.amount || c.grantedAmount || 0);
                     const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
                     const installments = parseInt(c.overdueInstallments || c.dueInstallments || c.arrearsCount || c.installmentsInArrears || c.overdueMonths || c.overdueCount || 0);
 
-                    return overdueAmt >= 1000000 && installments > 2;
+                    return loanAmt >= 600000 && installments > 2;
                 });
 
                 // Sort by overdueAmount descending, take top 10
@@ -923,7 +924,7 @@
 
                 const highRiskBody = document.getElementById('p2HighRiskBody');
                 if (top10.length === 0) {
-                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (රු. 1,000,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
+                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (ණය මුදල රු. 600,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
                 } else {
                     highRiskBody.innerHTML = top10.map((c, i) => {
                         const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
