@@ -880,24 +880,43 @@
             document.getElementById('r_var_tot').innerText   = (parseFloat(getPct(eTotOverdue, eGross)) - parseFloat(getPct(sTotOverdue, sGross))).toFixed(2) + '%';
 
             // Populate Top High-Risk Overdue Loans Table
-            // Populate Top High-Risk Overdue Loans Table (Arrears >= 1,000,000 AND Overdue Installments > 2)
+            // Criteria: overdueAmount >= 1,000,000 AND overdueInstallments > 2
+            // EXCLUDE: Legal Action - Courts, Legal Action - Cooperative Commissioner, Closed loans
             try {
                 const allCustomers = await window.db.getAll('customers');
+
+                const isLegalStage = (s) => {
+                    if (!s) return false;
+                    const sl = s.trim().toLowerCase();
+                    return sl.includes('courts') || sl.includes('cooperative commissioner');
+                };
+
+                const isClosedLoan = (s) => {
+                    if (!s) return false;
+                    const sl = s.trim().toLowerCase();
+                    return sl.includes('closed') || sl.includes('settled') || sl.includes('written off') || sl.includes('write off');
+                };
+
                 const overdueCustomers = allCustomers.filter(c => {
                     if (c.isDeleted) return false;
-                    const overdueAmt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0);
+
+                    // Exclude legal action cases
+                    if (isLegalStage(c.status)) return false;
+
+                    // Exclude closed/settled loans
+                    if (isClosedLoan(c.status)) return false;
+                    if (c.isClosed || c.closed || c.isSettled) return false;
+
+                    const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
                     const installments = parseInt(c.overdueInstallments || c.dueInstallments || c.arrearsCount || c.installmentsInArrears || c.overdueMonths || c.overdueCount || 0);
-                    
-                    const hasInstProp = (c.overdueInstallments !== undefined || c.dueInstallments !== undefined || c.arrearsCount !== undefined || c.installmentsInArrears !== undefined);
-                    const matchesAmt = overdueAmt >= 1000000;
-                    const matchesInst = installments > 2 || (!hasInstProp && overdueAmt >= 1000000);
-                    return matchesAmt && matchesInst;
+
+                    return overdueAmt >= 1000000 && installments > 2;
                 });
-                
-                // Sort by overdueAmount / arrears descending, then by loanAmount, take top 10
+
+                // Sort by overdueAmount descending, take top 10
                 overdueCustomers.sort((a, b) => {
-                    const aArr = parseFloat(a.overdueAmount || a.arrears || a.loanAmount || 0);
-                    const bArr = parseFloat(b.overdueAmount || b.arrears || b.loanAmount || 0);
+                    const aArr = parseFloat(a.overdueAmount || a.arrears || 0);
+                    const bArr = parseFloat(b.overdueAmount || b.arrears || 0);
                     return bArr - aArr;
                 });
                 const top10 = overdueCustomers.slice(0, 10);
@@ -907,7 +926,7 @@
                     highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (රු. 1,000,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
                 } else {
                     highRiskBody.innerHTML = top10.map((c, i) => {
-                        const overdueAmt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0);
+                        const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
                         const amt = overdueAmt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
                         const cat = c.category || c.loanType || '-';
                         const status = c.status || 'Overdue';
@@ -922,6 +941,7 @@
                     }).join('');
                 }
             } catch(e) { console.error('High risk table error:', e); }
+
 
             // 2. Fetch System Actions & Operations metrics for the selected month
             try {
