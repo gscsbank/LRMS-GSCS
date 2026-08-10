@@ -762,7 +762,8 @@ async function exportDatabase() {
         const users = await window.db.getAll("users");
         const documents = await window.db.getAll("documents");
         const activity_logs = await window.db.getAll("activity_logs");
-        return JSON.stringify({ customers, actions, users, documents, activity_logs });
+        const npl_statements = await window.db.getAll("npl_statements");
+        return JSON.stringify({ customers, actions, users, documents, activity_logs, npl_statements });
     } catch (err) {
         console.error("Error exporting database:", err);
         return null;
@@ -797,6 +798,7 @@ async function importDatabase(jsonData) {
         const rawUsers = data.users || [];
         const rawDocs = data.documents || [];
         const rawLogs = data.activity_logs || [];
+        const rawNPL = data.npl_statements || [];
 
         await lrmsAlert(`Step 2: File Parsed!\nFound ${rawCustomers.length} Customers.\nReady to WIPE existing Offline Database?`);
 
@@ -812,6 +814,7 @@ async function importDatabase(jsonData) {
         rawUsers.forEach(u => { allItems.push({ coll: 'users', data: u }); });
         rawDocs.forEach(d => { allItems.push({ coll: 'documents', data: d }); });
         rawLogs.forEach(l => { allItems.push({ coll: 'activity_logs', data: l }); });
+        rawNPL.forEach(n => { allItems.push({ coll: 'npl_statements', data: n }); });
 
         setRestoreStatus(`Importing ${allItems.length} records...`);
 

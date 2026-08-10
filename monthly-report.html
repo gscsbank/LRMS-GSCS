@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="si">
 
 <head>
@@ -349,6 +349,13 @@
                 <div class="print-page">
                     <div class="bw-box cover-border">
                         <div>
+                            <!-- Cover Page Logo -->
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <div style="display:inline-block; border: 2px solid #000; padding: 6px; border-radius: 4px;">
+                                    <img src="assets/logo.png" alt="Logo" style="max-height: 80px; display: block; object-fit: contain;">
+                                </div>
+                            </div>
+
                             <!-- Header Emblem / Institution Title -->
                             <div style="font-size:14pt; font-weight:bold; line-height:1.3; text-transform:uppercase; margin-bottom:6px">
                                 සීමා සහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමූපකාර සමිතිය
@@ -518,36 +525,51 @@
                     <table class="bw-table">
                         <thead>
                             <tr>
-                                <th style="text-align:left">අයකරගැනීමේ මාධ්‍යය / ක්‍රියාමාර්ගය (Channel)</th>
-                                <th style="text-align:center">සිදුකළ ප්‍රමාණය</th>
-                                <th style="text-align:left">ලබාගත් ප්‍රතිඵල සහ විස්තරය</th>
+                                <th style="width:30%; text-align:left">අයකරගැනීමේ මාධ්‍යය / ක්‍රියාමාර්ගය (Channel)</th>
+                                <th style="width:14%; text-align:center">සිදුකළ ප්‍රමාණය</th>
+                                <th style="text-align:left">ලබාගත් ප්‍රතිඵල, විස්තරය සහ ණයගැතියන්ගේ ලැයිස්තුව</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><strong>දුරකථන ඇමතුම්/සබඳතා (Phone Calls)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_callsCount">0</td>
-                                <td>ලබාගත් පොරොන්දු වූ ගෙවීම් (Promises to Pay): <strong id="op_promisesCount">0</strong> ක් (මුළු වටිනාකම LKR <span id="op_promisesAmt">0.00</span>)</td>
+                                <td>
+                                    <div>ලබාගත් පොරොන්දු වූ ගෙවීම් (Promises to Pay): <strong id="op_promisesCount">0</strong> ක් (මුළු වටිනාකම LKR <span id="op_promisesAmt">0.00</span>)</div>
+                                    <div id="op_callsCustList"></div>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>ක්ෂේත්‍ර සංචාර (Field Visits)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_visitsCount">0</td>
-                                <td>ණයගැතියන් හමුවී සාකච්ඡා කර ලබාගත් ක්ෂේත්‍ර නිරීක්ෂණ වාර්තා</td>
+                                <td>
+                                    <div>ණයගැතියන් හමුවී සාකච්ඡා කර ලබාගත් ක්ෂේත්‍ර නිරීක්ෂණ වාර්තා</div>
+                                    <div id="op_visitsCustList"></div>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>සිහිකැඳවීම් ලිපි (Reminder Letters)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_lettersCount">0</td>
-                                <td>තැපැල් මගින් යවන ලද ප්‍රථම සහ දෙවන සිහිකැඳවීම් ලිපි</td>
+                                <td>
+                                    <div>තැපැල් මගින් යවන ලද ප්‍රථම සහ දෙවන සිහිකැඳවීම් ලිපි</div>
+                                    <div id="op_lettersCustList"></div>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>එන්තරවාසි / Demand Notices</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_demandCount">0</td>
-                                <td>නීතිමය පියවර ගැනීමට ප්‍රථම නිකුත් කළ අවසාන එන්තරවාසි නිවේදන</td>
+                                <td>
+                                    <div>නීතිමය පියවර ගැනීමට ප්‍රථම නිකුත් කළ අවසාන එන්තරවාසි නිවේදන</div>
+                                    <div id="op_demandCustList"></div>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>ඩිජිටල් මතක් කිරීම් (SMS / WhatsApp)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_digitalCount">0</td>
-                                <td>SMS මතක් කිරීම්: <span id="op_smsCount">0</span> | WhatsApp පණිවිඩ: <span id="op_waCount">0</span></td>
+                                <td>
+                                    <div>SMS මතක් කිරීම්: <span id="op_smsCount">0</span> | WhatsApp පණිවිඩ: <span id="op_waCount">0</span></div>
+                                    <div id="op_digitalCustList"></div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -607,23 +629,31 @@
                         </tbody>
                     </table>
 
+                    <!-- High Risk Borrowers as of Month End -->
+                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">මාසය අවසාන වන විටත් අවදානම් (High Risk) තත්ත්වයේ පැවති ණයගැතියන්ගේ ලැයිස්තුව (High Risk Borrowers List - Month End):</div>
+                    <table class="bw-table">
+                        <thead>
+                            <tr>
+                                <th style="width:6%; text-align:center">#</th>
+                                <th style="width:20%">ගිණුම් අංකය</th>
+                                <th style="width:28%">ණයගැතියාගේ නම</th>
+                                <th style="width:20%">ණය කාණ්ඩය</th>
+                                <th style="width:14%; text-align:right">ණය මුදල / ශේෂය</th>
+                                <th style="width:12%; text-align:center">තත්ත්වය</th>
+                            </tr>
+                        </thead>
+                        <tbody id="p4HighRiskMonthEndBody">
+                            <tr><td colspan="6" style="text-align:center; font-style:italic">මාසය අවසානයේ අවදානම් තත්ත්වයේ ණයගැතියන් නොමැත.</td></tr>
+                        </tbody>
+                    </table>
+
                     <!-- Signatures Section -->
-                    <table class="sig-table">
+                    <table class="sig-table" style="margin-top: 25mm !important;">
                         <tr>
-                            <td style="width:33%; text-align:center; vertical-align:top">
-                                <div class="sig-line"></div>
+                            <td style="width:100%; text-align:center; vertical-align:top">
+                                <div class="sig-line" style="width: 220px !important;"></div>
                                 <div class="sig-title">Loan Management Officer</div>
                                 <div class="sig-sub">Prepared by</div>
-                            </td>
-                            <td style="width:34%; text-align:center; vertical-align:top">
-                                <div class="sig-line"></div>
-                                <div class="sig-title">Manager</div>
-                                <div class="sig-sub">Verified by</div>
-                            </td>
-                            <td style="width:33%; text-align:center; vertical-align:top">
-                                <div class="sig-line"></div>
-                                <div class="sig-title">Chairman</div>
-                                <div class="sig-sub">Approved by</div>
                             </td>
                         </tr>
                     </table>
@@ -703,7 +733,9 @@
         async function saveNPLStatementData() {
             const m = document.getElementById('reportMonth').value || currentReportMonth;
             const data = {
+                id: 'npl_' + m,
                 month: m,
+                savedAt: new Date().toISOString(),
                 start: {
                     totalLoans: parseFloat(document.getElementById('start_totalLoans').value) || 0,
                     overdue6_12: parseFloat(document.getElementById('start_overdue6_12').value) || 0,
@@ -718,19 +750,35 @@
                 }
             };
 
+            // Save to IndexedDB (primary - included in full backups)
+            try { await window.db.set('npl_statements', data); } catch(e) { console.warn('IndexedDB save failed:', e); }
+            // Also keep localStorage as fallback
             localStorage.setItem('lrms_npl_statement_' + m, JSON.stringify(data));
-            if (typeof lrmsAlert === 'function') await lrmsAlert(`Saved NPL Statement values for ${m}!`);
+
+            if (typeof lrmsAlert === 'function') await lrmsAlert(`✅ NPL Statement data for ${m} saved successfully!\n(IndexedDB + Backup ෙ include)`);
             else alert(`Saved NPL Statement values for ${m}!`);
             updatePrintBookletPreview();
         }
 
         async function loadReportData() {
             currentReportMonth = document.getElementById('reportMonth').value || currentReportMonth;
-            const savedStr = localStorage.getItem('lrms_npl_statement_' + currentReportMonth);
 
-            if (savedStr) {
+            let data = null;
+
+            // 1. Try IndexedDB first (primary store, included in backups)
+            try {
+                const idbRecord = await window.db.get('npl_statements', 'npl_' + currentReportMonth);
+                if (idbRecord) data = idbRecord;
+            } catch(e) { console.warn('IndexedDB read failed, falling back to localStorage:', e); }
+
+            // 2. Fallback to localStorage (for backward compatibility)
+            if (!data) {
+                const savedStr = localStorage.getItem('lrms_npl_statement_' + currentReportMonth);
+                if (savedStr) { try { data = JSON.parse(savedStr); } catch(e) { console.error(e); } }
+            }
+
+            if (data) {
                 try {
-                    const data = JSON.parse(savedStr);
                     document.getElementById('start_totalLoans').value = data.start.totalLoans || '';
                     document.getElementById('start_overdue6_12').value = data.start.overdue6_12 || '';
                     document.getElementById('start_overdue12_18').value = data.start.overdue12_18 || '';
@@ -740,7 +788,6 @@
                     document.getElementById('end_overdue6_12').value = data.end.overdue6_12 || '';
                     document.getElementById('end_overdue12_18').value = data.end.overdue12_18 || '';
                     document.getElementById('end_overdue18_plus').value = data.end.overdue18_plus || '';
-
                 } catch(e) { console.error(e); }
             } else {
                 // Clear inputs if no saved record for selected month
@@ -833,13 +880,19 @@
             document.getElementById('r_var_tot').innerText   = (parseFloat(getPct(eTotOverdue, eGross)) - parseFloat(getPct(sTotOverdue, sGross))).toFixed(2) + '%';
 
             // Populate Top High-Risk Overdue Loans Table
-            // Populate Top High-Risk Overdue Loans Table (sorted by overdue arrears amount)
+            // Populate Top High-Risk Overdue Loans Table (Arrears >= 1,000,000 AND Overdue Installments > 2)
             try {
                 const allCustomers = await window.db.getAll('customers');
-                const overdueCustomers = allCustomers.filter(c => !c.isDeleted && 
-                    (parseFloat(c.overdueAmount || c.arrears || 0) > 0 ||
-                     c.status && (c.status.toLowerCase().includes('overdue') || c.status.toLowerCase().includes('kalpasu')) ||
-                     c.category === 'overdue' || c.category === 'kalpasu'));
+                const overdueCustomers = allCustomers.filter(c => {
+                    if (c.isDeleted) return false;
+                    const overdueAmt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0);
+                    const installments = parseInt(c.overdueInstallments || c.dueInstallments || c.arrearsCount || c.installmentsInArrears || c.overdueMonths || c.overdueCount || 0);
+                    
+                    const hasInstProp = (c.overdueInstallments !== undefined || c.dueInstallments !== undefined || c.arrearsCount !== undefined || c.installmentsInArrears !== undefined);
+                    const matchesAmt = overdueAmt >= 1000000;
+                    const matchesInst = installments > 2 || (!hasInstProp && overdueAmt >= 1000000);
+                    return matchesAmt && matchesInst;
+                });
                 
                 // Sort by overdueAmount / arrears descending, then by loanAmount, take top 10
                 overdueCustomers.sort((a, b) => {
@@ -851,7 +904,7 @@
 
                 const highRiskBody = document.getElementById('p2HighRiskBody');
                 if (top10.length === 0) {
-                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් වාර්තා වී නොමැත.</td></tr>';
+                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (රු. 1,000,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
                 } else {
                     highRiskBody.innerHTML = top10.map((c, i) => {
                         const overdueAmt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0);
@@ -928,36 +981,89 @@
                     }
                 }
 
-                // 3. Fetch Legal Actions for Page 4 (Filtered ONLY for the selected month)
+                // Populate Customer Lists directly inside each Channel Table Row
+                const allCustomersList = await getAllCustomers();
+                const callsCusts = [], visitsCusts = [], lettersCusts = [], demandCusts = [], digitalCusts = [];
+
+                for (const a of monthActions) {
+                    const type = (a.actionType || '').toLowerCase();
+                    const acc = (a.customerAccountNo || '').toString().trim();
+                    if (!acc) continue;
+                    const cust = allCustomersList.find(c => (c.accountNo || '').toString().trim() === acc);
+                    const cName = cust ? cust.name : (a.customerName || '');
+                    const label = cName ? `${acc} (${cName})` : acc;
+
+                    if (type.includes('call') || type.includes('phone')) {
+                        if (!callsCusts.includes(label)) callsCusts.push(label);
+                    }
+                    if (type.includes('visiting') || type.includes('visit') || type.includes('field')) {
+                        if (!visitsCusts.includes(label)) visitsCusts.push(label);
+                    }
+                    if (type.includes('letter') || type.includes('reminder') || type.includes('notice')) {
+                        if (!lettersCusts.includes(label)) lettersCusts.push(label);
+                    }
+                    if (type.includes('lod') || type.includes('demand') || type.includes('legal')) {
+                        if (!demandCusts.includes(label)) demandCusts.push(label);
+                    }
+                    if (type.includes('sms') || type.includes('text') || type.includes('whatsapp')) {
+                        if (!digitalCusts.includes(label)) digitalCusts.push(label);
+                    }
+                }
+
+                const renderCustLabels = (arr) => {
+                    if (arr.length === 0) return `<div style="font-size:8pt; color:#64748b; margin-top:3px; font-style:italic">අදාළ ණයගැතියන් නොමැත.</div>`;
+                    return `<div style="font-size:8pt; color:#1e1b4b; margin-top:4px; font-weight:600; line-height:1.35">ණයගැතියන් (${arr.length}): ${arr.join(', ')}</div>`;
+                };
+
+                const elCalls = document.getElementById('op_callsCustList');
+                if (elCalls) elCalls.innerHTML = renderCustLabels(callsCusts);
+
+                const elVisits = document.getElementById('op_visitsCustList');
+                if (elVisits) elVisits.innerHTML = renderCustLabels(visitsCusts);
+
+                const elLetters = document.getElementById('op_lettersCustList');
+                if (elLetters) elLetters.innerHTML = renderCustLabels(lettersCusts);
+
+                const elDemand = document.getElementById('op_demandCustList');
+                if (elDemand) elDemand.innerHTML = renderCustLabels(demandCusts);
+
+                const elDigital = document.getElementById('op_digitalCustList');
+                if (elDigital) elDigital.innerHTML = renderCustLabels(digitalCusts);
+
+                // 3. Fetch Legal Actions for Page 4 (Filtered ONLY for Legal Action - Courts & Legal Action - Cooperative Commissioner for the selected month)
                 const customers = await getAllCustomers();
                 const monthLegalAccountNos = new Set();
 
                 // Check actions logged in this specific month for legal/LOD/demand notices
                 monthActions.forEach(a => {
                     const type = (a.actionType || '').toLowerCase();
-                    if (type.includes('legal') || type.includes('lod') || type.includes('demand')) {
+                    if (type.includes('legal') || type.includes('court') || type.includes('cooperative') || type.includes('commissioner')) {
                         if (a.customerAccountNo) monthLegalAccountNos.add(a.customerAccountNo.toString().trim());
                     }
                 });
 
-                // Check customers whose status was set to Legal Action in this specific month
-                customers.forEach(c => {
-                    if ((c.status || '').includes('Legal Action')) {
-                        if (c.statusDate && c.statusDate.startsWith(monthPrefix)) {
-                            monthLegalAccountNos.add((c.accountNo || '').toString().trim());
-                        }
-                    }
-                });
+                // Check customers whose status was set to Courts or Cooperative Commissioner in this month
+                const isStrictLegalStage = (statusStr) => {
+                    if (!statusStr) return false;
+                    const s = statusStr.trim().toLowerCase();
+                    return s.includes('courts') || s.includes('cooperative commissioner') || s.includes('legal action');
+                };
 
                 const legalCusts = customers.filter(c => {
+                    if (c.isDeleted) return false;
+                    const status = (c.status || '').trim();
+                    if (!status.includes('Courts') && !status.includes('Cooperative Commissioner') && status !== 'Legal Action - Courts' && status !== 'Legal Action - Cooperative Commissioner') return false;
+                    
                     const cleanAcc = (c.accountNo || '').toString().trim();
-                    return monthLegalAccountNos.has(cleanAcc);
+                    const isMonthStatus = c.statusDate && c.statusDate.startsWith(monthPrefix);
+                    const isMonthAction = monthLegalAccountNos.has(cleanAcc);
+                    return isMonthStatus || isMonthAction || !c.statusDate;
                 });
 
                 const p4Body = document.getElementById('p4LegalBody');
                 if (p4Body) {
                     if (legalCusts.length === 0) {
-                        p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ නීතිමය පියවර ගත් ගිණුම් නොමැත.</td></tr>`;
+                        p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ නීතිමය පියවර (Courts / Cooperative Commissioner) ගත් ගිණුම් නොමැත.</td></tr>`;
                     } else {
                         p4Body.innerHTML = legalCusts.map((c, idx) => {
                             const sDate = c.statusDate ? ` (${c.statusDate})` : '';
@@ -973,16 +1079,17 @@
                     }
                 }
 
-                // 4. Populate Demand Notices Issued This Month (p4DemandBody)
+                // 4. Populate Demand Notices Issued This Month (Letter of Demand ONLY)
                 const demandActions = monthActions.filter(a => {
                     const type = (a.actionType || '').toLowerCase();
-                    return type.includes('demand') || type.includes('lod') || type.includes('entharava') || type.includes('demand notice');
+                    const note = (a.officerNote || a.remarks || '').toLowerCase();
+                    return type.includes('demand') || type.includes('lod') || type.includes('letter of demand') || type.includes('entharava') || note.includes('letter of demand') || note.includes('lod');
                 });
 
                 const p4DemandBody = document.getElementById('p4DemandBody');
                 if (p4DemandBody) {
                     if (demandActions.length === 0) {
-                        p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ ඉල්ලුම් නිවේදන නිකුත් කරන ලද ගිණුම් නොමැත.</td></tr>`;
+                        p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ ඉල්ලුම් නිවේදන (Letter of Demand) නිකුත් කරන ලද ගිණුම් නොමැත.</td></tr>`;
                     } else {
                         // Deduplicate by account no, keep latest action date
                         const demandMap = new Map();
@@ -1004,6 +1111,33 @@
                                 <td>${name}</td>
                                 <td>${cat}</td>
                                 <td style="text-align:center">${action.date || '-'}</td>
+                            </tr>`;
+                        }).join('');
+                    }
+                }
+
+                // 5. Populate Month-End High Risk Borrowers List (p4HighRiskMonthEndBody)
+                const p4HighRiskMonthEndBody = document.getElementById('p4HighRiskMonthEndBody');
+                if (p4HighRiskMonthEndBody) {
+                    const highRiskCusts = customers.filter(c => {
+                        if (c.isDeleted) return false;
+                        const s = (c.status || '').toLowerCase();
+                        const cat = (c.category || '').toLowerCase();
+                        return s === 'high risk' || s.includes('high risk') || cat === 'high risk';
+                    });
+
+                    if (highRiskCusts.length === 0) {
+                        p4HighRiskMonthEndBody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-style:italic">මාසය අවසානයේ අවදානම් (High Risk) තත්ත්වයේ ණයගැතියන් නොමැත.</td></tr>`;
+                    } else {
+                        p4HighRiskMonthEndBody.innerHTML = highRiskCusts.map((c, idx) => {
+                            const amt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+                            return `<tr>
+                                <td style="text-align:center">${idx + 1}</td>
+                                <td style="font-weight:bold">${c.accountNo || '-'}</td>
+                                <td>${c.name || '-'}</td>
+                                <td>${c.category || c.loanType || '-'}</td>
+                                <td style="text-align:right; font-weight:bold">${amt}</td>
+                                <td style="text-align:center; font-weight:bold">${c.status || 'High Risk'}</td>
                             </tr>`;
                         }).join('');
                     }

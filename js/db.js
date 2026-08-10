@@ -2,7 +2,7 @@
 // Offline IndexedDB Wrapper for LRMS
 
 const DB_NAME = 'lrms_offline_db';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 window.db = {
     _db: null,
@@ -43,6 +43,10 @@ window.db = {
                     const msgStore = db.createObjectStore('message_queue', { keyPath: 'id' });
                     msgStore.createIndex('scheduledDate', 'scheduledDate', { unique: false });
                     msgStore.createIndex('status', 'status', { unique: false });
+                }
+                if (!db.objectStoreNames.contains('npl_statements')) {
+                    const nplStore = db.createObjectStore('npl_statements', { keyPath: 'id' });
+                    nplStore.createIndex('month', 'month', { unique: true });
                 }
             };
             
