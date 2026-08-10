@@ -964,14 +964,25 @@
                 let calls = 0, promises = 0, promisesAmt = 0, visits = 0, letters = 0, demand = 0, sms = 0, wa = 0;
                 let promiseLogs = [];
 
+                const classifyAction = (typeStr) => {
+                    const type = (typeStr || '').toLowerCase().trim();
+                    const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
+                    const isDemand = type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි');
+                    const isVisit = type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('සංචාර');
+                    const isCall = type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම');
+                    const isLetter = (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || (type.includes('reminder') && !isDigital)) && !isDigital && !isDemand;
+
+                    return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS: type.includes('sms') || type.includes('text'), isWA: type.includes('whatsapp') };
+                };
+
                 for (const a of monthActions) {
-                    const type = (a.actionType || '').toLowerCase();
-                    if (type.includes('call') || type.includes('phone')) calls++;
-                    if (type.includes('visiting') || type.includes('visit') || type.includes('field')) visits++;
-                    if (type.includes('letter') || type.includes('reminder') || type.includes('notice')) letters++;
-                    if (type.includes('lod') || type.includes('demand') || type.includes('legal')) demand++;
-                    if (type.includes('sms') || type.includes('text')) sms++;
-                    if (type.includes('whatsapp')) wa++;
+                    const cls = classifyAction(a.actionType);
+                    if (cls.isCall) calls++;
+                    if (cls.isVisit) visits++;
+                    if (cls.isLetter) letters++;
+                    if (cls.isDemand) demand++;
+                    if (cls.isSMS) sms++;
+                    if (cls.isWA) wa++;
 
                     if (a.response || a.followUpDate) {
                         promises++;
@@ -1017,28 +1028,18 @@
                 const callsCusts = [], visitsCusts = [], lettersCusts = [], demandCusts = [], digitalCusts = [];
 
                 for (const a of monthActions) {
-                    const type = (a.actionType || '').toLowerCase();
                     const acc = (a.customerAccountNo || '').toString().trim();
                     if (!acc) continue;
                     const cust = allCustomersList.find(c => (c.accountNo || '').toString().trim() === acc);
                     const cName = cust ? cust.name : (a.customerName || '');
                     const label = cName ? `${acc} (${cName})` : acc;
+                    const cls = classifyAction(a.actionType);
 
-                    if (type.includes('call') || type.includes('phone')) {
-                        if (!callsCusts.includes(label)) callsCusts.push(label);
-                    }
-                    if (type.includes('visiting') || type.includes('visit') || type.includes('field')) {
-                        if (!visitsCusts.includes(label)) visitsCusts.push(label);
-                    }
-                    if (type.includes('letter') || type.includes('reminder') || type.includes('notice')) {
-                        if (!lettersCusts.includes(label)) lettersCusts.push(label);
-                    }
-                    if (type.includes('lod') || type.includes('demand') || type.includes('legal')) {
-                        if (!demandCusts.includes(label)) demandCusts.push(label);
-                    }
-                    if (type.includes('sms') || type.includes('text') || type.includes('whatsapp')) {
-                        if (!digitalCusts.includes(label)) digitalCusts.push(label);
-                    }
+                    if (cls.isCall && !callsCusts.includes(label)) callsCusts.push(label);
+                    if (cls.isVisit && !visitsCusts.includes(label)) visitsCusts.push(label);
+                    if (cls.isLetter && !lettersCusts.includes(label)) lettersCusts.push(label);
+                    if (cls.isDemand && !demandCusts.includes(label)) demandCusts.push(label);
+                    if (cls.isDigital && !digitalCusts.includes(label)) digitalCusts.push(label);
                 }
 
                 const renderCustLabels = (arr) => {
