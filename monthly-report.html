@@ -909,22 +909,32 @@
 
                     const loanAmt = parseFloat(c.loanAmount || c.amount || c.grantedAmount || 0);
                     const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
-                    const installments = parseInt(c.overdueInstallments || c.dueInstallments || c.arrearsCount || c.installmentsInArrears || c.overdueMonths || c.overdueCount || 0);
+                    const effectiveAmt = Math.max(loanAmt, overdueAmt);
 
-                    return loanAmt >= 600000 && installments > 2;
+                    const rawInst = c.overdueInstallments ?? c.arrearsInstallments ?? c.dueInstallments ?? c.arrearsCount ?? c.installmentsInArrears ?? c.overdueMonths ?? c.overdueCount;
+                    if (rawInst === undefined || rawInst === null || rawInst === '' || rawInst === 'N/A' || rawInst === 'n/a') {
+                        return false; // Reject N/A or unspecified installment count
+                    }
+
+                    const instVal = parseInt(rawInst);
+                    if (isNaN(instVal) || instVal <= 2) {
+                        return false; // Reject installments <= 2
+                    }
+
+                    return effectiveAmt >= 1000000;
                 });
 
-                // Sort by overdueAmount descending, take top 10
+                // Sort by overdueAmount / effectiveAmt descending, take top 10
                 overdueCustomers.sort((a, b) => {
-                    const aArr = parseFloat(a.overdueAmount || a.arrears || 0);
-                    const bArr = parseFloat(b.overdueAmount || b.arrears || 0);
+                    const aArr = Math.max(parseFloat(a.overdueAmount || a.arrears || 0), parseFloat(a.loanAmount || a.amount || 0));
+                    const bArr = Math.max(parseFloat(b.overdueAmount || b.arrears || 0), parseFloat(b.loanAmount || b.amount || 0));
                     return bArr - aArr;
                 });
                 const top10 = overdueCustomers.slice(0, 10);
 
                 const highRiskBody = document.getElementById('p2HighRiskBody');
                 if (top10.length === 0) {
-                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (ණය මුදල රු. 600,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
+                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (රු. 1,000,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
                 } else {
                     highRiskBody.innerHTML = top10.map((c, i) => {
                         const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
