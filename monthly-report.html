@@ -967,12 +967,14 @@
                 const classifyAction = (typeStr) => {
                     const type = (typeStr || '').toLowerCase().trim();
                     const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
-                    const isDemand = type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි');
-                    const isVisit = type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('සංචාර');
-                    const isCall = type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම');
-                    const isLetter = (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || (type.includes('reminder') && !isDigital)) && !isDigital && !isDemand;
+                    const isSMS = isDigital && (type.includes('sms') || type.includes('text'));
+                    const isWA = isDigital && type.includes('whatsapp');
+                    const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි'));
+                    const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('සංචාර'));
+                    const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම'));
+                    const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('සිහිකැඳවීම'));
 
-                    return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS: type.includes('sms') || type.includes('text'), isWA: type.includes('whatsapp') };
+                    return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS, isWA };
                 };
 
                 for (const a of monthActions) {

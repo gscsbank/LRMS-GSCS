@@ -1321,11 +1321,17 @@ async function getOfficerPerformanceMetrics(monthPrefix = null) {
                 metrics[officer] = { officer, calls: 0, visits: 0, letters: 0, demand: 0, promises: 0, totalAmt: 0 };
             }
 
-            const type = (a.actionType || '').toLowerCase();
-            if (type.includes('call') || type.includes('phone')) metrics[officer].calls++;
-            if (type.includes('visit') || type.includes('field')) metrics[officer].visits++;
-            if (type.includes('letter') || type.includes('reminder') || type.includes('notice')) metrics[officer].letters++;
-            if (type.includes('lod') || type.includes('demand')) metrics[officer].demand++;
+            const type = (a.actionType || '').toLowerCase().trim();
+            const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
+            const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි'));
+            const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('සංචාර'));
+            const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම'));
+            const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('සිහිකැඳවීම'));
+
+            if (isCall) metrics[officer].calls++;
+            if (isVisit) metrics[officer].visits++;
+            if (isLetter) metrics[officer].letters++;
+            if (isDemand) metrics[officer].demand++;
 
             if (a.response || a.followUpDate) {
                 metrics[officer].promises++;
