@@ -367,7 +367,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=3.17"></script>
+    <script src="js/app.js?v=3.18"></script>
     <script>
         // Global variables for selected customer data
         let currentCust = null;
@@ -1822,6 +1822,10 @@
 
                 const actionData = {
                     customerAccountNo: accNo,
+                    loanAccountNo: (currentCust && currentCust.loanAccountNo) ? currentCust.loanAccountNo : (document.getElementById('cLoanAccNo').value || accNo),
+                    customerId: currentCust ? currentCust.id : null,
+                    customerName: currentCust ? currentCust.name : '',
+                    category: currentCust ? currentCust.category : '',
                     actionType: letterName,
                     date: document.getElementById('letterDate').value || new Date().toISOString().split('T')[0],
                     response: "Letter printed",

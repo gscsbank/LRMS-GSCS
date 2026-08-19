@@ -942,7 +942,7 @@
         </div><!-- end content-area -->
     </main>
 
-    <script src="js/app.js?v=3.17"></script>
+    <script src="js/app.js?v=3.18"></script>
     <script>
         // ── In-Memory States ──────────────────────────────────────
         let currentCustomers = [];
@@ -1597,8 +1597,13 @@
                     }[rec.status] || 'Field Visit';
                     
                     try {
+                        const custObj = (currentCustomers || []).find(c => String(c.accountNo) === String(acc) || String(c.loanAccountNo) === String(acc));
                         await addAction({
-                            customerAccountNo: acc,
+                            customerAccountNo: (custObj && custObj.accountNo) || acc,
+                            loanAccountNo: (custObj && custObj.loanAccountNo) || acc,
+                            customerId: (custObj && custObj.id) || null,
+                            customerName: (custObj && custObj.name) || '',
+                            category: (custObj && custObj.category) || '',
                             actionType: statusLabel,
                             date: visitDate,
                             response: rec.notes || null,

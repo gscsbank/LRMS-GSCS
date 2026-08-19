@@ -1,4 +1,4 @@
-// js/pdf-scanner.js v2.2
+// js/pdf-scanner.js v2.4
 
 if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -171,26 +171,8 @@ async function handlePDFUpload(event) {
                                 guarantor2Address   : ''
                             };
                             extractedCustomers.push(lastCustomer);
-                        } else if (lastCustomer && (lineStr.match(/01\s*[-:]/i) || lineStr.match(/w[a-z]+|æp|ඇප|guarantor/i))) {
-                            // Extract Guarantor 1 & 2 (ID & Name)
-                            const g1Match = lineStr.match(/01\s*[-:]\s*(\d+)\s+(.*?)(?=\s*02\s*[-:]|\bw[a-z]+|\bæp|\bඇප|$)/i);
-                            if (g1Match) {
-                                const id1 = g1Match[1].trim();
-                                let name1 = g1Match[2].replace(/^(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?/gi, '').trim();
-                                name1 = name1.replace(/\s*(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?.*$/gi, '').trim();
-                                if (id1 && name1) {
-                                    lastCustomer.guarantor1 = id1 + ' ' + name1;
-                                }
-                            }
-                            const g2Match = lineStr.match(/02\s*[-:]\s*(\d+)\s+(.*?)$/i);
-                            if (g2Match) {
-                                const id2 = g2Match[1].trim();
-                                let name2 = g2Match[2].replace(/^(?:w[a-z]+mlre|w[a-z]+mkaru|æpmlre|ඇපකරු|ඇපකරුවන්|guarantor)\s*:?/gi, '').trim();
-                                if (id2 && name2) {
-                                    lastCustomer.guarantor2 = id2 + ' ' + name2;
-                                }
-                            }
                         }
+                        // Note: Guarantor 1 and Guarantor 2 details are NOT extracted/updated from PDF as per user preference (entered manually)
                     }
                 }
 
@@ -217,8 +199,7 @@ async function handlePDFUpload(event) {
                             match.arrearsAmount       = c.arrearsAmount;
                             match.arrearsInstallments = c.arrearsInstallments;
                             if (c.lastPaidDate)  match.lastPaidDate = c.lastPaidDate;
-                            if (c.guarantor1)    match.guarantor1   = c.guarantor1;
-                            if (c.guarantor2)    match.guarantor2   = c.guarantor2;
+                            // Guarantor 1 & 2 details are kept as manually entered (not overwritten from PDF)
                             if (c.arrearsInstallments > 3 && match.status === 'Normal') {
                                 match.status = 'High Risk';
                             }

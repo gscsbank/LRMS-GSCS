@@ -637,7 +637,7 @@
         </div>
     </main>
 
-    <script src="js/app.js?v=3.17"></script>
+    <script src="js/app.js?v=3.18"></script>
     <!-- Edit Profile Modal -->
     <div id="editModal" class="modal-wrapper">
         <div class="modal-backdrop" onclick="toggleEditModal()"></div>
@@ -811,6 +811,7 @@
 
             let currentAccountNo = null;
             let currentCustomerId = null;
+            let currentCustomer = null;
 
             window.initPage = async () => {
                 const params = new URLSearchParams(window.location.search);
@@ -864,6 +865,10 @@
                     await lrmsAlert("Customer not found in Database!");
                     return;
                 }
+
+                currentCustomer = customer;
+                currentCustomerId = customer.id;
+                currentAccountNo = customer.accountNo;
 
                 const headerName = document.getElementById('headerName');
                 if (headerName) headerName.innerText = customer.name;
@@ -1089,7 +1094,8 @@
             }
 
             async function loadTimeline() {
-                const actions = await getCustomerActions(currentAccountNo);
+                const loanAcc = (currentCustomer && currentCustomer.loanAccountNo) ? currentCustomer.loanAccountNo : currentAccountNo;
+                const actions = await getCustomerActions(currentAccountNo, currentCustomerId, loanAcc, true);
                 const container = document.getElementById('timelineContainer');
                 const printBody = document.getElementById('printHistoryBody');
                 const actionCount = document.getElementById('actionCount');
@@ -1098,8 +1104,8 @@
                 }
 
                 if (actions.length === 0) {
-                    if (container) container.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:20px;font-style:italic">No actions recorded yet.</div>`;
-                    if (printBody) printBody.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">No actions recorded yet.</td></tr>`;
+                    if (container) container.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:20px;font-style:italic">No actions recorded yet for this loan.</div>`;
+                    if (printBody) printBody.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">No actions recorded yet for this loan.</td></tr>`;
                     return;
                 }
                 if (container) container.innerHTML = '';
@@ -1130,7 +1136,7 @@
                                             <p style="font-size:0.7rem;color:#9ca3af;font-weight:600;margin-top:2px">${dateStr}</p>
                                         </div>
                                         <button onclick="openEditActionModal('${action.id}')" class="btn btn-ghost no-print" style="padding:4px;color:#9ca3af">
-                                            <i data-lucide="pencil" style="width:14px;height:14px"></i>
+                                             <i data-lucide="pencil" style="width:14px;height:14px"></i>
                                         </button>
                                         <button onclick="handleDeleteHistoryItem(event, '${action.id}')" class="btn btn-ghost no-print" style="padding:4px;color:#ef4444;margin-left:4px" title="Delete Action">
                                             <i data-lucide="trash-2" style="width:14px;height:14px"></i>
@@ -1177,8 +1183,13 @@
             if (actionForm) {
                 actionForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    const loanAcc = (currentCustomer && currentCustomer.loanAccountNo) ? currentCustomer.loanAccountNo : currentAccountNo;
                     const actionData = {
                         customerAccountNo: currentAccountNo,
+                        loanAccountNo: loanAcc,
+                        customerId: currentCustomerId || (currentCustomer && currentCustomer.id) || null,
+                        customerName: currentCustomer ? currentCustomer.name : '',
+                        category: currentCustomer ? currentCustomer.category : '',
                         actionType: document.getElementById('actionType').value,
                         date: document.getElementById('actionDate').value,
                         response: document.getElementById('actionResponse').value.trim() || null,
@@ -1220,26 +1231,25 @@
                 if (!m) return;
                 m.classList.toggle('open');
                 if (m.classList.contains('open')) {
-                    getCustomerByAccountNo(currentAccountNo).then(c => {
-                        if (!c) return;
-                        document.getElementById('editAccNo').value = c.accountNo || '';
-                        document.getElementById('editCustName').value = c.name;
-                        document.getElementById('editAddress').value = c.address || '';
-                        document.getElementById('editLoanAccNo').value = c.loanAccountNo || '';
-                        document.getElementById('editLoanDate').value = c.loanDate || '';
-                        document.getElementById('editLoanAmount').value = c.loanAmount;
-                        document.getElementById('editInterestRate').value = c.interestRate;
-                        document.getElementById('editLoanCategory').value = c.category;
-                        document.getElementById('editGuarantor1').value = c.guarantor1 || '';
-                        document.getElementById('editGuarantor1Phone').value = c.guarantor1Phone || '';
-                        document.getElementById('editGuarantor1Address').value = c.guarantor1Address || '';
-                        document.getElementById('editGuarantor2').value = c.guarantor2 || '';
-                        document.getElementById('editGuarantor2Phone').value = c.guarantor2Phone || '';
-                        document.getElementById('editGuarantor2Address').value = c.guarantor2Address || '';
-                        document.getElementById('editPhone').value = c.phone || '';
-                        document.getElementById('editMapLink').value = c.mapLink || '';
-                        if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.getElementById('editModal') });
-                    });
+                    const c = currentCustomer;
+                    if (!c) return;
+                    document.getElementById('editAccNo').value = c.accountNo || '';
+                    document.getElementById('editCustName').value = c.name || '';
+                    document.getElementById('editAddress').value = c.address || '';
+                    document.getElementById('editLoanAccNo').value = c.loanAccountNo || '';
+                    document.getElementById('editLoanDate').value = c.loanDate || '';
+                    document.getElementById('editLoanAmount').value = c.loanAmount || 0;
+                    document.getElementById('editInterestRate').value = c.interestRate || 0;
+                    document.getElementById('editLoanCategory').value = c.category || '';
+                    document.getElementById('editGuarantor1').value = c.guarantor1 || '';
+                    document.getElementById('editGuarantor1Phone').value = c.guarantor1Phone || '';
+                    document.getElementById('editGuarantor1Address').value = c.guarantor1Address || '';
+                    document.getElementById('editGuarantor2').value = c.guarantor2 || '';
+                    document.getElementById('editGuarantor2Phone').value = c.guarantor2Phone || '';
+                    document.getElementById('editGuarantor2Address').value = c.guarantor2Address || '';
+                    document.getElementById('editPhone').value = c.phone || '';
+                    document.getElementById('editMapLink').value = c.mapLink || '';
+                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.getElementById('editModal') });
                 }
             }
 
@@ -1265,7 +1275,13 @@
                         phone: document.getElementById('editPhone').value.trim(),
                         mapLink: document.getElementById('editMapLink').value.trim()
                     };
-                    if (await updateCustomer(currentAccountNo, d)) { 
+                    if (currentCustomerId) {
+                        const merged = { ...(currentCustomer || {}), ...d };
+                        await window.db.update("customers", currentCustomerId, merged);
+                        invalidateCache('customers');
+                        toggleEditModal();
+                        loadCustomerDetails();
+                    } else if (await updateCustomer(currentAccountNo, d)) { 
                         if (d.accountNo && d.accountNo !== currentAccountNo) {
                             const idParam = currentCustomerId ? `&id=${encodeURIComponent(currentCustomerId)}` : '';
                             window.location.href = `customer-detail.html?accountNo=${encodeURIComponent(d.accountNo)}${idParam}`;
@@ -1322,7 +1338,8 @@
             // ─────────────────────────────────────────────────────
 
             window.openEditActionModal = async function (id) {
-                const customerActions = await getCustomerActions(currentAccountNo);
+                const loanAcc = (currentCustomer && currentCustomer.loanAccountNo) ? currentCustomer.loanAccountNo : currentAccountNo;
+                const customerActions = await getCustomerActions(currentAccountNo, currentCustomerId, loanAcc);
                 const a = customerActions.find(item => item.id === id);
                 if (!a) return;
                 document.getElementById('editActionId').value = id;

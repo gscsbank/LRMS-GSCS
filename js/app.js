@@ -410,8 +410,9 @@ async function getCustomerById(id) {
 async function addAction(actionData) {
     try {
         await window.db.add("actions", actionData);
-        invalidateCache('actions', actionData.customerAccountNo);
-        await logActivity("Log Action", `Logged ${actionData.actionType} for Acc: ${actionData.customerAccountNo}`, "info");
+        invalidateCache('actions');
+        const displayAcc = actionData.loanAccountNo || actionData.customerAccountNo;
+        await logActivity("Log Action", `Logged ${actionData.actionType} for Loan: ${displayAcc}`, "info");
         console.log("Action recorded successfully!");
         return true;
     } catch (error) {
@@ -420,54 +421,81 @@ async function addAction(actionData) {
     }
 }
 
-// Helper Function: Get actions for a customer (supports multi-loan separation via customerId / loanAccountNo)
+// Helper Function: Get actions for a customer (strictly separated per loan via customerId and loanAccountNo)
 async function getCustomerActions(accountNo, customerId = null, loanAccountNo = null, forceRefresh = false) {
-    if (!accountNo && !customerId) return [];
+    if (!accountNo && !customerId && !loanAccountNo) return [];
     const cleanAcc = (accountNo || '').toString().trim();
-    const cacheKey = customerId ? `${cleanAcc}_${customerId}` : cleanAcc;
+    const cleanLoanAcc = (loanAccountNo || '').toString().trim();
+    const cleanCustId = customerId ? String(customerId).trim() : null;
+    const cacheKey = cleanCustId ? `${cleanAcc}_${cleanCustId}` : (cleanLoanAcc ? `${cleanAcc}_${cleanLoanAcc}` : cleanAcc);
 
-    if (!forceRefresh && window.lrmsCache.actions[cacheKey]) {
+    if (!forceRefresh && window.lrmsCache && window.lrmsCache.actions && window.lrmsCache.actions[cacheKey]) {
         console.log("Cache Hit: getCustomerActions", cacheKey);
         return window.lrmsCache.actions[cacheKey];
     }
 
     try {
-        console.log("Fetching Actions from DB:", cleanAcc, customerId);
+        console.log("Fetching Actions from DB:", cleanAcc, cleanCustId, cleanLoanAcc);
         let actions = [];
         if (cleanAcc) {
-            const allActions = await window.db.getByIndex("actions", "customerAccountNo", cleanAcc);
+            const byAcc = await window.db.getByIndex("actions", "customerAccountNo", cleanAcc);
+            if (byAcc && byAcc.length) actions = [...actions, ...byAcc];
             const numCleanAcc = isNaN(cleanAcc) || cleanAcc === "" ? null : Number(cleanAcc);
-            actions = allActions;
-
             if (numCleanAcc !== null) {
                 const numActions = await window.db.getByIndex("actions", "customerAccountNo", numCleanAcc);
-                actions = [...allActions, ...numActions];
+                if (numActions && numActions.length) actions = [...actions, ...numActions];
             }
-        } else {
-            actions = await window.db.getAll("actions");
+        }
+        if (cleanLoanAcc && cleanLoanAcc !== cleanAcc) {
+            const byLoanAcc = await window.db.getByIndex("actions", "customerAccountNo", cleanLoanAcc);
+            if (byLoanAcc && byLoanAcc.length) actions = [...actions, ...byLoanAcc];
+        }
+
+        if (actions.length === 0) {
+            const allDocs = await window.db.getAll("actions");
+            actions = (allDocs || []).filter(a => {
+                if (a.isDeleted) return false;
+                const aAcc = String(a.customerAccountNo || '').trim();
+                const aLoan = String(a.loanAccountNo || '').trim();
+                const aCustId = a.customerId ? String(a.customerId).trim() : null;
+                return aAcc === cleanAcc || 
+                       (cleanLoanAcc && (aAcc === cleanLoanAcc || aLoan === cleanLoanAcc)) ||
+                       (cleanCustId && aCustId === cleanCustId);
+            });
         }
 
         // Deduplicate by action ID
         const actionMap = new Map();
-        actions.forEach(a => { if (!a.isDeleted) actionMap.set(a.id, a); });
+        actions.forEach(a => { if (a && !a.isDeleted) actionMap.set(a.id, a); });
         actions = Array.from(actionMap.values());
 
-        // Separate actions per loan if customerId or loanAccountNo is provided
-        if (customerId || loanAccountNo) {
+        // Strictly separate actions per loan account
+        if (cleanCustId || cleanLoanAcc) {
             actions = actions.filter(a => {
-                if (a.customerId) {
-                    return a.customerId === customerId;
+                // 1. If action has explicit customerId, match by customerId
+                if (a.customerId && cleanCustId) {
+                    return String(a.customerId).trim() === cleanCustId;
                 }
-                if (a.loanAccountNo && loanAccountNo) {
-                    return a.loanAccountNo === loanAccountNo;
+                // 2. If action has explicit loanAccountNo, match by loanAccountNo
+                if (a.loanAccountNo && cleanLoanAcc) {
+                    const aLoanD = digitsOnly(a.loanAccountNo);
+                    const targetLoanD = digitsOnly(cleanLoanAcc);
+                    return String(a.loanAccountNo).trim() === cleanLoanAcc || (aLoanD && targetLoanD && aLoanD === targetLoanD);
                 }
-                // Backward compatibility for legacy actions without customerId
-                return true;
+                // 3. For legacy actions without explicit loanAccountNo/customerId:
+                if (!a.loanAccountNo && !a.customerId) {
+                    if (cleanLoanAcc && cleanLoanAcc !== cleanAcc) {
+                        return String(a.customerAccountNo).trim() === cleanLoanAcc;
+                    }
+                    return true;
+                }
+                return false;
             });
         }
 
         actions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+        if (!window.lrmsCache.actions) window.lrmsCache.actions = {};
         window.lrmsCache.actions[cacheKey] = actions;
         return actions;
     } catch (error) {
@@ -1251,9 +1279,9 @@ async function calculateNPLRiskScore(customer, customerActions = null) {
     else if (status.includes('high risk') || status.includes('overdue') || status.includes('kalpasu')) { score += 25; badges.push('අවදානම් / කල්පසු තත්ත්වය (+25)'); }
 
     // Factor 3: Actions History & Missed Promises
-    if (!customerActions && customer.accountNo) {
+    if (!customerActions && (customer.accountNo || customer.loanAccountNo)) {
         try {
-            customerActions = await getActionsForCustomer(customer.accountNo);
+            customerActions = await getCustomerActions(customer.accountNo, customer.id, customer.loanAccountNo);
         } catch(e) { customerActions = []; }
     }
     customerActions = customerActions || [];

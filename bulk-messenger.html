@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -399,7 +399,10 @@
                         : 'SMS Reminder (Scheduled)';
                     const today = new Date().toISOString().split('T')[0];
                     const actionRecord = {
-                        customerAccountNo: (c.accountNo || c.loanAccountNo || '').toString().trim(),
+                        customerAccountNo: (c.accountNo || '').toString().trim(),
+                        loanAccountNo: (c.loanAccountNo || c.accountNo || '').toString().trim(),
+                        customerId: c.id || null,
+                        category: c.category || '',
                         customerName: c.name || '',
                         actionType: actionType,
                         date: today,
@@ -607,7 +610,7 @@
 
         }
     </script>
-    <script src="js/app.js?v=3.17"></script>
+    <script src="js/app.js?v=3.18"></script>
 <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
 
