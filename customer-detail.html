@@ -637,7 +637,7 @@
         </div>
     </main>
 
-    <script src="js/app.js?v=3.18"></script>
+    <script src="js/app.js?v=3.19"></script>
     <!-- Edit Profile Modal -->
     <div id="editModal" class="modal-wrapper">
         <div class="modal-backdrop" onclick="toggleEditModal()"></div>
@@ -1210,9 +1210,14 @@
                 updateStatusBtn.addEventListener('click', async () => {
                     const status = document.getElementById('statusSelect').value;
                     const date = document.getElementById('statusDateInput').value;
-                    if (!date) { await lrmsAlert("Select a date."); return; }
-                    if (await updateCustomerStatus(currentAccountNo, status, date)) loadCustomerDetails();
-                    else await lrmsAlert("Failed to update.");
+                    if (!date) { await lrmsAlert("Please select a date."); return; }
+                    const success = await updateCustomerStatus(currentAccountNo, status, date, currentCustomerId);
+                    if (success) {
+                        await loadCustomerDetails();
+                        await lrmsAlert("Status and Changed Date successfully updated!");
+                    } else {
+                        await lrmsAlert("Failed to update status.");
+                    }
                 });
             }
 

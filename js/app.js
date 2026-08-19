@@ -505,14 +505,22 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
 }
 
 // Helper Function: Update Customer Status
-async function updateCustomerStatus(accountNo, newStatus, statusDate) {
+async function updateCustomerStatus(accountNo, newStatus, statusDate, customerId = null) {
     try {
-        const customer = await getCustomerByAccountNo(accountNo);
+        let customer = null;
+        if (customerId && typeof getCustomerById === 'function') {
+            customer = await getCustomerById(customerId);
+        }
+        if (!customer && accountNo) {
+            customer = await getCustomerByAccountNo(accountNo);
+        }
         if (customer) {
             await window.db.update("customers", customer.id, {
                 status: newStatus,
                 statusDate: statusDate || new Date().toISOString().split('T')[0]
             });
+            invalidateCache('customers');
+            await logActivity("Update Status", `Updated status for ${customer.name} to ${newStatus} (${statusDate})`, "info");
             return true;
         }
         return false;
@@ -560,6 +568,7 @@ async function deleteCustomer(accountNo) {
                 isDeleted: true,
                 deletedAt: new Date().toISOString()
             });
+            invalidateCache('customers');
             await logActivity("Delete Customer", `Deleted customer: ${customer.name} (${accountNo})`, "danger");
             return true;
         } else {
@@ -572,6 +581,7 @@ async function deleteCustomer(accountNo) {
             });
             if (found) {
                 await window.db.update("customers", found.id, { isDeleted: true, deletedAt: new Date().toISOString() });
+                invalidateCache('customers');
                 await logActivity("Delete Customer", `Deleted customer: ${found.name} (${accountNo})`, "danger");
                 return true;
             }
@@ -603,6 +613,7 @@ async function restoreCustomer(docId) {
             isDeleted: null,
             deletedAt: null
         });
+        invalidateCache('customers');
         await logActivity("Restore Customer", `Restored customer: ${data.name} (${data.accountNo})`, "info");
         return true;
     } catch (error) {
