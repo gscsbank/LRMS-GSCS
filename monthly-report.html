@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="si">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>මාසික ණය ප්‍රගති වාර්තාව (Monthly Loan Progress Report) - LRMS</title>
+    <title>????? ?? ??????? ??????? (Monthly Loan Progress Report) - LRMS</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/db.js?v=3.15"></script>
@@ -29,7 +29,7 @@
             color: #1e293b;
         }
 
-        /* ── A4 Print Booklet Styling (High Contrast B&W Executive Style) ── */
+        /* -- A4 Print Booklet Styling (High Contrast B&W Executive Style) -- */
         @media print {
             @page {
                 size: A4 portrait;
@@ -218,12 +218,12 @@
         <!-- Header -->
         <header class="top-header no-print">
             <div>
-                <h2>මාසික ණය ප්‍රගති වාර්තාව (Monthly Loan Progress Report)</h2>
-                <p>මාසික කල්පසු ණය අවදානම් හා අයකරගැනීම් වාර්තා පොත</p>
+                <h2>????? ?? ??????? ??????? (Monthly Loan Progress Report)</h2>
+                <p>????? ?????? ?? ??????? ?? ?????????? ?????? ???</p>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
                 <button onclick="window.print()" class="btn btn-primary" style="background: linear-gradient(135deg, #1e1b4b, #311b92);">
-                    <i data-lucide="printer"></i> 🖨️ Print Report Booklet (A4 B&W)
+                    <i data-lucide="printer"></i> ??? Print Report Booklet (A4 B&W)
                 </button>
             </div>
         </header>
@@ -234,16 +234,16 @@
             <div class="card p-5 mb-6 no-print" style="background:#ffffff; border:1px solid #e2e8f0">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px">
                     <div style="display:flex; align-items:center; gap:12px">
-                        <label style="font-weight:700; font-size:0.9rem; color:#1e1b4b">🗓️ වාර්තා මාසය තෝරන්න (Select Month):</label>
+                        <label style="font-weight:700; font-size:0.9rem; color:#1e1b4b">??? ?????? ???? ?????? (Select Month):</label>
                         <input type="month" id="reportMonth" class="form-input" style="width:180px; height:42px; font-weight:700" onchange="loadReportData()">
                     </div>
 
                     <div style="display:inline-flex; background:#f1f5f9; padding:4px; border-radius:12px; border:1px solid #cbd5e1">
                         <button id="btnTabEntry" class="report-tab-btn active" onclick="switchReportTab('entry')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px">
-                            <i data-lucide="file-edit" style="width:16px;height:16px"></i> 1. මූල්‍ය දත්ත ඇතුළත් කිරීම (Data Entry)
+                            <i data-lucide="file-edit" style="width:16px;height:16px"></i> 1. ?????? ???? ?????? ????? (Data Entry)
                         </button>
                         <button id="btnTabPreview" class="report-tab-btn" onclick="switchReportTab('preview')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; background:transparent; color:#475569">
-                            <i data-lucide="book-open" style="width:16px;height:16px"></i> 2. නිල වාර්තා පොත පෙරදසුන (Booklet Preview)
+                            <i data-lucide="book-open" style="width:16px;height:16px"></i> 2. ??? ?????? ??? ??????? (Booklet Preview)
                         </button>
                     </div>
                 </div>
@@ -256,12 +256,12 @@
                         <div>
                             <h3 style="font-size:1.15rem; font-weight:800; color:#1e1b4b; display:flex; align-items:center; gap:8px">
                                 <i data-lucide="database" style="color:#7c3aed"></i>
-                                බැංකුවේ Main System එකෙන් ලැබෙන "කල්පසු අඩමාන ණය වෙන් කිරීමේ ලේඛනයේ" දත්ත
+                                ??????? Main System ????? ????? "?????? ????? ?? ???? ?????? ??????" ????
                             </h3>
-                            <p style="font-size:0.82rem; color:#6b7280; margin-top:2px">මාසයේ ආරම්භය (Start of Month) සහ මාසයේ අවසානය (End of Month) දත්ත මෙහි ඇතුළත් කරන්න.</p>
+                            <p style="font-size:0.82rem; color:#6b7280; margin-top:2px">????? ?????? (Start of Month) ?? ????? ?????? (End of Month) ???? ???? ?????? ?????.</p>
                         </div>
                         <button onclick="saveNPLStatementData()" class="btn btn-primary" style="background:#16a34a; border:none">
-                            <i data-lucide="save"></i> 💾 දත්ත සුරකින්න (Save Values)
+                            <i data-lucide="save"></i> ?? ???? ???????? (Save Values)
                         </button>
                     </div>
 
@@ -269,34 +269,34 @@
                         <!-- Start of Month Entry -->
                         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px">
                             <h4 style="font-weight:800; font-size:0.95rem; color:#1e1b4b; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #cbd5e1; display:flex; align-items:center; gap:6px">
-                                📌 මාසයේ ආරම්භය (Start of Month Values)
+                                ?? ????? ?????? (Start of Month Values)
                             </h4>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="form-label">මුළු ණය මුදල (Total Gross Loans)</label>
+                                    <label class="form-label">???? ?? ???? (Total Gross Loans)</label>
                                     <input type="number" step="0.01" id="start_totalLoans" class="form-input" placeholder="e.g. 233682458.88" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 6 සිට 12 දක්වා - 20%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 6 ??? 12 ????? - 20%)</label>
                                     <input type="number" step="0.01" id="start_overdue6_12" class="form-input" placeholder="e.g. 5769588.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 12 සිට 18 දක්වා - 50%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 12 ??? 18 ????? - 50%)</label>
                                     <input type="number" step="0.01" id="start_overdue12_18" class="form-input" placeholder="e.g. 2203962.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 18ට වැඩි - 100%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 18? ???? - 100%)</label>
                                     <input type="number" step="0.01" id="start_overdue18_plus" class="form-input" placeholder="e.g. 11469168.88" oninput="calculateNPLTotals()">
                                 </div>
                                 <div style="background:#e0e7ff; padding:12px; border-radius:8px">
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3">
-                                        <span>කල් පසු ණය එකතුව:</span> <span id="start_disp_totalOverdue">0.00</span>
+                                        <span>??? ??? ?? ?????:</span> <span id="start_disp_totalOverdue">0.00</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3; margin-top:4px">
-                                        <span>අඩමාන ණය වෙන් කිරීම:</span> <span id="start_disp_provision">0.00</span>
+                                        <span>????? ?? ???? ?????:</span> <span id="start_disp_provision">0.00</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#1e1b4b; margin-top:4px; border-top:1px solid #c7d2fe; padding-top:4px">
-                                        <span>ශුද්ධ ණය ශේෂය:</span> <span id="start_disp_netBalance">0.00</span>
+                                        <span>????? ?? ????:</span> <span id="start_disp_netBalance">0.00</span>
                                     </div>
                                 </div>
                             </div>
@@ -305,34 +305,34 @@
                         <!-- End of Month Entry -->
                         <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:20px">
                             <h4 style="font-weight:800; font-size:0.95rem; color:#166534; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #86efac; display:flex; align-items:center; gap:6px">
-                                🏁 මාසයේ අවසානය (End of Month Values)
+                                ?? ????? ?????? (End of Month Values)
                             </h4>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="form-label">මුළු ණය මුදල (Total Gross Loans)</label>
+                                    <label class="form-label">???? ?? ???? (Total Gross Loans)</label>
                                     <input type="number" step="0.01" id="end_totalLoans" class="form-input" placeholder="e.g. 235100000.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 6 සිට 12 දක්වා - 20%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 6 ??? 12 ????? - 20%)</label>
                                     <input type="number" step="0.01" id="end_overdue6_12" class="form-input" placeholder="e.g. 5100000.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 12 සිට 18 දක්වා - 50%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 12 ??? 18 ????? - 50%)</label>
                                     <input type="number" step="0.01" id="end_overdue12_18" class="form-input" placeholder="e.g. 1950000.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div>
-                                    <label class="form-label">කල් පසු ණය (මාස 18ට වැඩි - 100%)</label>
+                                    <label class="form-label">??? ??? ?? (??? 18? ???? - 100%)</label>
                                     <input type="number" step="0.01" id="end_overdue18_plus" class="form-input" placeholder="e.g. 10800000.00" oninput="calculateNPLTotals()">
                                 </div>
                                 <div style="background:#dcfce7; padding:12px; border-radius:8px">
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d">
-                                        <span>කල් පසු ණය එකතුව:</span> <span id="end_disp_totalOverdue">0.00</span>
+                                        <span>??? ??? ?? ?????:</span> <span id="end_disp_totalOverdue">0.00</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d; margin-top:4px">
-                                        <span>අඩමාන ණය වෙන් කිරීම:</span> <span id="end_disp_provision">0.00</span>
+                                        <span>????? ?? ???? ?????:</span> <span id="end_disp_provision">0.00</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#14532d; margin-top:4px; border-top:1px solid #86efac; padding-top:4px">
-                                        <span>ශුද්ධ ණය ශේෂය:</span> <span id="end_disp_netBalance">0.00</span>
+                                        <span>????? ?? ????:</span> <span id="end_disp_netBalance">0.00</span>
                                     </div>
                                 </div>
                             </div>
@@ -345,7 +345,7 @@
             <!-- TAB 2: PRINTABLE A4 EXECUTIVE BOOKLET PREVIEW & PRINT SECTION -->
             <div id="tabPreview" style="display:none">
 
-                <!-- ════════════════ PAGE 1: COVER PAGE ════════════════ -->
+                <!-- ---------------- PAGE 1: COVER PAGE ---------------- -->
                 <div class="print-page">
                     <div class="bw-box cover-border">
                         <div>
@@ -358,7 +358,7 @@
 
                             <!-- Header Emblem / Institution Title -->
                             <div style="font-size:14pt; font-weight:bold; line-height:1.3; text-transform:uppercase; margin-bottom:6px">
-                                සීමා සහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමූපකාර සමිතිය
+                                ???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????
                             </div>
                             <div style="font-size:10pt; font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:20mm">
                                 GALAPITIYAGAMA SANASA CO-OPERATIVE SOCIETY
@@ -366,7 +366,7 @@
 
                             <div style="border-top:2px solid #000; border-bottom:2px solid #000; padding:15px 10px; margin:20mm 0">
                                 <div class="bw-title" style="font-size:18pt; margin-bottom:8px">
-                                    මාසික ණය ප්‍රගති වාර්තාව
+                                    ????? ?? ??????? ???????
                                 </div>
                                 <div class="bw-subtitle" style="font-size:12pt; margin-bottom:0">
                                     MONTHLY LOAN PROGRESS REPORT
@@ -374,7 +374,7 @@
                             </div>
 
                             <div style="font-size:12pt; font-weight:bold; margin-top:10mm">
-                                වාර්තාගත කාලපරිච්ඡේදය: <span id="covMonthText" style="text-decoration:underline">2026 අගෝස්තු මාසය</span>
+                                ???????? ????????????: <span id="covMonthText" style="text-decoration:underline">2026 ??????? ????</span>
                             </div>
                         </div>
 
@@ -397,60 +397,60 @@
                     </div>
                 </div>
 
-                <!-- ════════════════ PAGE 2: NPL STATEMENT & PROVISION STATEMENT ════════════════ -->
+                <!-- ---------------- PAGE 2: NPL STATEMENT & PROVISION STATEMENT ---------------- -->
                 <div class="print-page">
-                    <div class="bw-title">කල්පසු අඩමාන ණය වෙන් කිරීමේ ලේඛනය සහ මූල්‍ය අවදානම් විශ්ලේෂණය</div>
-                    <div class="bw-subtitle" id="p2SubTitle">මාසයේ ආරම්භය සහ අවසානය සංසන්දනාත්මක වාර්තාව</div>
+                    <div class="bw-title">?????? ????? ?? ???? ?????? ????? ?? ?????? ??????? ?????????</div>
+                    <div class="bw-subtitle" id="p2SubTitle">????? ?????? ?? ?????? ???????????? ???????</div>
 
                     <!-- Screenshot-Matching NPL Statement Table -->
                     <table class="bw-table">
                         <thead>
                             <tr>
-                                <th style="width:35%; text-align:left">විස්තරය (Description)</th>
-                                <th style="text-align:right">මාසයේ ආරම්භය (LKR)</th>
-                                <th style="text-align:right">මාසයේ අවසානය (LKR)</th>
-                                <th style="text-align:right">වෙනස / ප්‍රගතිය (LKR)</th>
+                                <th style="width:35%; text-align:left">??????? (Description)</th>
+                                <th style="text-align:right">????? ?????? (LKR)</th>
+                                <th style="text-align:right">????? ?????? (LKR)</th>
+                                <th style="text-align:right">???? / ???????? (LKR)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>මුළු ණය මුදල (Total Loans)</strong></td>
+                                <td><strong>???? ?? ???? (Total Loans)</strong></td>
                                 <td style="text-align:right" id="p2_start_gross">0.00</td>
                                 <td style="text-align:right" id="p2_end_gross">0.00</td>
                                 <td style="text-align:right; font-weight:bold" id="p2_var_gross">0.00</td>
                             </tr>
                             <tr>
-                                <td>කල් පසු ණය (මාස 6 සිට 12 දක්වා) [20%]</td>
+                                <td>??? ??? ?? (??? 6 ??? 12 ?????) [20%]</td>
                                 <td style="text-align:right" id="p2_start_6_12">0.00</td>
                                 <td style="text-align:right" id="p2_end_6_12">0.00</td>
                                 <td style="text-align:right" id="p2_var_6_12">0.00</td>
                             </tr>
                             <tr>
-                                <td>කල් පසු ණය (මාස 12 සිට 18 දක්වා) [50%]</td>
+                                <td>??? ??? ?? (??? 12 ??? 18 ?????) [50%]</td>
                                 <td style="text-align:right" id="p2_start_12_18">0.00</td>
                                 <td style="text-align:right" id="p2_end_12_18">0.00</td>
                                 <td style="text-align:right" id="p2_var_12_18">0.00</td>
                             </tr>
                             <tr>
-                                <td>කල් පසු ණය (මාස 18ට වැඩි) [100%]</td>
+                                <td>??? ??? ?? (??? 18? ????) [100%]</td>
                                 <td style="text-align:right" id="p2_start_18p">0.00</td>
                                 <td style="text-align:right" id="p2_end_18p">0.00</td>
                                 <td style="text-align:right" id="p2_var_18p">0.00</td>
                             </tr>
                             <tr style="font-weight:bold; background:#f5f5f5">
-                                <td>කල් පසු ණය එකතුව (Total Overdue)</td>
+                                <td>??? ??? ?? ????? (Total Overdue)</td>
                                 <td style="text-align:right" id="p2_start_totOverdue">0.00</td>
                                 <td style="text-align:right" id="p2_end_totOverdue">0.00</td>
                                 <td style="text-align:right" id="p2_var_totOverdue">0.00</td>
                             </tr>
                             <tr>
-                                <td>අඩමාන ණය වෙන් කිරීම (NPL Provision)</td>
+                                <td>????? ?? ???? ????? (NPL Provision)</td>
                                 <td style="text-align:right" id="p2_start_prov">(0.00)</td>
                                 <td style="text-align:right" id="p2_end_prov">(0.00)</td>
                                 <td style="text-align:right" id="p2_var_prov">0.00</td>
                             </tr>
                             <tr style="font-weight:bold; font-size:10.5pt; border-top:2px solid #000; border-bottom:2px double #000">
-                                <td>ශුද්ධ ණය ශේෂය (Net Loan Balance)</td>
+                                <td>????? ?? ???? (Net Loan Balance)</td>
                                 <td style="text-align:right" id="p2_start_net">0.00</td>
                                 <td style="text-align:right" id="p2_end_net">0.00</td>
                                 <td style="text-align:right" id="p2_var_net">0.00</td>
@@ -459,37 +459,37 @@
                     </table>
 
                     <!-- Percentage Breakdown Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">ප්‍රතිශතයන් පිළිබඳ විශ්ලේෂණය (NPL Ratios Analysis):</div>
+                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">??????????? ?????? ????????? (NPL Ratios Analysis):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
-                                <th style="text-align:left">කල්පසු ණය කාණ්ඩය</th>
-                                <th style="text-align:center">ආරම්භක ප්‍රතිශතය %</th>
-                                <th style="text-align:center">අවසාන ප්‍රතිශතය %</th>
-                                <th style="text-align:center">වෙනස %</th>
+                                <th style="text-align:left">?????? ?? ??????</th>
+                                <th style="text-align:center">?????? ????????? %</th>
+                                <th style="text-align:center">????? ????????? %</th>
+                                <th style="text-align:center">???? %</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>කල් පසු ණය (මාස 6 සිට 12 දක්වා)</td>
+                                <td>??? ??? ?? (??? 6 ??? 12 ?????)</td>
                                 <td style="text-align:center" id="r_start_6_12">0.00%</td>
                                 <td style="text-align:center" id="r_end_6_12">0.00%</td>
                                 <td style="text-align:center" id="r_var_6_12">0.00%</td>
                             </tr>
                             <tr>
-                                <td>කල් පසු ණය (මාස 12 සිට 18 දක්වා)</td>
+                                <td>??? ??? ?? (??? 12 ??? 18 ?????)</td>
                                 <td style="text-align:center" id="r_start_12_18">0.00%</td>
                                 <td style="text-align:center" id="r_end_12_18">0.00%</td>
                                 <td style="text-align:center" id="r_var_12_18">0.00%</td>
                             </tr>
                             <tr>
-                                <td>කල් පසු ණය (මාස 18ට වැඩි)</td>
+                                <td>??? ??? ?? (??? 18? ????)</td>
                                 <td style="text-align:center" id="r_start_18p">0.00%</td>
                                 <td style="text-align:center" id="r_end_18p">0.00%</td>
                                 <td style="text-align:center" id="r_var_18p">0.00%</td>
                             </tr>
                             <tr style="font-weight:bold; background:#f0f0f0">
-                                <td>සමස්ත කල් පසු ණය ප්‍රතිශතය (මාස 6 සිට ඉහළට)</td>
+                                <td>????? ??? ??? ?? ????????? (??? 6 ??? ????)</td>
                                 <td style="text-align:center" id="r_start_tot">0.00%</td>
                                 <td style="text-align:center" id="r_end_tot">0.00%</td>
                                 <td style="text-align:center" id="r_var_tot">0.00%</td>
@@ -498,76 +498,76 @@
                     </table>
 
                     <!-- Top High-Risk Overdue Loans Exposure Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">වැඩිම කල්පසු ශේෂ සහිත අවදානම් ණයගැතියන් (Top High-Risk Overdue Loans - by Arrears):</div>
+                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">????? ?????? ??? ???? ??????? ????????? (Top High-Risk Overdue Loans - by Arrears):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
                                 <th style="width:6%; text-align:center">#</th>
-                                <th style="width:18%">ගිණුම් අංකය</th>
-                                <th style="width:26%">ණයගැතියාගේ නම</th>
-                                <th style="width:18%">ණය කාණ්ඩය</th>
-                                <th style="width:18%; text-align:right">ණය මුදල (LKR)</th>
-                                <th style="width:14%; text-align:center">තත්ත්වය</th>
+                                <th style="width:18%">?????? ????</th>
+                                <th style="width:26%">?????????? ??</th>
+                                <th style="width:18%">?? ??????</th>
+                                <th style="width:18%; text-align:right">?? ???? (LKR)</th>
+                                <th style="width:14%; text-align:center">???????</th>
                             </tr>
                         </thead>
                         <tbody id="p2HighRiskBody">
-                            <tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් වාර්තා වී නොමැත.</td></tr>
+                            <tr><td colspan="6" style="text-align:center; font-style:italic">??????? ????????? ?????? ?? ?????.</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- ════════════════ PAGE 3: RECOVERY OPERATIONS SUMMARY ════════════════ -->
+                <!-- ---------------- PAGE 3: RECOVERY OPERATIONS SUMMARY ---------------- -->
                 <div class="print-page">
-                    <div class="bw-title">මාසික ණය අයකරගැනීමේ මෙහෙයුම් ප්‍රගති වාර්තාව</div>
-                    <div class="bw-subtitle">පද්ධතිය මගින් ලබාගත් අයකරගැනීමේ ක්‍රියාමාර්ග පිළිබඳ විස්තරය</div>
+                    <div class="bw-title">????? ?? ?????????? ???????? ??????? ???????</div>
+                    <div class="bw-subtitle">??????? ????? ?????? ?????????? ???????????? ?????? ???????</div>
 
                     <!-- Operations Summary Table -->
                     <table class="bw-table">
                         <thead>
                             <tr>
-                                <th style="width:30%; text-align:left">අයකරගැනීමේ මාධ්‍යය / ක්‍රියාමාර්ගය (Channel)</th>
-                                <th style="width:14%; text-align:center">සිදුකළ ප්‍රමාණය</th>
-                                <th style="text-align:left">ලබාගත් ප්‍රතිඵල, විස්තරය සහ ණයගැතියන්ගේ ලැයිස්තුව</th>
+                                <th style="width:30%; text-align:left">?????????? ??????? / ????????????? (Channel)</th>
+                                <th style="width:14%; text-align:center">?????? ????????</th>
+                                <th style="text-align:left">?????? ????????, ??????? ?? ??????????? ?????????</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>දුරකථන ඇමතුම්/සබඳතා (Phone Calls)</strong></td>
+                                <td><strong>?????? ??????/????? (Phone Calls)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_callsCount">0</td>
                                 <td>
-                                    <div>ලබාගත් පොරොන්දු වූ ගෙවීම් (Promises to Pay): <strong id="op_promisesCount">0</strong> ක් (මුළු වටිනාකම LKR <span id="op_promisesAmt">0.00</span>)</div>
+                                    <div>?????? ???????? ?? ?????? (Promises to Pay): <strong id="op_promisesCount">0</strong> ?? (???? ??????? LKR <span id="op_promisesAmt">0.00</span>)</div>
                                     <div id="op_callsCustList"></div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>ක්ෂේත්‍ර සංචාර (Field Visits)</strong></td>
+                                <td><strong>???????? ????? (Field Visits)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_visitsCount">0</td>
                                 <td>
-                                    <div>ණයගැතියන් හමුවී සාකච්ඡා කර ලබාගත් ක්ෂේත්‍ර නිරීක්ෂණ වාර්තා</div>
+                                    <div>????????? ????? ??????? ?? ?????? ???????? ???????? ??????</div>
                                     <div id="op_visitsCustList"></div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>සිහිකැඳවීම් ලිපි (Reminder Letters)</strong></td>
+                                <td><strong>??????????? ???? (Reminder Letters)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_lettersCount">0</td>
                                 <td>
-                                    <div>තැපැල් මගින් යවන ලද ප්‍රථම සහ දෙවන සිහිකැඳවීම් ලිපි</div>
+                                    <div>?????? ????? ??? ?? ?????? ?? ???? ??????????? ????</div>
                                     <div id="op_lettersCustList"></div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>එන්තරවාසි / Demand Notices</strong></td>
+                                <td><strong>????????? / Demand Notices</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_demandCount">0</td>
                                 <td>
-                                    <div>නීතිමය පියවර ගැනීමට ප්‍රථම නිකුත් කළ අවසාන එන්තරවාසි නිවේදන</div>
+                                    <div>?????? ????? ?????? ?????? ?????? ?? ????? ????????? ??????</div>
                                     <div id="op_demandCustList"></div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>ඩිජිටල් මතක් කිරීම් (SMS / WhatsApp)</strong></td>
+                                <td><strong>??????? ???? ?????? (SMS / WhatsApp)</strong></td>
                                 <td style="text-align:center; font-weight:bold" id="op_digitalCount">0</td>
                                 <td>
-                                    <div>SMS මතක් කිරීම්: <span id="op_smsCount">0</span> | WhatsApp පණිවිඩ: <span id="op_waCount">0</span></div>
+                                    <div>SMS ???? ??????: <span id="op_smsCount">0</span> | WhatsApp ??????: <span id="op_waCount">0</span></div>
                                     <div id="op_digitalCustList"></div>
                                 </td>
                             </tr>
@@ -575,75 +575,75 @@
                     </table>
 
                     <!-- Customer Promises Detail Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">මාසය තුළ ලබාගත් ප්‍රධාන පොරොන්දු වූ ගෙවීම් (Promises to Pay Log):</div>
+                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">???? ??? ?????? ??????? ???????? ?? ?????? (Promises to Pay Log):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
                                 <th style="width:8%">#</th>
-                                <th style="width:20%">ගිණුම් අංකය</th>
-                                <th style="width:25%">ණයගැතියාගේ නම</th>
-                                <th>ක්‍රියාමාර්ගය / ප්‍රතිචාරය (Response & Promise Date)</th>
+                                <th style="width:20%">?????? ????</th>
+                                <th style="width:25%">?????????? ??</th>
+                                <th>????????????? / ?????????? (Response & Promise Date)</th>
                             </tr>
                         </thead>
                         <tbody id="p3PromisesBody">
-                            <tr><td colspan="4" style="text-align:center; font-style:italic">දත්ත සටහන් වී නොමැත.</td></tr>
+                            <tr><td colspan="4" style="text-align:center; font-style:italic">???? ????? ?? ?????.</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- ════════════════ PAGE 4: LEGAL ACTIONS & BOARD RECOMMENDATIONS ════════════════ -->
+                <!-- ---------------- PAGE 4: LEGAL ACTIONS & BOARD RECOMMENDATIONS ---------------- -->
                 <div class="print-page">
-                    <div class="bw-title">නීතිමය ක්‍රියාමාර්ග සහ ඉදිරි යෝජනා</div>
-                    <div class="bw-subtitle">ණය අයකරගැනීමේ උපායමාර්ගික සැලසුම</div>
+                    <div class="bw-title">?????? ???????????? ?? ????? ?????</div>
+                    <div class="bw-subtitle">?? ?????????? ??????????? ??????</div>
 
-                    <div style="font-weight:bold; margin-bottom:5px">නීතිමය පියවර ගෙන ඇති ණයගැතියන්ගේ ලැයිස්තුව (Legal Cases Summary):</div>
+                    <div style="font-weight:bold; margin-bottom:5px">?????? ????? ??? ??? ??????????? ????????? (Legal Cases Summary):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
                                 <th style="width:8%">#</th>
-                                <th style="width:20%">ගිණුම් අංකය</th>
-                                <th style="width:25%">ණයගැතියාගේ නම</th>
-                                <th style="width:20%">ණය කාණ්ඩය</th>
-                                <th>නීතිමය තත්ත්වය (Legal Status)</th>
+                                <th style="width:20%">?????? ????</th>
+                                <th style="width:25%">?????????? ??</th>
+                                <th style="width:20%">?? ??????</th>
+                                <th>?????? ??????? (Legal Status)</th>
                             </tr>
                         </thead>
                         <tbody id="p4LegalBody">
-                            <tr><td colspan="5" style="text-align:center; font-style:italic">නීතිමය පියවර ගත් ගිණුම් නොමැත.</td></tr>
+                            <tr><td colspan="5" style="text-align:center; font-style:italic">?????? ????? ??? ?????? ?????.</td></tr>
                         </tbody>
                     </table>
 
                     <!-- Demand Notices Issued This Month -->
-                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">එන්තරවාසි / ඉල්ලුම් නිවේදන ලැබූ ණයගැතියන් (Demand Notices Issued - This Month):</div>
+                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">????????? / ??????? ?????? ???? ????????? (Demand Notices Issued - This Month):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
                                 <th style="width:6%; text-align:center">#</th>
-                                <th style="width:20%">ගිණුම් අංකය</th>
-                                <th style="width:30%">ණයගැතියාගේ නම</th>
-                                <th style="width:20%">ණය කාණ්ඩය</th>
-                                <th style="width:24%">නිවේදන දිනය</th>
+                                <th style="width:20%">?????? ????</th>
+                                <th style="width:30%">?????????? ??</th>
+                                <th style="width:20%">?? ??????</th>
+                                <th style="width:24%">?????? ????</th>
                             </tr>
                         </thead>
                         <tbody id="p4DemandBody">
-                            <tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ ඉල්ලුම් නිවේදන නිකුත් කරන ලද ගිණුම් නොමැත.</td></tr>
+                            <tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ??????? ?????? ?????? ??? ?? ?????? ?????.</td></tr>
                         </tbody>
                     </table>
 
                     <!-- High Risk Borrowers as of Month End -->
-                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">මාසය අවසාන වන විටත් අවදානම් (High Risk) තත්ත්වයේ පැවති ණයගැතියන්ගේ ලැයිස්තුව (High Risk Borrowers List - Month End):</div>
+                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">???? ????? ?? ????? ??????? (High Risk) ???????? ????? ??????????? ????????? (High Risk Borrowers List - Month End):</div>
                     <table class="bw-table">
                         <thead>
                             <tr>
                                 <th style="width:6%; text-align:center">#</th>
-                                <th style="width:20%">ගිණුම් අංකය</th>
-                                <th style="width:28%">ණයගැතියාගේ නම</th>
-                                <th style="width:20%">ණය කාණ්ඩය</th>
-                                <th style="width:14%; text-align:right">ණය මුදල / ශේෂය</th>
-                                <th style="width:12%; text-align:center">තත්ත්වය</th>
+                                <th style="width:20%">?????? ????</th>
+                                <th style="width:28%">?????????? ??</th>
+                                <th style="width:20%">?? ??????</th>
+                                <th style="width:14%; text-align:right">?? ???? / ????</th>
+                                <th style="width:12%; text-align:center">???????</th>
                             </tr>
                         </thead>
                         <tbody id="p4HighRiskMonthEndBody">
-                            <tr><td colspan="6" style="text-align:center; font-style:italic">මාසය අවසානයේ අවදානම් තත්ත්වයේ ණයගැතියන් නොමැත.</td></tr>
+                            <tr><td colspan="6" style="text-align:center; font-style:italic">???? ??????? ??????? ???????? ????????? ?????.</td></tr>
                         </tbody>
                     </table>
 
@@ -664,7 +664,7 @@
         </div>
     </main>
 
-    <script src="js/app.js?v=3.19"></script>
+    <script src="js/app.js?v=3.20"></script>
     <script>
         lucide.createIcons({ root: document.body });
 
@@ -755,7 +755,7 @@
             // Also keep localStorage as fallback
             localStorage.setItem('lrms_npl_statement_' + m, JSON.stringify(data));
 
-            if (typeof lrmsAlert === 'function') await lrmsAlert(`✅ NPL Statement data for ${m} saved successfully!\n(IndexedDB + Backup ෙ include)`);
+            if (typeof lrmsAlert === 'function') await lrmsAlert(`? NPL Statement data for ${m} saved successfully!\n(IndexedDB + Backup ? include)`);
             else alert(`Saved NPL Statement values for ${m}!`);
             updatePrintBookletPreview();
         }
@@ -808,7 +808,7 @@
             const monthNameSinhala = dateObj.toLocaleString('si-LK', { month: 'long', year: 'numeric' });
             
             document.getElementById('covMonthText').innerText = monthNameSinhala || (y + ' ' + mon);
-            document.getElementById('p2SubTitle').innerText = `${monthNameSinhala} - සංසන්දනාත්මක මූල්‍ය අවදානම් ලේඛනය`;
+            document.getElementById('p2SubTitle').innerText = `${monthNameSinhala} - ???????????? ?????? ??????? ?????`;
 
             // 1. Fill NPL Statement Values
             const sGross = parseFloat(document.getElementById('start_totalLoans').value) || 0;
@@ -934,7 +934,7 @@
 
                 const highRiskBody = document.getElementById('p2HighRiskBody');
                 if (top10.length === 0) {
-                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">අවදානම් ණයගැතියන් (රු. 1,000,000 ට වැඩි සහ වාරික 2 ට වැඩි) වාර්තා වී නොමැත.</td></tr>';
+                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">??????? ????????? (??. 1,000,000 ? ???? ?? ????? 2 ? ????) ?????? ?? ?????.</td></tr>';
                 } else {
                     highRiskBody.innerHTML = top10.map((c, i) => {
                         const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
@@ -969,10 +969,10 @@
                     const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
                     const isSMS = isDigital && (type.includes('sms') || type.includes('text'));
                     const isWA = isDigital && type.includes('whatsapp');
-                    const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි'));
-                    const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('සංචාර'));
-                    const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම'));
-                    const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('සිහිකැඳවීම'));
+                    const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('?????????'));
+                    const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('?????'));
+                    const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('??????') || type.includes('?????'));
+                    const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('????') || type.includes('?????') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('??????????'));
 
                     return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS, isWA };
                 };
@@ -1006,7 +1006,7 @@
                 const p3Body = document.getElementById('p3PromisesBody');
                 if (p3Body) {
                     if (promiseLogs.length === 0) {
-                        p3Body.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">මාසය තුළ පොරොන්දු වූ ගෙවීම් ලොග් වී නොමැත.</td></tr>`;
+                        p3Body.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">???? ??? ???????? ?? ?????? ???? ?? ?????.</td></tr>`;
                     } else {
                         const customers = await getAllCustomers();
                         p3Body.innerHTML = promiseLogs.slice(0, 10).map((a, idx) => {
@@ -1045,8 +1045,8 @@
                 }
 
                 const renderCustLabels = (arr) => {
-                    if (arr.length === 0) return `<div style="font-size:8pt; color:#64748b; margin-top:3px; font-style:italic">අදාළ ණයගැතියන් නොමැත.</div>`;
-                    return `<div style="font-size:8pt; color:#1e1b4b; margin-top:4px; font-weight:600; line-height:1.35">ණයගැතියන් (${arr.length}): ${arr.join(', ')}</div>`;
+                    if (arr.length === 0) return `<div style="font-size:8pt; color:#64748b; margin-top:3px; font-style:italic">???? ????????? ?????.</div>`;
+                    return `<div style="font-size:8pt; color:#1e1b4b; margin-top:4px; font-weight:600; line-height:1.35">????????? (${arr.length}): ${arr.join(', ')}</div>`;
                 };
 
                 const elCalls = document.getElementById('op_callsCustList');
@@ -1097,7 +1097,7 @@
                 const p4Body = document.getElementById('p4LegalBody');
                 if (p4Body) {
                     if (legalCusts.length === 0) {
-                        p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ නීතිමය පියවර (Courts / Cooperative Commissioner) ගත් ගිණුම් නොමැත.</td></tr>`;
+                        p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ?????? ????? (Courts / Cooperative Commissioner) ??? ?????? ?????.</td></tr>`;
                     } else {
                         p4Body.innerHTML = legalCusts.map((c, idx) => {
                             const sDate = c.statusDate ? ` (${c.statusDate})` : '';
@@ -1123,7 +1123,7 @@
                 const p4DemandBody = document.getElementById('p4DemandBody');
                 if (p4DemandBody) {
                     if (demandActions.length === 0) {
-                        p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">මෙම මාසය තුළ ඉල්ලුම් නිවේදන (Letter of Demand) නිකුත් කරන ලද ගිණුම් නොමැත.</td></tr>`;
+                        p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ??????? ?????? (Letter of Demand) ?????? ??? ?? ?????? ?????.</td></tr>`;
                     } else {
                         // Deduplicate by account no, keep latest action date
                         const demandMap = new Map();
@@ -1161,7 +1161,7 @@
                     });
 
                     if (highRiskCusts.length === 0) {
-                        p4HighRiskMonthEndBody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-style:italic">මාසය අවසානයේ අවදානම් (High Risk) තත්ත්වයේ ණයගැතියන් නොමැත.</td></tr>`;
+                        p4HighRiskMonthEndBody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-style:italic">???? ??????? ??????? (High Risk) ???????? ????????? ?????.</td></tr>`;
                     } else {
                         p4HighRiskMonthEndBody.innerHTML = highRiskCusts.map((c, idx) => {
                             const amt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});

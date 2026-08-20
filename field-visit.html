@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -822,7 +822,7 @@
             <div class="fv-controls-box no-print">
                 <div class="fv-controls-grid">
                     <div class="fv-cg">
-                        <label>Visit Date (නිරීක්ෂණ දිනය)</label>
+                        <label>Visit Date (???????? ????)</label>
                         <input type="date" id="visitDate" onchange="onVisitDateChange()">
                     </div>
                     <div class="fv-cg">
@@ -926,11 +926,11 @@
             <div class="print-only">
                 <div class="print-header-top">
                     <div class="print-header-bank">GALAPITIYAGAMA SANASA COOPERATIVE SOCIETY</div>
-                    <div class="print-header-sub">Field Visit &amp; Recovery Worksheet &nbsp;|&nbsp; ක්ෂේත්‍ර නිරීක්ෂණ සටහන් පත්‍රිකාව</div>
+                    <div class="print-header-sub">Field Visit &amp; Recovery Worksheet &nbsp;|&nbsp; ???????? ???????? ????? ?????????</div>
                 </div>
                 <div class="print-meta-grid">
-                    <div><strong>Visit Date:</strong> <span id="printVisitDate">—</span></div>
-                    <div><strong>Filters:</strong> <span id="printFilter">—</span></div>
+                    <div><strong>Visit Date:</strong> <span id="printVisitDate">�</span></div>
+                    <div><strong>Filters:</strong> <span id="printFilter">�</span></div>
                     <div><strong>Cases Count:</strong> <span id="printCount">0</span></div>
                     <div><strong>Printed Date:</strong> <span id="printGenDate"></span></div>
                 </div>
@@ -942,14 +942,14 @@
         </div><!-- end content-area -->
     </main>
 
-    <script src="js/app.js?v=3.19"></script>
+    <script src="js/app.js?v=3.20"></script>
     <script>
-        // ── In-Memory States ──────────────────────────────────────
+        // -- In-Memory States --------------------------------------
         let currentCustomers = [];
         let viewMode = 'card';
         let searchTerm = '';
 
-        // ── Helpers ───────────────────────────────────────────────
+        // -- Helpers -----------------------------------------------
         function toLocal(date) {
             const y = date.getFullYear();
             const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -957,12 +957,12 @@
             return `${y}-${m}-${d}`;
         }
         function fmt(d) {
-            if (!d) return '—';
+            if (!d) return '�';
             try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
             catch { return d; }
         }
 
-        // ── LocalStorage visit records ─────────────────────────────
+        // -- LocalStorage visit records -----------------------------
         const LS_KEY = 'fvRecords';
         function getRecordsForDate(date) {
             try { return JSON.parse(localStorage.getItem(LS_KEY + '_' + date) || '{}'); }
@@ -972,7 +972,7 @@
             localStorage.setItem(LS_KEY + '_' + date, JSON.stringify(records));
         }
 
-        // ── Status mapping ────────────────────────────────────────
+        // -- Status mapping ----------------------------------------
         const statusClass = {
             'pending':'',
             'visited-agreed':'visited-agreed',
@@ -983,14 +983,14 @@
         };
 
         const statusLabels = {
-            'visited-agreed':'✅ Visited - Agreed',
-            'visited-paid':'💰 Visited - Paid',
-            'visited-promised':'🤝 Visited - Promised',
-            'visited-nothome':'🚪 Visited - Not Home',
-            'visited-refused':'❌ Visited - Refused'
+            'visited-agreed':'? Visited - Agreed',
+            'visited-paid':'?? Visited - Paid',
+            'visited-promised':'?? Visited - Promised',
+            'visited-nothome':'?? Visited - Not Home',
+            'visited-refused':'? Visited - Refused'
         };
 
-        // ── Init ──────────────────────────────────────────────────
+        // -- Init --------------------------------------------------
         window.addEventListener('DOMContentLoaded', async () => {
             const today = new Date();
             document.getElementById('visitDate').value = toLocal(today);
@@ -1021,7 +1021,7 @@
             renderActiveView();
         };
 
-        // ── Generate Report & Fetch ───────────────────────────────
+        // -- Generate Report & Fetch -------------------------------
         async function generateReport() {
             const visitDate = document.getElementById('visitDate').value;
             const minArr = parseFloat(document.getElementById('minArrears').value) || 3;
@@ -1060,7 +1060,7 @@
             renderActiveView();
         }
 
-        // ── Render Views ──────────────────────────────────────────
+        // -- Render Views ------------------------------------------
         function renderActiveView() {
             const visitDate = document.getElementById('visitDate').value;
             const savedRecords = getRecordsForDate(visitDate);
@@ -1179,7 +1179,7 @@
                         <div class="fv-action-links">
                             ${c.phone ? `<a href="tel:${c.phone}" class="action-link-btn"><i data-lucide="phone-call" style="width:13px;height:13px"></i> Call</a>` : ''}
                             ${c.phone ? `<a href="${waUrl}" target="_blank" class="action-link-btn wa"><i data-lucide="message-square" style="width:13px;height:13px"></i> WhatsApp</a>` : ''}
-                            <a href="${mapsUrl}" target="_blank" class="action-link-btn maps" title="${c.mapLink ? 'Saved location ★' : c.address ? 'Search by address' : 'Open Google Maps'}" style="${c.mapLink ? 'color:#ea4335;border-color:#fca5a5;background:#fef2f2' : ''}"><i data-lucide="map-pin" style="width:13px;height:13px"></i> Locate${c.mapLink ? ' ★' : ''}</a>
+                            <a href="${mapsUrl}" target="_blank" class="action-link-btn maps" title="${c.mapLink ? 'Saved location ?' : c.address ? 'Search by address' : 'Open Google Maps'}" style="${c.mapLink ? 'color:#ea4335;border-color:#fca5a5;background:#fef2f2' : ''}"><i data-lucide="map-pin" style="width:13px;height:13px"></i> Locate${c.mapLink ? ' ?' : ''}</a>
                         </div>
 
                         <div style="margin-top:10px">
@@ -1198,9 +1198,9 @@
                         <div style="margin-top:8px;padding-top:10px;border-top:1px dashed var(--border)">
                             <button onclick="openMapPicker('${c.accountNo}', event)" class="action-link-btn" style="font-size:.72rem;gap:5px;color:${c.mapLink ? '#16a34a' : 'var(--text-secondary)'};border-color:${c.mapLink ? '#86efac' : 'var(--border)'};background:${c.mapLink ? '#f0fdf4' : 'var(--surface)'}">
                                 <i data-lucide="map" style="width:13px;height:13px"></i>
-                                ${c.mapLink ? '✅ Update Location' : '🗺️ Pick Location on Map'}
+                                ${c.mapLink ? '? Update Location' : '??? Pick Location on Map'}
                             </button>
-                            ${c.mapLink ? `<a href="${c.mapLink}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:600;color:#16a34a;text-decoration:none;margin-left:8px;vertical-align:middle"><i data-lucide="external-link" style="width:11px;height:11px"></i> View saved ↗</a>` : ''}
+                            ${c.mapLink ? `<a href="${c.mapLink}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:600;color:#16a34a;text-decoration:none;margin-left:8px;vertical-align:middle"><i data-lucide="external-link" style="width:11px;height:11px"></i> View saved ?</a>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1208,7 +1208,7 @@
             }).join('');
         }
 
-        // ── Location Panel & Map Picker Functions ───────────────
+        // -- Location Panel & Map Picker Functions ---------------
         let _mapPickerAcc = null;
         let _leafletMap = null;
         let _mapMarker = null;
@@ -1239,7 +1239,7 @@
                 if (!_leafletMap) {
                     _leafletMap = L.map('mapPickerContainer').setView([7.8731, 80.7718], 8);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap contributors',
+                        attribution: '� OpenStreetMap contributors',
                         maxZoom: 19
                     }).addTo(_leafletMap);
 
@@ -1275,14 +1275,14 @@
         };
 
         function fetchAddrFromLatLng(lat, lng) {
-            document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)} — Loading address...`;
+            document.getElementById('mapSelectedAddr').textContent = `?? ${lat.toFixed(5)}, ${lng.toFixed(5)} � Loading address...`;
             fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
                 .then(r => r.json())
                 .then(d => {
                     const addr = d.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-                    document.getElementById('mapSelectedAddr').textContent = '📍 ' + addr;
+                    document.getElementById('mapSelectedAddr').textContent = '?? ' + addr;
                 }).catch(() => {
-                    document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                    document.getElementById('mapSelectedAddr').textContent = `?? ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
                 });
         }
 
@@ -1311,7 +1311,7 @@
                             fetchAddrFromLatLng(ll.lat, ll.lng);
                         });
                     }
-                    document.getElementById('mapSelectedAddr').textContent = '📍 ' + r.display_name;
+                    document.getElementById('mapSelectedAddr').textContent = '?? ' + r.display_name;
                     document.getElementById('mapUseBtn').disabled = false;
                 }).catch(() => {
                     btn.textContent = 'Search'; btn.disabled = false;
@@ -1324,7 +1324,7 @@
             const { lat, lng } = _selectedLatLng;
             const mapsLink = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
             const btn = document.getElementById('mapUseBtn');
-            btn.textContent = '⏳ Saving...';
+            btn.textContent = '? Saving...';
             btn.disabled = true;
             try {
                 const customer = await getCustomerByAccountNo(_mapPickerAcc);
@@ -1337,11 +1337,11 @@
                 } else throw new Error();
             } catch {
                 lrmsAlert('Failed to save location. Please try again.');
-                btn.textContent = '✅ Use this Location';
+                btn.textContent = '? Use this Location';
                 btn.disabled = false;
             }
         };
-        // ─────────────────────────────────────────────────────────
+        // ---------------------------------------------------------
 
         // Render Table Layout
         function renderListView(filtered, savedRecords) {
@@ -1365,20 +1365,20 @@
                     <td style="font-weight:700;color:var(--text-light);text-align:center">${i+1}</td>
                     <td style="font-weight:800;color:var(--text-primary)">${c.accountNo}</td>
                     <td style="font-weight:700;color:var(--text-primary)">${c.name}</td>
-                    <td style="font-size:0.8rem;color:var(--text-secondary)">${c.address || '—'}</td>
-                    <td style="font-weight:600;font-size:0.82rem">${c.phone || '—'}</td>
-                    <td><span class="badge badge-closed" style="text-transform:none;font-weight:600;font-size:0.75rem">${c.category || '—'}</span></td>
+                    <td style="font-size:0.8rem;color:var(--text-secondary)">${c.address || '�'}</td>
+                    <td style="font-weight:600;font-size:0.82rem">${c.phone || '�'}</td>
+                    <td><span class="badge badge-closed" style="text-transform:none;font-weight:600;font-size:0.75rem">${c.category || '�'}</span></td>
                     <td style="text-align:center"><span style="${arrStyle}">${arr}</span></td>
                     <td style="font-weight:600;font-size:0.82rem">${fmt(c.lastPaidDate)}</td>
                     <td>
                         <div style="display:flex;flex-direction:column;gap:6px">
                             <select class="form-select visit-sel ${cls}" style="height:34px;padding:0 8px;font-size:0.78rem" data-acc="${c.accountNo}" onchange="onStatusChangeTable(this)">
-                                <option value="pending" ${selVal==='pending'?'selected':''}>— Pending —</option>
-                                <option value="visited-agreed" ${selVal==='visited-agreed'?'selected':''}>✅ Visited - Agreed</option>
-                                <option value="visited-paid" ${selVal==='visited-paid'?'selected':''}>💰 Visited - Paid</option>
-                                <option value="visited-promised" ${selVal==='visited-promised'?'selected':''}>🤝 Visited - Promised</option>
-                                <option value="visited-nothome" ${selVal==='visited-nothome'?'selected':''}>🚪 Visited - Not Home</option>
-                                <option value="visited-refused" ${selVal==='visited-refused'?'selected':''}>❌ Visited - Refused</option>
+                                <option value="pending" ${selVal==='pending'?'selected':''}>� Pending �</option>
+                                <option value="visited-agreed" ${selVal==='visited-agreed'?'selected':''}>? Visited - Agreed</option>
+                                <option value="visited-paid" ${selVal==='visited-paid'?'selected':''}>?? Visited - Paid</option>
+                                <option value="visited-promised" ${selVal==='visited-promised'?'selected':''}>?? Visited - Promised</option>
+                                <option value="visited-nothome" ${selVal==='visited-nothome'?'selected':''}>?? Visited - Not Home</option>
+                                <option value="visited-refused" ${selVal==='visited-refused'?'selected':''}>? Visited - Refused</option>
                             </select>
                             <textarea class="visit-note" style="height:32px;margin:0;padding:4px 8px;font-size:0.75rem" oninput="updateCardNotes('${c.accountNo}', this)" placeholder="Response remarks...">${saved.notes || ''}</textarea>
                         </div>
@@ -1432,35 +1432,35 @@
                             <span style="font-size:8pt;font-weight:800;text-transform:uppercase">${c.category || 'Loan'}</span>
                         </div>
                         
-                        <div class="print-detail-title" style="margin-top:2pt">Customer Name / ණයගැතියාගේ නම</div>
+                        <div class="print-detail-title" style="margin-top:2pt">Customer Name / ?????????? ??</div>
                         <div class="print-detail-value" style="font-size:10.5pt;font-weight:800">${c.name}</div>
                         
-                        <div class="print-detail-title">Address / ලිපිනය</div>
+                        <div class="print-detail-title">Address / ??????</div>
                         <div class="print-detail-value">${c.address || 'N/A'}</div>
                         
                         <div class="print-detail-row">
                             <div>
-                                <div class="print-detail-title">Phone / දුරකථන</div>
+                                <div class="print-detail-title">Phone / ??????</div>
                                 <div class="print-detail-value">${c.phone || 'N/A'}</div>
                             </div>
                             <div>
-                                <div class="print-detail-title">Arrears / හිඟ වාරික</div>
+                                <div class="print-detail-title">Arrears / ??? ?????</div>
                                 <div class="print-detail-value" style="font-size:10.5pt;font-weight:800">${arr} Installments</div>
                             </div>
                         </div>
 
                         <div class="print-detail-row">
                             <div>
-                                <div class="print-detail-title">Last Payment / අවසන් ගෙවීම් දිනය</div>
+                                <div class="print-detail-title">Last Payment / ????? ?????? ????</div>
                                 <div class="print-detail-value">${fmt(c.lastPaidDate)}</div>
                             </div>
                             <div>
-                                <div class="print-detail-title">Loan Acc No / ණය ගිණුම් අංකය</div>
+                                <div class="print-detail-title">Loan Acc No / ?? ?????? ????</div>
                                 <div class="print-detail-value">${c.loanAccountNo || c.accountNo}</div>
                             </div>
                         </div>
 
-                        <div class="print-detail-title">Guarantors / ඇපකරුවන්</div>
+                        <div class="print-detail-title">Guarantors / ????????</div>
                         <div style="font-size:7.8pt;line-height:1.2;font-weight:600;margin-top:2px">
                             G1: ${g1} ${c.guarantor1Phone ? ' (' + c.guarantor1Phone + ')' : ''}<br>
                             G2: ${g2} ${c.guarantor2Phone ? ' (' + c.guarantor2Phone + ')' : ''}
@@ -1469,15 +1469,15 @@
                     
                     <div class="print-visit-right">
                         <div>
-                            <div style="font-size:8pt;font-weight:800;text-transform:uppercase;border-bottom:1px solid #000;padding-bottom:2pt;margin-bottom:6pt">Visit Outcome / නිරීක්ෂණ ප්‍රතිඵලය</div>
+                            <div style="font-size:8pt;font-weight:800;text-transform:uppercase;border-bottom:1px solid #000;padding-bottom:2pt;margin-bottom:6pt">Visit Outcome / ???????? ?????????</div>
                             <div class="print-checkbox-group">
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-agreed' ? 'background:#000;' : ''}"></div>
-                                    <span>Visited - Agreed to Pay (ගෙවීමට එකඟ විය)</span>
+                                    <span>Visited - Agreed to Pay (?????? ??? ???)</span>
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-paid' ? 'background:#000;' : ''}"></div>
-                                    <span>Visited - Paid (මුදල් ලබා දෙන ලදී)</span>
+                                    <span>Visited - Paid (????? ??? ??? ???)</span>
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-promised' ? 'background:#000;' : ''}"></div>
@@ -1485,17 +1485,17 @@
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-nothome' ? 'background:#000;' : ''}"></div>
-                                    <span>Visited - Not at Home (නිවසේ නොසිටියේය)</span>
+                                    <span>Visited - Not at Home (????? ?????????)</span>
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-refused' ? 'background:#000;' : ''}"></div>
-                                    <span>Visited - Refused (ගෙවීම ප්‍රතික්ෂේප කළේය)</span>
+                                    <span>Visited - Refused (????? ??????????? ????)</span>
                                 </div>
                             </div>
                         </div>
 
                         <div style="margin-top:8pt">
-                            <div style="font-size:7.5pt;font-weight:800;text-transform:uppercase;color:#222">Field Notes / ක්ෂේත්‍ර සටහන්:</div>
+                            <div style="font-size:7.5pt;font-weight:800;text-transform:uppercase;color:#222">Field Notes / ???????? ?????:</div>
                             ${notes ? `<div style="font-size:8.5pt;font-weight:600;margin-top:2px;border:1px solid #ccc;padding:4pt;border-radius:4px">${notes}</div>` : `
                             <div class="print-lines-box">
                                 <div class="print-writing-line"></div>
@@ -1577,7 +1577,7 @@
             }), savedRecords);
         };
 
-        // ── Save Records to DB Action logs ─────────────────────────
+        // -- Save Records to DB Action logs -------------------------
         async function saveVisitRecords() {
             const visitDate = document.getElementById('visitDate').value;
             if (!visitDate) { await lrmsAlert('Please select a Visit Date first.'); return; }
@@ -1617,7 +1617,7 @@
                 }
             }
 
-            await lrmsAlert(`✅ <b>${savedCount}</b> outcomes successfully saved to history logs for visit date <b>${fmt(visitDate)}</b>.`);
+            await lrmsAlert(`? <b>${savedCount}</b> outcomes successfully saved to history logs for visit date <b>${fmt(visitDate)}</b>.`);
             generateReport();
         }
     </script>
@@ -1626,7 +1626,7 @@
     <div id="mapPickerModal">
         <div class="map-picker-box">
             <div class="map-picker-header">
-                <h3>🗺️ Pick Customer Location on Map</h3>
+                <h3>??? Pick Customer Location on Map</h3>
                 <button type="button" class="btn btn-ghost" onclick="closeMapPicker()" style="padding:4px 8px"><i data-lucide="x"></i></button>
             </div>
             <div class="map-search-bar">

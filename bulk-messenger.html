@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -114,22 +114,22 @@
                 <!-- Smart Scheduled Reminders Panel -->
                 <div class="card" style="margin-bottom:20px; border-left:4px solid #7c3aed;">
                     <div class="card-header">
-                        <h3><i data-lucide="zap" style="color:#7c3aed"></i> ස්වයංක්‍රීය Scheduled Reminders</h3>
+                        <h3><i data-lucide="zap" style="color:#7c3aed"></i> ??????????? Scheduled Reminders</h3>
                     </div>
                     <div class="card-body">
-                        <p style="font-size:0.82rem; color:#6b7280; margin:0 0 14px">ණයගැතියන්ට ස්වයංක්‍රීය WhatsApp / SMS පණිවිඩ — Group එකක් ක්ලික් කර ලැයිස්තුවට එක් කර පණිවිඩ යවන්න</p>
+                        <p style="font-size:0.82rem; color:#6b7280; margin:0 0 14px">?????????? ??????????? WhatsApp / SMS ?????? � Group ???? ?????? ?? ?????????? ??? ?? ?????? ?????</p>
                         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
                             <button onclick="loadScheduledGroup('due-today')" class="btn btn-primary" style="background:#7c3aed; border:none; height:auto; min-height:46px; padding:10px 14px; white-space:normal; line-height:1.3; font-size:0.82rem; border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center; gap:8px;">
-                                <i data-lucide="calendar-check" style="width:18px;height:18px;flex-shrink:0"></i> <span>අද දින වාරික (Due Today)</span>
+                                <i data-lucide="calendar-check" style="width:18px;height:18px;flex-shrink:0"></i> <span>?? ??? ????? (Due Today)</span>
                             </button>
                             <button onclick="loadScheduledGroup('due-3days')" class="btn btn-primary" style="background:#8b5cf6; border:none; height:auto; min-height:46px; padding:10px 14px; white-space:normal; line-height:1.3; font-size:0.82rem; border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center; gap:8px;">
-                                <i data-lucide="bell" style="width:18px;height:18px;flex-shrink:0"></i> <span>දින 3ට කලින් මතක්කිරීම</span>
+                                <i data-lucide="bell" style="width:18px;height:18px;flex-shrink:0"></i> <span>??? 3? ????? ?????????</span>
                             </button>
                             <button onclick="loadScheduledGroup('promise-today')" class="btn btn-primary" style="background:#f59e0b; border:none; height:auto; min-height:46px; padding:10px 14px; white-space:normal; line-height:1.3; font-size:0.82rem; border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center; gap:8px;">
-                                <i data-lucide="handshake" style="width:18px;height:18px;flex-shrink:0"></i> <span>පොරොන්දු ගෙවීම් (Promise Due)</span>
+                                <i data-lucide="handshake" style="width:18px;height:18px;flex-shrink:0"></i> <span>???????? ?????? (Promise Due)</span>
                             </button>
                             <button onclick="loadScheduledGroup('overdue')" class="btn btn-primary" style="background:#ef4444; border:none; height:auto; min-height:46px; padding:10px 14px; white-space:normal; line-height:1.3; font-size:0.82rem; border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center; gap:8px;">
-                                <i data-lucide="alert-triangle" style="width:18px;height:18px;flex-shrink:0"></i> <span>කල්පසු නිවේදන (Overdue)</span>
+                                <i data-lucide="alert-triangle" style="width:18px;height:18px;flex-shrink:0"></i> <span>?????? ?????? (Overdue)</span>
                             </button>
                         </div>
                     </div>
@@ -164,10 +164,10 @@
                     <div class="card-body">
                         <!-- Template Language Selector -->
                         <div id="templateSelectorRow" style="display:none; margin-bottom:14px; padding:12px 14px; background:#f5f3ff; border-radius:10px; border:1px solid #ddd6fe;">
-                            <label style="font-size:0.8rem; font-weight:700; color:#5b21b6; display:block; margin-bottom:8px;"><i data-lucide="languages" style="width:14px;height:14px;"></i> පණිවිඩ භාෂාව / Message Language</label>
+                            <label style="font-size:0.8rem; font-weight:700; color:#5b21b6; display:block; margin-bottom:8px;"><i data-lucide="languages" style="width:14px;height:14px;"></i> ?????? ????? / Message Language</label>
                             <div style="display:flex; flex-wrap:wrap; gap:10px;">
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; padding:6px 14px; border-radius:99px; background:#fff; border:1.5px solid #7c3aed; color:#7c3aed;">
-                                    <input type="radio" name="tmplStyle" value="si" checked onchange="applyTemplate()" style="accent-color:#7c3aed;"> සිංහල (Sinhala)
+                                    <input type="radio" name="tmplStyle" value="si" checked onchange="applyTemplate()" style="accent-color:#7c3aed;"> ????? (Sinhala)
                                 </label>
                                 <label style="cursor:pointer; display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; padding:6px 14px; border-radius:99px; background:#fff; border:1.5px solid #0ea5e9; color:#0ea5e9;">
                                     <input type="radio" name="tmplStyle" value="en" onchange="applyTemplate()" style="accent-color:#0ea5e9;"> English
@@ -392,7 +392,7 @@
                     window.open(`sms:${cleanPhone}${separator}body=${encodedMsg}`, '_blank');
                 }
 
-                // ── Save to Action History ──────────────────────────────────────────
+                // -- Save to Action History ------------------------------------------
                 try {
                     const actionType = dispatchType === 'whatsapp'
                         ? 'WhatsApp Reminder (Scheduled)'
@@ -407,7 +407,7 @@
                         actionType: actionType,
                         date: today,
                         response: '',
-                        officerNote: `ස්වයංක්‍රීය ${dispatchType === 'whatsapp' ? 'WhatsApp' : 'SMS'} සිහිකැඳවීමක් (Scheduled Reminder) යවන ලදී.`,
+                        officerNote: `??????????? ${dispatchType === 'whatsapp' ? 'WhatsApp' : 'SMS'} ???????????? (Scheduled Reminder) ??? ???.`,
                         remarks: personalizedMsg.slice(0, 200),
                         isDeleted: false
                     };
@@ -420,7 +420,7 @@
                 } catch(logErr) {
                     console.warn('Could not save action log for bulk message:', logErr);
                 }
-                // ───────────────────────────────────────────────────────────────────
+                // -------------------------------------------------------------------
 
                 dispatchIndex++;
                 updateDispatchUI();
@@ -461,19 +461,19 @@
             // Template library (Sinhala & English)
             const TEMPLATES = {
                 'due-today': {
-                    'si': (d) => `හිතවත්, {name} මහත්මා/මහත්මිය,\n\nඔබගේ ණය ගිණුම් අංකය {accountNo} හි අද දින (${d.today}) ණය වාරිකය ගෙවිය යුතු බව කාරුණිකව මතක් කර දෙමු.\nකරුණාකර අද දින ගෙවීම ඉටු කරන ලෙස ඉල්ලා සිටිමු.\n\nගලපිටියාගම සණස බැංකුව\nඅවශ්‍ය නම් විස්තර සඳහා අමතන්න : 0372260658`,
+                    'si': (d) => `??????, {name} ??????/???????,\n\n???? ?? ?????? ???? {accountNo} ?? ?? ??? (${d.today}) ?? ?????? ????? ???? ?? ???????? ???? ?? ????.\n??????? ?? ??? ????? ??? ??? ??? ????? ??????.\n\n?????????? ??? ??????\n?????? ??? ?????? ???? ?????? : 0372260658`,
                     'en': (d) => `Dear {name},\n\nThis is a friendly reminder that the monthly installment for your loan account {accountNo} is due today (${d.today}).\nPlease make your payment today.\n\nGalapitiyagama SANASA Bank\nFor details contact: 0372260658`
                 },
                 'due-3days': {
-                    'si': (d) => `හිතවත්, {name} මහත්මා/මහත්මිය,\n\nඔබගේ ණය ගිණුම් අංකය {accountNo} හි ණය වාරිකය දින 3කින් (${d.in3}) ගෙවිය යුතු බව කාරුණිකව මතක් කර සිටිමු.\n\nකරුණාකර නියමිත දිනට වාරිකය ගෙවීම සිදුකරන ලෙස ඉල්ලා සිටිමු.\nගලපිටියාගම සණස බැංකුව\n\nඅවශ්‍ය නම් විස්තර සඳහා අමතන්න : 0372260658`,
+                    'si': (d) => `??????, {name} ??????/???????,\n\n???? ?? ?????? ???? {accountNo} ?? ?? ?????? ??? 3???? (${d.in3}) ????? ???? ?? ???????? ???? ?? ??????.\n\n??????? ?????? ???? ?????? ????? ??????? ??? ????? ??????.\n?????????? ??? ??????\n\n?????? ??? ?????? ???? ?????? : 0372260658`,
                     'en': (d) => `Dear {name},\n\nThis is to remind you that your loan installment for account {accountNo} is due in 3 days (${d.in3}).\n\nPlease make your payment on the due date.\nGalapitiyagama SANASA Bank\n\nFor details contact: 0372260658`
                 },
                 'promise-today': {
-                    'si': (d) => `හිතවත්, {name} මහත්මා/මහත්මිය,\n\nඔබ ${d.today} දිනට ණය ගෙවීමේ පොරොන්දු ලබා දී ඇති බව කාරුණිකව මතක් කර සිටිමු.\nකරුණාකර නියමිත දිනට වාරිකය ගෙවීම සිදුකරන ලෙස ඉල්ලා සිටිමු.\n\nගලපිටියාගම සණස බැංකුව\nඅවශ්‍ය නම් විස්තර සඳහා අමතන්න : 0372260658`,
+                    'si': (d) => `??????, {name} ??????/???????,\n\n?? ${d.today} ???? ?? ?????? ???????? ??? ?? ??? ?? ???????? ???? ?? ??????.\n??????? ?????? ???? ?????? ????? ??????? ??? ????? ??????.\n\n?????????? ??? ??????\n?????? ??? ?????? ???? ?????? : 0372260658`,
                     'en': (d) => `Dear {name},\n\nThis is to remind you that you promised to pay your loan installment on ${d.today}.\nPlease make your payment today.\n\nGalapitiyagama SANASA Bank\nFor details contact: 0372260658`
                 },
                 'overdue': {
-                    'si': (d) => `හිතවත්, {name} මහත්මා/මහත්මිය,\n\nඔබගේ ණය ගිණුම් අංකය {accountNo} හි ණය වාරිකය/ශේෂය කල්පසු වී ඇති බව දන්වා සිටිමු.\nකරුණාකර අද දින තුල ගෙවීම ඉක්මනින් ඉටු කරන ලෙසත්, වාරිකය ප්‍රමාද වීමෙන් ඔබ හට අමතර දඩ පොලියක් එක්වීම වලක්වා ගන්නා ලෙසත් කාරුණිකව දන්වා සිටිමු.\n\nගලපිටියාගම සණස බැංකුව\nඅවශ්‍ය නම් විස්තර සඳහා අමතන්න : 0372260658`,
+                    'si': (d) => `??????, {name} ??????/???????,\n\n???? ?? ?????? ???? {accountNo} ?? ?? ??????/???? ?????? ?? ??? ?? ????? ??????.\n??????? ?? ??? ??? ????? ???????? ??? ??? ?????, ?????? ??????? ?????? ?? ?? ???? ?? ??????? ?????? ?????? ????? ????? ???????? ????? ??????.\n\n?????????? ??? ??????\n?????? ??? ?????? ???? ?????? : 0372260658`,
                     'en': (d) => `Dear {name},\n\nPlease note that your installment/balance for loan account {accountNo} is overdue.\nPlease make your payment today to avoid additional penalty interest charges.\n\nGalapitiyagama SANASA Bank\nFor details contact: 0372260658`
                 }
             };
@@ -503,7 +503,7 @@
             }
 
             // Calculate the next installment date for a customer based on loanDate's day-of-month
-            // e.g. loanDate = 2024-03-15 → installment is every month on the 15th
+            // e.g. loanDate = 2024-03-15 ? installment is every month on the 15th
             function getNextInstallmentDate(c, referenceDate) {
                 // Try to extract the day-of-month from loanDate
                 const rawDate = c.loanDate || c.installmentDate || c.nextDueDate || c.dueDate || '';
@@ -570,7 +570,7 @@
                         );
 
                     } else if (mode === 'overdue') {
-                        // Only High Risk / Overdue — Legal Actions already excluded
+                        // Only High Risk / Overdue � Legal Actions already excluded
                         targets = allCusts.filter(c =>
                             !c.isDeleted &&
                             !isExcluded(c) &&
@@ -580,7 +580,7 @@
                     }
 
                     if (!targets || targets.length === 0) {
-                        await lrmsAlert("මෙම කාණ්ඩය සඳහා ගනුදෙනුකරුවන් හමු නොවිණි. (No customers found for this category)");
+                        await lrmsAlert("??? ?????? ???? ????????????? ??? ??????. (No customers found for this category)");
                         return;
                     }
 
@@ -601,7 +601,7 @@
                     if (firstRadio) firstRadio.checked = true;
                     applyTemplate();
 
-                    await lrmsAlert(`ගනුදෙනුකරුවන් ${targets.length} දෙනෙකු ලැයිස්තුවට එක් කරන ලදී. Template Style වෙනස් කිරීමට Message Editor දෙසට scroll කරන්න.`);
+                    await lrmsAlert(`????????????? ${targets.length} ?????? ?????????? ??? ??? ???. Template Style ????? ?????? Message Editor ???? scroll ?????.`);
                 } catch(err) {
                     console.error("Error loading scheduled group:", err);
                     await lrmsAlert("Error loading group: " + err.message);
@@ -610,7 +610,7 @@
 
         }
     </script>
-    <script src="js/app.js?v=3.19"></script>
+    <script src="js/app.js?v=3.20"></script>
 <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
 

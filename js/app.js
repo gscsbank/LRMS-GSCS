@@ -406,6 +406,11 @@ async function getCustomerById(id) {
 }
 
 
+// Helper Function: Extract only digits from string
+function digitsOnly(str) {
+    return String(str || '').replace(/[^0-9]/g, '');
+}
+
 // Helper Function: Add recovery action
 async function addAction(actionData) {
     try {
@@ -421,12 +426,15 @@ async function addAction(actionData) {
     }
 }
 
-// Helper Function: Get actions for a customer (strictly separated per loan via customerId and loanAccountNo)
+// Helper Function: Get actions for a customer
 async function getCustomerActions(accountNo, customerId = null, loanAccountNo = null, forceRefresh = false) {
     if (!accountNo && !customerId && !loanAccountNo) return [];
     const cleanAcc = (accountNo || '').toString().trim();
     const cleanLoanAcc = (loanAccountNo || '').toString().trim();
     const cleanCustId = customerId ? String(customerId).trim() : null;
+    const accDigits = digitsOnly(cleanAcc);
+    const loanAccDigits = digitsOnly(cleanLoanAcc);
+
     const cacheKey = cleanCustId ? `${cleanAcc}_${cleanCustId}` : (cleanLoanAcc ? `${cleanAcc}_${cleanLoanAcc}` : cleanAcc);
 
     if (!forceRefresh && window.lrmsCache && window.lrmsCache.actions && window.lrmsCache.actions[cacheKey]) {
@@ -436,65 +444,46 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
 
     try {
         console.log("Fetching Actions from DB:", cleanAcc, cleanCustId, cleanLoanAcc);
-        let actions = [];
-        if (cleanAcc) {
-            const byAcc = await window.db.getByIndex("actions", "customerAccountNo", cleanAcc);
-            if (byAcc && byAcc.length) actions = [...actions, ...byAcc];
-            const numCleanAcc = isNaN(cleanAcc) || cleanAcc === "" ? null : Number(cleanAcc);
-            if (numCleanAcc !== null) {
-                const numActions = await window.db.getByIndex("actions", "customerAccountNo", numCleanAcc);
-                if (numActions && numActions.length) actions = [...actions, ...numActions];
-            }
-        }
-        if (cleanLoanAcc && cleanLoanAcc !== cleanAcc) {
-            const byLoanAcc = await window.db.getByIndex("actions", "customerAccountNo", cleanLoanAcc);
-            if (byLoanAcc && byLoanAcc.length) actions = [...actions, ...byLoanAcc];
-        }
+        
+        // Fetch all actions from DB to guarantee no records are missed
+        const allDocs = await window.db.getAll("actions");
+        
+        let actions = (allDocs || []).filter(a => {
+            if (!a || a.isDeleted === true || a.isDeleted === 'true') return false;
+            
+            const aAcc = String(a.customerAccountNo || '').trim();
+            const aLoan = String(a.loanAccountNo || '').trim();
+            const aCustId = a.customerId ? String(a.customerId).trim() : null;
+            const aAccDigits = digitsOnly(aAcc);
+            const aLoanDigits = digitsOnly(aLoan);
 
-        if (actions.length === 0) {
-            const allDocs = await window.db.getAll("actions");
-            actions = (allDocs || []).filter(a => {
-                if (a.isDeleted) return false;
-                const aAcc = String(a.customerAccountNo || '').trim();
-                const aLoan = String(a.loanAccountNo || '').trim();
-                const aCustId = a.customerId ? String(a.customerId).trim() : null;
-                return aAcc === cleanAcc || 
-                       (cleanLoanAcc && (aAcc === cleanLoanAcc || aLoan === cleanLoanAcc)) ||
-                       (cleanCustId && aCustId === cleanCustId);
-            });
-        }
+            // 1. Direct customerId match
+            if (cleanCustId && aCustId && aCustId === cleanCustId) return true;
+
+            // 2. Direct loanAccountNo match
+            if (cleanLoanAcc) {
+                if (aLoan && (aLoan === cleanLoanAcc || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits))) return true;
+                if (aAcc && (aAcc === cleanLoanAcc || (loanAccDigits && aAccDigits && loanAccDigits === aAccDigits))) return true;
+            }
+
+            // 3. Direct customerAccountNo match
+            if (cleanAcc) {
+                if (aAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits))) return true;
+                if (aLoan && (aLoan === cleanAcc || (accDigits && aLoanDigits && accDigits === aLoanDigits))) return true;
+            }
+
+            return false;
+        });
 
         // Deduplicate by action ID
         const actionMap = new Map();
-        actions.forEach(a => { if (a && !a.isDeleted) actionMap.set(a.id, a); });
+        actions.forEach(a => { if (a && a.id) actionMap.set(a.id, a); });
         actions = Array.from(actionMap.values());
 
-        // Strictly separate actions per loan account
-        if (cleanCustId || cleanLoanAcc) {
-            actions = actions.filter(a => {
-                // 1. If action has explicit customerId, match by customerId
-                if (a.customerId && cleanCustId) {
-                    return String(a.customerId).trim() === cleanCustId;
-                }
-                // 2. If action has explicit loanAccountNo, match by loanAccountNo
-                if (a.loanAccountNo && cleanLoanAcc) {
-                    const aLoanD = digitsOnly(a.loanAccountNo);
-                    const targetLoanD = digitsOnly(cleanLoanAcc);
-                    return String(a.loanAccountNo).trim() === cleanLoanAcc || (aLoanD && targetLoanD && aLoanD === targetLoanD);
-                }
-                // 3. For legacy actions without explicit loanAccountNo/customerId:
-                if (!a.loanAccountNo && !a.customerId) {
-                    if (cleanLoanAcc && cleanLoanAcc !== cleanAcc) {
-                        return String(a.customerAccountNo).trim() === cleanLoanAcc;
-                    }
-                    return true;
-                }
-                return false;
-            });
-        }
+        // Sort latest first
+        actions.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-        actions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+        if (!window.lrmsCache) window.lrmsCache = {};
         if (!window.lrmsCache.actions) window.lrmsCache.actions = {};
         window.lrmsCache.actions[cacheKey] = actions;
         return actions;
@@ -503,6 +492,9 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
         return [];
     }
 }
+
+// Alias for backwards compatibility
+const getActionsForCustomer = getCustomerActions;
 
 // Helper Function: Update Customer Status
 async function updateCustomerStatus(accountNo, newStatus, statusDate, customerId = null) {
