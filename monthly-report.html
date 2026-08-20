@@ -2,1186 +2,1186 @@
 <html lang="si">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>????? ?? ??????? ??????? (Monthly Loan Progress Report) - LRMS</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/db.js?v=3.15"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=3.17">
-    <style>
-        .report-tab-btn.active {
-            background: #1e1b4b;
-            color: white;
-            box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>මාසික ණය ප්‍රගති වාර්තාව (Monthly Loan Progress Report) - LRMS</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/db.js?v=3.15"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css?v=3.17">
+  <style>
+    .report-tab-btn.active {
+      background: #1e1b4b;
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2);
+    }
 
-        .npl-table th, .npl-table td {
-            border: 1px solid #cbd5e1;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-        }
+    .npl-table th, .npl-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+    }
 
-        .npl-table th {
-            background: #f8fafc;
-            font-weight: 700;
-            color: #1e293b;
-        }
+    .npl-table th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #1e293b;
+    }
 
-        /* -- A4 Print Booklet Styling (High Contrast B&W Executive Style) -- */
-        @media print {
-            @page {
-                size: A4 portrait;
-                margin: 12mm 15mm 15mm 15mm;
-            }
+    /* -- A4 Print Booklet Styling (High Contrast B&W Executive Style) -- */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm 15mm 15mm 15mm;
+      }
 
-            body {
-                background: #ffffff !important;
-                color: #000000 !important;
-                font-family: 'Times New Roman', Times, serif, 'Inter', sans-serif !important;
-                font-size: 11pt !important;
-                line-height: 1.4 !important;
-            }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: 'Times New Roman', Times, serif, 'Inter', sans-serif !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+      }
 
-            .no-print, nav, header, .nav-links, .modern-top-nav, button, select, input {
-                display: none !important;
-            }
+      .no-print, nav, header, .nav-links, .modern-top-nav, button, select, input {
+        display: none !important;
+      }
 
-            .main-content {
-                padding: 0 !important;
-                margin: 0 !important;
-            }
+      .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
 
-            .content-area {
-                padding: 0 !important;
-                max-width: 100% !important;
-                background: transparent !important;
-            }
+      .content-area {
+        padding: 0 !important;
+        max-width: 100% !important;
+        background: transparent !important;
+      }
 
-            .print-page {
-                page-break-before: always;
-                padding-top: 10mm;
-                min-height: 260mm;
-                display: block !important;
-            }
+      .print-page {
+        page-break-before: always;
+        padding-top: 10mm;
+        min-height: 260mm;
+        display: block !important;
+      }
 
-            .print-page:first-of-type {
-                page-break-before: avoid;
-                padding-top: 0;
-            }
+      .print-page:first-of-type {
+        page-break-before: avoid;
+        padding-top: 0;
+      }
 
-            .bw-box {
-                border: 1.5px solid #000000 !important;
-                background: #ffffff !important;
-                color: #000000 !important;
-            }
+      .bw-box {
+        border: 1.5px solid #000000 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
 
-            .bw-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin-top: 10px !important;
-                margin-bottom: 15px !important;
-            }
+      .bw-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 10px !important;
+        margin-bottom: 15px !important;
+      }
 
-            .bw-table th, .bw-table td {
-                border: 1px solid #000000 !important;
-                padding: 6px 10px !important;
-                font-size: 9.5pt !important;
-                color: #000000 !important;
-                background: #ffffff !important;
-            }
+      .bw-table th, .bw-table td {
+        border: 1px solid #000000 !important;
+        padding: 6px 10px !important;
+        font-size: 9.5pt !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+      }
 
-            .bw-table th {
-                background: #f0f0f0 !important;
-                font-weight: bold !important;
-                text-transform: uppercase !important;
-            }
+      .bw-table th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+      }
 
-            .bw-title {
-                font-size: 16pt !important;
-                font-weight: bold !important;
-                text-align: center !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.5px !important;
-                margin-bottom: 4px !important;
-            }
+      .bw-title {
+        font-size: 16pt !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 4px !important;
+      }
 
-            .bw-subtitle {
-                font-size: 12pt !important;
-                font-weight: bold !important;
-                text-align: center !important;
-                margin-bottom: 15px !important;
-            }
+      .bw-subtitle {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        margin-bottom: 15px !important;
+      }
 
-            .cover-border {
-                border: 3px double #000000 !important;
-                padding: 25mm 15mm !important;
-                height: 250mm !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-                text-align: center !important;
-            }
+      .cover-border {
+        border: 3px double #000000 !important;
+        padding: 25mm 15mm !important;
+        height: 250mm !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        text-align: center !important;
+      }
 
-        .sig-table {
-            width: 100% !important;
-            margin-top: 35mm !important;
-            border-collapse: collapse !important;
-            border: none !important;
-            background: transparent !important;
-        }
+    .sig-table {
+      width: 100% !important;
+      margin-top: 35mm !important;
+      border-collapse: collapse !important;
+      border: none !important;
+      background: transparent !important;
+    }
 
-        .sig-table td {
-            border: none !important;
-            background: transparent !important;
-            padding: 0 10px !important;
-            vertical-align: top !important;
-            text-align: center !important;
-        }
+    .sig-table td {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 10px !important;
+      vertical-align: top !important;
+      text-align: center !important;
+    }
 
-        .sig-line {
-            border-top: 1.5px solid #000000 !important;
-            width: 150px !important;
-            margin: 0 auto 8px auto !important;
-        }
+    .sig-line {
+      border-top: 1.5px solid #000000 !important;
+      width: 150px !important;
+      margin: 0 auto 8px auto !important;
+    }
 
-        .sig-title {
-            font-size: 10pt !important;
-            font-weight: bold !important;
-            color: #000000 !important;
-            line-height: 1.3 !important;
-            margin: 0 !important;
-            text-transform: uppercase !important;
-        }
+    .sig-title {
+      font-size: 10pt !important;
+      font-weight: bold !important;
+      color: #000000 !important;
+      line-height: 1.3 !important;
+      margin: 0 !important;
+      text-transform: uppercase !important;
+    }
 
-        .sig-sub {
-            font-size: 8.5pt !important;
-            color: #444444 !important;
-            font-style: italic !important;
-            line-height: 1.2 !important;
-            margin-top: 2px !important;
-        }
-    </style>
+    .sig-sub {
+      font-size: 8.5pt !important;
+      color: #444444 !important;
+      font-style: italic !important;
+      line-height: 1.2 !important;
+      margin-top: 2px !important;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- Top Navigation -->
-    <nav class="modern-top-nav no-print">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <div class="logo-wrapper">
-                    <img src="assets/logo.png" alt="Logo">
-                </div>
-                <div class="brand-info">
-                    <span class="nav-brand">GSCS Bank</span>
-                    <span class="system-name">Loan Recovery System</span>
-                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
-                </div>
-            </div>
-
-                        <div class="nav-links" id="topNavLinks">
-                <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
-                <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
-                <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
-                <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
-                <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
-                <a href="monthly-report.html" class="nav-link active"><i data-lucide="book-open"></i> <span>Monthly Report</span></a>
-                <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
-                <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
-                <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
-                <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
-                <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
-                <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
-            </div>
-
-            <div class="nav-right">
-                <div class="nav-dropdown">
-                    <button class="nav-circle-btn"><i data-lucide="user"></i></button>
-                    <div class="dropdown-menu align-right" style="width:220px">
-                        <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
-                            <strong style="display:block;color:var(--text-primary)">Administrator</strong>
-                            <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
-                        </div>
-                        <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
-                        <a href="admin.html"><i data-lucide="users"></i> Manage Users</a>
-                        <div style="border-top:1px solid var(--border); margin:4px 0"></div>
-                        <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
-                    </div>
-                </div>
-            </div>
+  <!-- Top Navigation -->
+  <nav class="modern-top-nav no-print">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <div class="logo-wrapper">
+          <img src="assets/logo.png" alt="Logo">
         </div>
-    </nav>
+        <div class="brand-info">
+          <span class="nav-brand">GSCS Bank</span>
+          <span class="system-name">Loan Recovery System</span>
+          <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+        </div>
+      </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="top-header no-print">
+            <div class="nav-links" id="topNavLinks">
+        <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
+        <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
+        <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
+        <a href="categories.html" class="nav-link"><i data-lucide="layers"></i> <span>Categories</span></a>
+        <a href="reports.html" class="nav-link"><i data-lucide="file-bar-chart"></i> <span>Reports</span></a>
+        <a href="monthly-report.html" class="nav-link active"><i data-lucide="book-open"></i> <span>Monthly Report</span></a>
+        <a href="letters.html" class="nav-link"><i data-lucide="file-text"></i> <span>Letters</span></a>
+        <a href="field-visit.html" class="nav-link"><i data-lucide="map-pin"></i> <span>Field Visit</span></a>
+        <a href="loan-restructuring.html" class="nav-link"><i data-lucide="refresh-cw"></i> <span>Restructuring</span></a>
+        <a href="reminders.html" class="nav-link"><i data-lucide="bell"></i> <span>Reminders</span></a>
+        <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
+        <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
+      </div>
+
+      <div class="nav-right">
+        <div class="nav-dropdown">
+          <button class="nav-circle-btn"><i data-lucide="user"></i></button>
+          <div class="dropdown-menu align-right" style="width:220px">
+            <div style="padding:12px; border-bottom:1px solid var(--border); margin-bottom:4px">
+              <strong style="display:block;color:var(--text-primary)">Administrator</strong>
+              <span style="font-size:0.75rem;color:var(--text-secondary)">Welcome back</span>
+            </div>
+            <a href="javascript:void(0)" onclick="handleBackup()"><i data-lucide="download-cloud"></i> Backup Data</a>
+            <a href="admin.html"><i data-lucide="users"></i> Manage Users</a>
+            <div style="border-top:1px solid var(--border); margin:4px 0"></div>
+            <a href="#" onclick="handleLogout()" style="color:#ef4444"><i data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="top-header no-print">
+      <div>
+        <h2>මාසික ණය ප්‍රගති වාර්තාව (Monthly Loan Progress Report)</h2>
+        <p>මාසික ණයවල ප්‍රගතිය හා අයකර ගැනීමේ ක්‍රියාකාරීත්ව වාර්තාව</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="window.print()" class="btn btn-primary" style="background: linear-gradient(135deg, #1e1b4b, #311b92);">
+          <i data-lucide="printer"></i> 🖨️ මුද්‍රණය කරන්න (Print Report Booklet - A4 B&W)
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area">
+
+      <!-- Control Bar (Month Picker & View Selector) -->
+      <div class="card p-5 mb-6 no-print" style="background:#ffffff; border:1px solid #e2e8f0">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px">
+          <div style="display:flex; align-items:center; gap:12px">
+            <label style="font-weight:700; font-size:0.9rem; color:#1e1b4b">අදාළ මාසය තෝරන්න (Select Month):</label>
+            <input type="month" id="reportMonth" class="form-input" style="width:180px; height:42px; font-weight:700" onchange="loadReportData()">
+          </div>
+
+          <div style="display:inline-flex; background:#f1f5f9; padding:4px; border-radius:12px; border:1px solid #cbd5e1">
+            <button id="btnTabEntry" class="report-tab-btn active" onclick="switchReportTab('entry')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px">
+              <i data-lucide="file-edit" style="width:16px;height:16px"></i> 1. මාසික අගයන් ඇතුළත් කිරීම (Data Entry)
+            </button>
+            <button id="btnTabPreview" class="report-tab-btn" onclick="switchReportTab('preview')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; background:transparent; color:#475569">
+              <i data-lucide="book-open" style="width:16px;height:16px"></i> 2. සම්පූර්ණ වාර්තා පෙරදසුන (Booklet Preview)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 1: DATA ENTRY FORM (Main Bank System NPL Statement Data) -->
+      <div id="tabDataEntry" class="no-print">
+        <div class="card p-6 mb-6" style="border: 1px solid #c4b5fd">
+          <div style="border-bottom: 2px solid #ede9fe; padding-bottom: 12px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center">
             <div>
-                <h2>????? ?? ??????? ??????? (Monthly Loan Progress Report)</h2>
-                <p>????? ?????? ?? ??????? ?? ?????????? ?????? ???</p>
+              <h3 style="font-size:1.15rem; font-weight:800; color:#1e1b4b; display:flex; align-items:center; gap:8px">
+                <i data-lucide="database" style="color:#7c3aed"></i>
+                සමිතියේ Main System එකෙන් ලැබෙන "මාසිකව නිකුත් වූ ණය පිළිබඳ වාර්තාව" අගයන්:
+              </h3>
+              <p style="font-size:0.82rem; color:#6b7280; margin-top:2px">මාසය ආරම්භයේ (Start of Month) හා මාසය අවසානයේ (End of Month) දත්ත මෙහි ඇතුළත් කරන්න.</p>
             </div>
-            <div style="display:flex;align-items:center;gap:12px">
-                <button onclick="window.print()" class="btn btn-primary" style="background: linear-gradient(135deg, #1e1b4b, #311b92);">
-                    <i data-lucide="printer"></i> ??? Print Report Booklet (A4 B&W)
-                </button>
-            </div>
-        </header>
+            <button onclick="saveNPLStatementData()" class="btn btn-primary" style="background:#16a34a; border:none">
+              <i data-lucide="save"></i> මෙම අගයන් සුරකින්න (Save Values)
+            </button>
+          </div>
 
-        <div class="content-area">
-
-            <!-- Control Bar (Month Picker & View Selector) -->
-            <div class="card p-5 mb-6 no-print" style="background:#ffffff; border:1px solid #e2e8f0">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px">
-                    <div style="display:flex; align-items:center; gap:12px">
-                        <label style="font-weight:700; font-size:0.9rem; color:#1e1b4b">??? ?????? ???? ?????? (Select Month):</label>
-                        <input type="month" id="reportMonth" class="form-input" style="width:180px; height:42px; font-weight:700" onchange="loadReportData()">
-                    </div>
-
-                    <div style="display:inline-flex; background:#f1f5f9; padding:4px; border-radius:12px; border:1px solid #cbd5e1">
-                        <button id="btnTabEntry" class="report-tab-btn active" onclick="switchReportTab('entry')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px">
-                            <i data-lucide="file-edit" style="width:16px;height:16px"></i> 1. ?????? ???? ?????? ????? (Data Entry)
-                        </button>
-                        <button id="btnTabPreview" class="report-tab-btn" onclick="switchReportTab('preview')" style="padding:8px 18px; font-size:0.85rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; background:transparent; color:#475569">
-                            <i data-lucide="book-open" style="width:16px;height:16px"></i> 2. ??? ?????? ??? ??????? (Booklet Preview)
-                        </button>
-                    </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px">
+            <!-- Start of Month Entry -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px">
+              <h4 style="font-weight:800; font-size:0.95rem; color:#1e1b4b; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #cbd5e1; display:flex; align-items:center; gap:6px">
+                මාසය ආරම්භයේ අගයන් (Start of Month Values)
+              </h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">මුළු ණය ශේෂය (Total Gross Loans)</label>
+                  <input type="number" step="0.01" id="start_totalLoans" class="form-input" placeholder="e.g. 233682458.88" oninput="calculateNPLTotals()">
                 </div>
-            </div>
-
-            <!-- TAB 1: DATA ENTRY FORM (Main Bank System NPL Statement Data) -->
-            <div id="tabDataEntry" class="no-print">
-                <div class="card p-6 mb-6" style="border: 1px solid #c4b5fd">
-                    <div style="border-bottom: 2px solid #ede9fe; padding-bottom: 12px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center">
-                        <div>
-                            <h3 style="font-size:1.15rem; font-weight:800; color:#1e1b4b; display:flex; align-items:center; gap:8px">
-                                <i data-lucide="database" style="color:#7c3aed"></i>
-                                ??????? Main System ????? ????? "?????? ????? ?? ???? ?????? ??????" ????
-                            </h3>
-                            <p style="font-size:0.82rem; color:#6b7280; margin-top:2px">????? ?????? (Start of Month) ?? ????? ?????? (End of Month) ???? ???? ?????? ?????.</p>
-                        </div>
-                        <button onclick="saveNPLStatementData()" class="btn btn-primary" style="background:#16a34a; border:none">
-                            <i data-lucide="save"></i> ?? ???? ???????? (Save Values)
-                        </button>
-                    </div>
-
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px">
-                        <!-- Start of Month Entry -->
-                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px">
-                            <h4 style="font-weight:800; font-size:0.95rem; color:#1e1b4b; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #cbd5e1; display:flex; align-items:center; gap:6px">
-                                ?? ????? ?????? (Start of Month Values)
-                            </h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="form-label">???? ?? ???? (Total Gross Loans)</label>
-                                    <input type="number" step="0.01" id="start_totalLoans" class="form-input" placeholder="e.g. 233682458.88" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 6 ??? 12 ????? - 20%)</label>
-                                    <input type="number" step="0.01" id="start_overdue6_12" class="form-input" placeholder="e.g. 5769588.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 12 ??? 18 ????? - 50%)</label>
-                                    <input type="number" step="0.01" id="start_overdue12_18" class="form-input" placeholder="e.g. 2203962.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 18? ???? - 100%)</label>
-                                    <input type="number" step="0.01" id="start_overdue18_plus" class="form-input" placeholder="e.g. 11469168.88" oninput="calculateNPLTotals()">
-                                </div>
-                                <div style="background:#e0e7ff; padding:12px; border-radius:8px">
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3">
-                                        <span>??? ??? ?? ?????:</span> <span id="start_disp_totalOverdue">0.00</span>
-                                    </div>
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3; margin-top:4px">
-                                        <span>????? ?? ???? ?????:</span> <span id="start_disp_provision">0.00</span>
-                                    </div>
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#1e1b4b; margin-top:4px; border-top:1px solid #c7d2fe; padding-top:4px">
-                                        <span>????? ?? ????:</span> <span id="start_disp_netBalance">0.00</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- End of Month Entry -->
-                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:20px">
-                            <h4 style="font-weight:800; font-size:0.95rem; color:#166534; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #86efac; display:flex; align-items:center; gap:6px">
-                                ?? ????? ?????? (End of Month Values)
-                            </h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="form-label">???? ?? ???? (Total Gross Loans)</label>
-                                    <input type="number" step="0.01" id="end_totalLoans" class="form-input" placeholder="e.g. 235100000.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 6 ??? 12 ????? - 20%)</label>
-                                    <input type="number" step="0.01" id="end_overdue6_12" class="form-input" placeholder="e.g. 5100000.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 12 ??? 18 ????? - 50%)</label>
-                                    <input type="number" step="0.01" id="end_overdue12_18" class="form-input" placeholder="e.g. 1950000.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div>
-                                    <label class="form-label">??? ??? ?? (??? 18? ???? - 100%)</label>
-                                    <input type="number" step="0.01" id="end_overdue18_plus" class="form-input" placeholder="e.g. 10800000.00" oninput="calculateNPLTotals()">
-                                </div>
-                                <div style="background:#dcfce7; padding:12px; border-radius:8px">
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d">
-                                        <span>??? ??? ?? ?????:</span> <span id="end_disp_totalOverdue">0.00</span>
-                                    </div>
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d; margin-top:4px">
-                                        <span>????? ?? ???? ?????:</span> <span id="end_disp_provision">0.00</span>
-                                    </div>
-                                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#14532d; margin-top:4px; border-top:1px solid #86efac; padding-top:4px">
-                                        <span>????? ?? ????:</span> <span id="end_disp_netBalance">0.00</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <div>
+                  <label class="form-label">සුළු අවදානම් ණය (මාස 6 සිට 12 දක්වා - 20%)</label>
+                  <input type="number" step="0.01" id="start_overdue6_12" class="form-input" placeholder="e.g. 5769588.00" oninput="calculateNPLTotals()">
                 </div>
+                <div>
+                  <label class="form-label">මධ්‍ය අවදානම් ණය (මාස 12 සිට 18 දක්වා - 50%)</label>
+                  <input type="number" step="0.01" id="start_overdue12_18" class="form-input" placeholder="e.g. 2203962.00" oninput="calculateNPLTotals()">
+                </div>
+                <div>
+                  <label class="form-label">අධි අවදානම් ණය (මාස 18ට වැඩි - 100%)</label>
+                  <input type="number" step="0.01" id="start_overdue18_plus" class="form-input" placeholder="e.g. 11469168.88" oninput="calculateNPLTotals()">
+                </div>
+                <div style="background:#e0e7ff; padding:12px; border-radius:8px">
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3">
+                    <span>මුළු අක්‍රීය ණය ශේෂය:</span> <span id="start_disp_totalOverdue">0.00</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#3730a3; margin-top:4px">
+                    <span>අක්‍රීය ණය සඳහා සංචිතය:</span> <span id="start_disp_provision">0.00</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#1e1b4b; margin-top:4px; border-top:1px solid #c7d2fe; padding-top:4px">
+                    <span>ශුද්ධ ණය ශේෂය:</span> <span id="start_disp_netBalance">0.00</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- TAB 2: PRINTABLE A4 EXECUTIVE BOOKLET PREVIEW & PRINT SECTION -->
-            <div id="tabPreview" style="display:none">
-
-                <!-- ---------------- PAGE 1: COVER PAGE ---------------- -->
-                <div class="print-page">
-                    <div class="bw-box cover-border">
-                        <div>
-                            <!-- Cover Page Logo -->
-                            <div style="text-align: center; margin-bottom: 15px;">
-                                <div style="display:inline-block; border: 2px solid #000; padding: 6px; border-radius: 4px;">
-                                    <img src="assets/logo.png" alt="Logo" style="max-height: 80px; display: block; object-fit: contain;">
-                                </div>
-                            </div>
-
-                            <!-- Header Emblem / Institution Title -->
-                            <div style="font-size:14pt; font-weight:bold; line-height:1.3; text-transform:uppercase; margin-bottom:6px">
-                                ???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????
-                            </div>
-                            <div style="font-size:10pt; font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:20mm">
-                                GALAPITIYAGAMA SANASA CO-OPERATIVE SOCIETY
-                            </div>
-
-                            <div style="border-top:2px solid #000; border-bottom:2px solid #000; padding:15px 10px; margin:20mm 0">
-                                <div class="bw-title" style="font-size:18pt; margin-bottom:8px">
-                                    ????? ?? ??????? ???????
-                                </div>
-                                <div class="bw-subtitle" style="font-size:12pt; margin-bottom:0">
-                                    MONTHLY LOAN PROGRESS REPORT
-                                </div>
-                            </div>
-
-                            <div style="font-size:12pt; font-weight:bold; margin-top:10mm">
-                                ???????? ????????????: <span id="covMonthText" style="text-decoration:underline">2026 ??????? ????</span>
-                            </div>
-                        </div>
-
-                        <!-- Footer Details -->
-                        <div style="border-top:1px solid #000; padding-top:15px; font-size:10pt">
-                            <div style="display:flex; justify-content:space-between; text-align:left">
-                                <div>
-                                    <strong>Submitted by:</strong><br>
-                                    Loan Management and Recovery Division
-                                </div>
-                                <div style="text-align:right">
-                                    <strong>System:</strong><br>
-                                    Loan Recovery Management System (LRMS)
-                                </div>
-                            </div>
-                            <div style="margin-top:15px; font-size:9pt; font-style:italic">
-                                Generated by Automated Loan Recovery Management System (LRMS).
-                            </div>
-                        </div>
-                    </div>
+            <!-- End of Month Entry -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:20px">
+              <h4 style="font-weight:800; font-size:0.95rem; color:#166534; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #86efac; display:flex; align-items:center; gap:6px">
+                මාසය අවසානයේ අගයන් (End of Month Values)
+              </h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">මුළු ණය ශේෂය (Total Gross Loans)</label>
+                  <input type="number" step="0.01" id="end_totalLoans" class="form-input" placeholder="e.g. 235100000.00" oninput="calculateNPLTotals()">
                 </div>
-
-                <!-- ---------------- PAGE 2: NPL STATEMENT & PROVISION STATEMENT ---------------- -->
-                <div class="print-page">
-                    <div class="bw-title">?????? ????? ?? ???? ?????? ????? ?? ?????? ??????? ?????????</div>
-                    <div class="bw-subtitle" id="p2SubTitle">????? ?????? ?? ?????? ???????????? ???????</div>
-
-                    <!-- Screenshot-Matching NPL Statement Table -->
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:35%; text-align:left">??????? (Description)</th>
-                                <th style="text-align:right">????? ?????? (LKR)</th>
-                                <th style="text-align:right">????? ?????? (LKR)</th>
-                                <th style="text-align:right">???? / ???????? (LKR)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>???? ?? ???? (Total Loans)</strong></td>
-                                <td style="text-align:right" id="p2_start_gross">0.00</td>
-                                <td style="text-align:right" id="p2_end_gross">0.00</td>
-                                <td style="text-align:right; font-weight:bold" id="p2_var_gross">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>??? ??? ?? (??? 6 ??? 12 ?????) [20%]</td>
-                                <td style="text-align:right" id="p2_start_6_12">0.00</td>
-                                <td style="text-align:right" id="p2_end_6_12">0.00</td>
-                                <td style="text-align:right" id="p2_var_6_12">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>??? ??? ?? (??? 12 ??? 18 ?????) [50%]</td>
-                                <td style="text-align:right" id="p2_start_12_18">0.00</td>
-                                <td style="text-align:right" id="p2_end_12_18">0.00</td>
-                                <td style="text-align:right" id="p2_var_12_18">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>??? ??? ?? (??? 18? ????) [100%]</td>
-                                <td style="text-align:right" id="p2_start_18p">0.00</td>
-                                <td style="text-align:right" id="p2_end_18p">0.00</td>
-                                <td style="text-align:right" id="p2_var_18p">0.00</td>
-                            </tr>
-                            <tr style="font-weight:bold; background:#f5f5f5">
-                                <td>??? ??? ?? ????? (Total Overdue)</td>
-                                <td style="text-align:right" id="p2_start_totOverdue">0.00</td>
-                                <td style="text-align:right" id="p2_end_totOverdue">0.00</td>
-                                <td style="text-align:right" id="p2_var_totOverdue">0.00</td>
-                            </tr>
-                            <tr>
-                                <td>????? ?? ???? ????? (NPL Provision)</td>
-                                <td style="text-align:right" id="p2_start_prov">(0.00)</td>
-                                <td style="text-align:right" id="p2_end_prov">(0.00)</td>
-                                <td style="text-align:right" id="p2_var_prov">0.00</td>
-                            </tr>
-                            <tr style="font-weight:bold; font-size:10.5pt; border-top:2px solid #000; border-bottom:2px double #000">
-                                <td>????? ?? ???? (Net Loan Balance)</td>
-                                <td style="text-align:right" id="p2_start_net">0.00</td>
-                                <td style="text-align:right" id="p2_end_net">0.00</td>
-                                <td style="text-align:right" id="p2_var_net">0.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Percentage Breakdown Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">??????????? ?????? ????????? (NPL Ratios Analysis):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left">?????? ?? ??????</th>
-                                <th style="text-align:center">?????? ????????? %</th>
-                                <th style="text-align:center">????? ????????? %</th>
-                                <th style="text-align:center">???? %</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>??? ??? ?? (??? 6 ??? 12 ?????)</td>
-                                <td style="text-align:center" id="r_start_6_12">0.00%</td>
-                                <td style="text-align:center" id="r_end_6_12">0.00%</td>
-                                <td style="text-align:center" id="r_var_6_12">0.00%</td>
-                            </tr>
-                            <tr>
-                                <td>??? ??? ?? (??? 12 ??? 18 ?????)</td>
-                                <td style="text-align:center" id="r_start_12_18">0.00%</td>
-                                <td style="text-align:center" id="r_end_12_18">0.00%</td>
-                                <td style="text-align:center" id="r_var_12_18">0.00%</td>
-                            </tr>
-                            <tr>
-                                <td>??? ??? ?? (??? 18? ????)</td>
-                                <td style="text-align:center" id="r_start_18p">0.00%</td>
-                                <td style="text-align:center" id="r_end_18p">0.00%</td>
-                                <td style="text-align:center" id="r_var_18p">0.00%</td>
-                            </tr>
-                            <tr style="font-weight:bold; background:#f0f0f0">
-                                <td>????? ??? ??? ?? ????????? (??? 6 ??? ????)</td>
-                                <td style="text-align:center" id="r_start_tot">0.00%</td>
-                                <td style="text-align:center" id="r_end_tot">0.00%</td>
-                                <td style="text-align:center" id="r_var_tot">0.00%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Top High-Risk Overdue Loans Exposure Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">????? ?????? ??? ???? ??????? ????????? (Top High-Risk Overdue Loans - by Arrears):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:6%; text-align:center">#</th>
-                                <th style="width:18%">?????? ????</th>
-                                <th style="width:26%">?????????? ??</th>
-                                <th style="width:18%">?? ??????</th>
-                                <th style="width:18%; text-align:right">?? ???? (LKR)</th>
-                                <th style="width:14%; text-align:center">???????</th>
-                            </tr>
-                        </thead>
-                        <tbody id="p2HighRiskBody">
-                            <tr><td colspan="6" style="text-align:center; font-style:italic">??????? ????????? ?????? ?? ?????.</td></tr>
-                        </tbody>
-                    </table>
+                <div>
+                  <label class="form-label">සුළු අවදානම් ණය (මාස 6 සිට 12 දක්වා - 20%)</label>
+                  <input type="number" step="0.01" id="end_overdue6_12" class="form-input" placeholder="e.g. 5100000.00" oninput="calculateNPLTotals()">
                 </div>
-
-                <!-- ---------------- PAGE 3: RECOVERY OPERATIONS SUMMARY ---------------- -->
-                <div class="print-page">
-                    <div class="bw-title">????? ?? ?????????? ???????? ??????? ???????</div>
-                    <div class="bw-subtitle">??????? ????? ?????? ?????????? ???????????? ?????? ???????</div>
-
-                    <!-- Operations Summary Table -->
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:30%; text-align:left">?????????? ??????? / ????????????? (Channel)</th>
-                                <th style="width:14%; text-align:center">?????? ????????</th>
-                                <th style="text-align:left">?????? ????????, ??????? ?? ??????????? ?????????</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>?????? ??????/????? (Phone Calls)</strong></td>
-                                <td style="text-align:center; font-weight:bold" id="op_callsCount">0</td>
-                                <td>
-                                    <div>?????? ???????? ?? ?????? (Promises to Pay): <strong id="op_promisesCount">0</strong> ?? (???? ??????? LKR <span id="op_promisesAmt">0.00</span>)</div>
-                                    <div id="op_callsCustList"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>???????? ????? (Field Visits)</strong></td>
-                                <td style="text-align:center; font-weight:bold" id="op_visitsCount">0</td>
-                                <td>
-                                    <div>????????? ????? ??????? ?? ?????? ???????? ???????? ??????</div>
-                                    <div id="op_visitsCustList"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>??????????? ???? (Reminder Letters)</strong></td>
-                                <td style="text-align:center; font-weight:bold" id="op_lettersCount">0</td>
-                                <td>
-                                    <div>?????? ????? ??? ?? ?????? ?? ???? ??????????? ????</div>
-                                    <div id="op_lettersCustList"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>????????? / Demand Notices</strong></td>
-                                <td style="text-align:center; font-weight:bold" id="op_demandCount">0</td>
-                                <td>
-                                    <div>?????? ????? ?????? ?????? ?????? ?? ????? ????????? ??????</div>
-                                    <div id="op_demandCustList"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>??????? ???? ?????? (SMS / WhatsApp)</strong></td>
-                                <td style="text-align:center; font-weight:bold" id="op_digitalCount">0</td>
-                                <td>
-                                    <div>SMS ???? ??????: <span id="op_smsCount">0</span> | WhatsApp ??????: <span id="op_waCount">0</span></div>
-                                    <div id="op_digitalCustList"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Customer Promises Detail Table -->
-                    <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">???? ??? ?????? ??????? ???????? ?? ?????? (Promises to Pay Log):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:8%">#</th>
-                                <th style="width:20%">?????? ????</th>
-                                <th style="width:25%">?????????? ??</th>
-                                <th>????????????? / ?????????? (Response & Promise Date)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="p3PromisesBody">
-                            <tr><td colspan="4" style="text-align:center; font-style:italic">???? ????? ?? ?????.</td></tr>
-                        </tbody>
-                    </table>
+                <div>
+                  <label class="form-label">මධ්‍ය අවදානම් ණය (මාස 12 සිට 18 දක්වා - 50%)</label>
+                  <input type="number" step="0.01" id="end_overdue12_18" class="form-input" placeholder="e.g. 1950000.00" oninput="calculateNPLTotals()">
                 </div>
-
-                <!-- ---------------- PAGE 4: LEGAL ACTIONS & BOARD RECOMMENDATIONS ---------------- -->
-                <div class="print-page">
-                    <div class="bw-title">?????? ???????????? ?? ????? ?????</div>
-                    <div class="bw-subtitle">?? ?????????? ??????????? ??????</div>
-
-                    <div style="font-weight:bold; margin-bottom:5px">?????? ????? ??? ??? ??????????? ????????? (Legal Cases Summary):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:8%">#</th>
-                                <th style="width:20%">?????? ????</th>
-                                <th style="width:25%">?????????? ??</th>
-                                <th style="width:20%">?? ??????</th>
-                                <th>?????? ??????? (Legal Status)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="p4LegalBody">
-                            <tr><td colspan="5" style="text-align:center; font-style:italic">?????? ????? ??? ?????? ?????.</td></tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Demand Notices Issued This Month -->
-                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">????????? / ??????? ?????? ???? ????????? (Demand Notices Issued - This Month):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:6%; text-align:center">#</th>
-                                <th style="width:20%">?????? ????</th>
-                                <th style="width:30%">?????????? ??</th>
-                                <th style="width:20%">?? ??????</th>
-                                <th style="width:24%">?????? ????</th>
-                            </tr>
-                        </thead>
-                        <tbody id="p4DemandBody">
-                            <tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ??????? ?????? ?????? ??? ?? ?????? ?????.</td></tr>
-                        </tbody>
-                    </table>
-
-                    <!-- High Risk Borrowers as of Month End -->
-                    <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">???? ????? ?? ????? ??????? (High Risk) ???????? ????? ??????????? ????????? (High Risk Borrowers List - Month End):</div>
-                    <table class="bw-table">
-                        <thead>
-                            <tr>
-                                <th style="width:6%; text-align:center">#</th>
-                                <th style="width:20%">?????? ????</th>
-                                <th style="width:28%">?????????? ??</th>
-                                <th style="width:20%">?? ??????</th>
-                                <th style="width:14%; text-align:right">?? ???? / ????</th>
-                                <th style="width:12%; text-align:center">???????</th>
-                            </tr>
-                        </thead>
-                        <tbody id="p4HighRiskMonthEndBody">
-                            <tr><td colspan="6" style="text-align:center; font-style:italic">???? ??????? ??????? ???????? ????????? ?????.</td></tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Signatures Section -->
-                    <table class="sig-table" style="margin-top: 25mm !important;">
-                        <tr>
-                            <td style="width:100%; text-align:center; vertical-align:top">
-                                <div class="sig-line" style="width: 220px !important;"></div>
-                                <div class="sig-title">Loan Management Officer</div>
-                                <div class="sig-sub">Prepared by</div>
-                            </td>
-                        </tr>
-                    </table>
+                <div>
+                  <label class="form-label">අධි අවදානම් ණය (මාස 18ට වැඩි - 100%)</label>
+                  <input type="number" step="0.01" id="end_overdue18_plus" class="form-input" placeholder="e.g. 10800000.00" oninput="calculateNPLTotals()">
                 </div>
-
+                <div style="background:#dcfce7; padding:12px; border-radius:8px">
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d">
+                    <span>මුළු අක්‍රීය ණය ශේෂය:</span> <span id="end_disp_totalOverdue">0.00</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700; color:#14532d; margin-top:4px">
+                    <span>අක්‍රීය ණය සඳහා සංචිතය:</span> <span id="end_disp_provision">0.00</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#14532d; margin-top:4px; border-top:1px solid #86efac; padding-top:4px">
+                    <span>ශුද්ධ ණය ශේෂය:</span> <span id="end_disp_netBalance">0.00</span>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
 
         </div>
-    </main>
+      </div>
 
-    <script src="js/app.js?v=3.20"></script>
-    <script>
-        lucide.createIcons({ root: document.body });
+      <!-- TAB 2: PRINTABLE A4 EXECUTIVE BOOKLET PREVIEW & PRINT SECTION -->
+      <div id="tabPreview" style="display:none">
 
-        let currentReportMonth = new Date().toISOString().slice(0, 7); // e.g. "2026-08"
+        <!-- ---------------- PAGE 1: COVER PAGE ---------------- -->
+        <div class="print-page">
+          <div class="bw-box cover-border">
+            <div>
+              <!-- Cover Page Logo -->
+              <div style="text-align: center; margin-bottom: 15px;">
+                <div style="display:inline-block; border: 2px solid #000; padding: 6px; border-radius: 4px;">
+                  <img src="assets/logo.png" alt="Logo" style="max-height: 80px; display: block; object-fit: contain;">
+                </div>
+              </div>
 
-        window.onload = async () => {
-            const reportMonthInput = document.getElementById('reportMonth');
-            if (reportMonthInput) reportMonthInput.value = currentReportMonth;
-            await loadReportData();
+              <!-- Header Emblem / Institution Title -->
+              <div style="font-size:14pt; font-weight:bold; line-height:1.3; text-transform:uppercase; margin-bottom:6px">
+                ගලපිටියාගම විවිධ සේවා සමුපකාර සමිතියට අයත් සංසදය / ග්‍රාමීය බැංකුව
+              </div>
+              <div style="font-size:10pt; font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:20mm">
+                GALAPITIYAGAMA SANASA CO-OPERATIVE SOCIETY
+              </div>
+
+              <div style="border-top:2px solid #000; border-bottom:2px solid #000; padding:15px 10px; margin:20mm 0">
+                <div class="bw-title" style="font-size:18pt; margin-bottom:8px">
+                  මාසික ණය ප්‍රගති වාර්තාව
+                </div>
+                <div class="bw-subtitle" style="font-size:12pt; margin-bottom:0">
+                  MONTHLY LOAN PROGRESS REPORT
+                </div>
+              </div>
+
+              <div style="font-size:12pt; font-weight:bold; margin-top:10mm">
+                අදාළ කාලසීමාව: <span id="covMonthText" style="text-decoration:underline">2026 අගෝස්තු මස</span>
+              </div>
+            </div>
+
+            <!-- Footer Details -->
+            <div style="border-top:1px solid #000; padding-top:15px; font-size:10pt">
+              <div style="display:flex; justify-content:space-between; text-align:left">
+                <div>
+                  <strong>Submitted by:</strong><br>
+                  Loan Management and Recovery Division
+                </div>
+                <div style="text-align:right">
+                  <strong>System:</strong><br>
+                  Loan Recovery Management System (LRMS)
+                </div>
+              </div>
+              <div style="margin-top:15px; font-size:9pt; font-style:italic">
+                Generated by Automated Loan Recovery Management System (LRMS).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------------- PAGE 2: NPL STATEMENT & PROVISION STATEMENT ---------------- -->
+        <div class="print-page">
+          <div class="bw-title">මාසිකව නිකුත් වූ ණය පිළිබඳ විස්තරය සහ සංචිත වෙන්කිරීම් විශ්ලේෂණය</div>
+          <div class="bw-subtitle" id="p2SubTitle">මාසය ආරම්භය හා අවසානය සංසන්දනාත්මක සටහන</div>
+
+          <!-- Screenshot-Matching NPL Statement Table -->
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:35%; text-align:left">විස්තරය (Description)</th>
+                <th style="text-align:right">මාසය ආරම්භය (LKR)</th>
+                <th style="text-align:right">මාසය ආරම්භය (LKR)</th>
+                <th style="text-align:right">වෙනස / ප්‍රගතිය (LKR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>මුළු ණය ශේෂය (Total Loans)</strong></td>
+                <td style="text-align:right" id="p2_start_gross">0.00</td>
+                <td style="text-align:right" id="p2_end_gross">0.00</td>
+                <td style="text-align:right; font-weight:bold" id="p2_var_gross">0.00</td>
+              </tr>
+              <tr>
+                <td>සුළු අවදානම් ණය (මාස 6 සිට 12 දක්වා) [20%]</td>
+                <td style="text-align:right" id="p2_start_6_12">0.00</td>
+                <td style="text-align:right" id="p2_end_6_12">0.00</td>
+                <td style="text-align:right" id="p2_var_6_12">0.00</td>
+              </tr>
+              <tr>
+                <td>මධ්‍ය අවදානම් ණය (මාස 12 සිට 18 දක්වා) [50%]</td>
+                <td style="text-align:right" id="p2_start_12_18">0.00</td>
+                <td style="text-align:right" id="p2_end_12_18">0.00</td>
+                <td style="text-align:right" id="p2_var_12_18">0.00</td>
+              </tr>
+              <tr>
+                <td>අධි අවදානම් ණය (මාස 18ට වැඩි) [100%]</td>
+                <td style="text-align:right" id="p2_start_18p">0.00</td>
+                <td style="text-align:right" id="p2_end_18p">0.00</td>
+                <td style="text-align:right" id="p2_var_18p">0.00</td>
+              </tr>
+              <tr style="font-weight:bold; background:#f5f5f5">
+                <td>මුළු අක්‍රීය ණය ශේෂය (Total Overdue)</td>
+                <td style="text-align:right" id="p2_start_totOverdue">0.00</td>
+                <td style="text-align:right" id="p2_end_totOverdue">0.00</td>
+                <td style="text-align:right" id="p2_var_totOverdue">0.00</td>
+              </tr>
+              <tr>
+                <td>අක්‍රීය ණය සඳහා සංචිතය (NPL Provision)</td>
+                <td style="text-align:right" id="p2_start_prov">(0.00)</td>
+                <td style="text-align:right" id="p2_end_prov">(0.00)</td>
+                <td style="text-align:right" id="p2_var_prov">0.00</td>
+              </tr>
+              <tr style="font-weight:bold; font-size:10.5pt; border-top:2px solid #000; border-bottom:2px double #000">
+                <td>ශුද්ධ ණය ශේෂය (Net Loan Balance)</td>
+                <td style="text-align:right" id="p2_start_net">0.00</td>
+                <td style="text-align:right" id="p2_end_net">0.00</td>
+                <td style="text-align:right" id="p2_var_net">0.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Percentage Breakdown Table -->
+          <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">ප්‍රතිශතයන් පිළිබඳ විශ්ලේෂණය (NPL Ratios Analysis):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="text-align:left">අක්‍රීය ණය කාණ්ඩය</th>
+                <th style="text-align:center">ආරම්භක ප්‍රතිශතය %</th>
+                <th style="text-align:center">අවසාන ප්‍රතිශතය %</th>
+                <th style="text-align:center">වෙනස %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>සුළු අවදානම් ණය (මාස 6 සිට 12 දක්වා)</td>
+                <td style="text-align:center" id="r_start_6_12">0.00%</td>
+                <td style="text-align:center" id="r_end_6_12">0.00%</td>
+                <td style="text-align:center" id="r_var_6_12">0.00%</td>
+              </tr>
+              <tr>
+                <td>මධ්‍ය අවදානම් ණය (මාස 12 සිට 18 දක්වා)</td>
+                <td style="text-align:center" id="r_start_12_18">0.00%</td>
+                <td style="text-align:center" id="r_end_12_18">0.00%</td>
+                <td style="text-align:center" id="r_var_12_18">0.00%</td>
+              </tr>
+              <tr>
+                <td>අධි අවදානම් ණය (මාස 18ට වැඩි)</td>
+                <td style="text-align:center" id="r_start_18p">0.00%</td>
+                <td style="text-align:center" id="r_end_18p">0.00%</td>
+                <td style="text-align:center" id="r_var_18p">0.00%</td>
+              </tr>
+              <tr style="font-weight:bold; background:#f0f0f0">
+                <td>මුළු අක්‍රීය ණය ප්‍රතිශතය (මාස 6 සිට ඉහළ)</td>
+                <td style="text-align:center" id="r_start_tot">0.00%</td>
+                <td style="text-align:center" id="r_end_tot">0.00%</td>
+                <td style="text-align:center" id="r_var_tot">0.00%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Top High-Risk Overdue Loans Exposure Table -->
+          <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">ඉහළම හිඟ මුදල් සහිත ණයගැතියන්ගේ නාමලේඛනය (Top High-Risk Overdue Loans - by Arrears):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:6%; text-align:center">#</th>
+                <th style="width:18%">ගිණුම් අංකය</th>
+                <th style="width:26%">සාමාජිකයාගේ නම</th>
+                <th style="width:18%">ණය වර්ගය</th>
+                <th style="width:18%; text-align:right">හිඟ මුදල (LKR)</th>
+                <th style="width:14%; text-align:center">දුරකථන</th>
+              </tr>
+            </thead>
+            <tbody id="p2HighRiskBody">
+              <tr><td colspan="6" style="text-align:center; font-style:italic">?ගිණුම් අංකය ණය වර්ගය ?? .</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ---------------- PAGE 3: RECOVERY OPERATIONS SUMMARY ---------------- -->
+        <div class="print-page">
+          <div class="bw-title"> ?? ගිණුම් අංකය ?ගිණුම් අංකය </div>
+          <div class="bw-subtitle">?ගිණුම් අංකය? ගිණුම් අංකයගිණුම් අංකය??ගිණුම් අංකයණය වර්ගය?</div>
+
+          <!-- Operations Summary Table -->
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:30%; text-align:left"> ගිණුම් අංකය / දුරකථන (Channel)</th>
+                <th style="width:14%; text-align:center">ගිණුම් අංකය </th>
+                <th style="text-align:left">ගිණුම් අංකය , ?අක්‍රීය ණය කාණ්ඩය ණය වර්ගය </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ගිණුම් අංකය??/ (Phone Calls)</strong></td>
+                <td style="text-align:center; font-weight:bold" id="op_callsCount">0</td>
+                <td>
+                  <div> ??අක්‍රීය ණය කාණ්ඩය (Promises to Pay): <strong id="op_promisesCount">0</strong> ?? (??ණය වර්ගය? LKR <span id="op_promisesAmt">0.00</span>)</div>
+                  <div id="op_callsCustList"></div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>??ගිණුම් අංකය? (Field Visits)</strong></td>
+                <td style="text-align:center; font-weight:bold" id="op_visitsCount">0</td>
+                <td>
+                  <div> ගිණුම් අංකය? ?අක්‍රීය ණය කාණ්ඩය ??ගිණුම් අංකය??ණය වර්ගය</div>
+                  <div id="op_visitsCustList"></div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong> ගිණුම් අංකය (Reminder Letters)</strong></td>
+                <td style="text-align:center; font-weight:bold" id="op_lettersCount">0</td>
+                <td>
+                  <div>ගිණුම් අංකය?  ණය වර්ගය ??  ගිණුම් අංකය</div>
+                  <div id="op_lettersCustList"></div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>දුරකථන?? / Demand Notices</strong></td>
+                <td style="text-align:center; font-weight:bold" id="op_demandCount">0</td>
+                <td>
+                  <div>ගිණුම් අංකය? ගිණුම් අංකයණය වර්ගය ??  ගිණුම් අංකය??</div>
+                  <div id="op_demandCustList"></div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>?ගිණුම් අංකය  (SMS / WhatsApp)</strong></td>
+                <td style="text-align:center; font-weight:bold" id="op_digitalCount">0</td>
+                <td>
+                  <div>SMS ??ණය වර්ගය: <span id="op_smsCount">0</span> | WhatsApp පණිවිඩ: <span id="op_waCount">0</span></div>
+                  <div id="op_digitalCustList"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Customer Promises Detail Table -->
+          <div style="font-weight:bold; margin-top:15px; margin-bottom:5px">  ගිණුම් අංකය ??අක්‍රීය ණය කාණ්ඩය (Promises to Pay Log):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:8%">#</th>
+                <th style="width:20%">ගිණුම් අංකය</th>
+                <th style="width:25%">සාමාජිකයාගේ නම</th>
+                <th>දුරකථන / දුරකථන (Response & Promise Date)</th>
+              </tr>
+            </thead>
+            <tbody id="p3PromisesBody">
+              <tr><td colspan="4" style="text-align:center; font-style:italic">දත්ත කිසිවක් හමු නොවුණි.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ---------------- PAGE 4: LEGAL ACTIONS & BOARD RECOMMENDATIONS ---------------- -->
+        <div class="print-page">
+          <div class="bw-title">ගිණුම් අංකයදුරකථන? ??  </div>
+          <div class="bw-subtitle">?? ගිණුම් අංකය?ගිණුම් අංකය??</div>
+
+          <div style="font-weight:bold; margin-bottom:5px">ගිණුම් අංකය?   ගිණුම් අංකය (Legal Cases Summary):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:8%">#</th>
+                <th style="width:20%">ගිණුම් අංකය</th>
+                <th style="width:25%">සාමාජිකයාගේ නම</th>
+                <th style="width:20%">ණය වර්ගය</th>
+                <th>ගිණුම් අංකය (Legal Status)</th>
+              </tr>
+            </thead>
+            <tbody id="p4LegalBody">
+              <tr><td colspan="5" style="text-align:center; font-style:italic">ගිණුම් අංකය?  ගිණුම් අංකය?.</td></tr>
+            </tbody>
+          </table>
+
+          <!-- Demand Notices Issued This Month -->
+          <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">දුරකථන?? / ?ගිණුම් අංකය?? ??ණය වර්ගය (Demand Notices Issued - This Month):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:6%; text-align:center">#</th>
+                <th style="width:20%">ගිණුම් අංකය</th>
+                <th style="width:30%">සාමාජිකයාගේ නම</th>
+                <th style="width:20%">ණය වර්ගය</th>
+                <th style="width:24%">ගිණුම් අංකය</th>
+              </tr>
+            </thead>
+            <tbody id="p4DemandBody">
+              <tr><td colspan="5" style="text-align:center; font-style:italic">   ?ගිණුම් අංකයණය වර්ගය  ?? ගිණුම් අංකය?.</td></tr>
+            </tbody>
+          </table>
+
+          <!-- High Risk Borrowers as of Month End -->
+          <div style="font-weight:bold; margin-top:18px; margin-bottom:5px">  ?? ණය වර්ගය? (High Risk) ??ගිණුම් අංකය? ගිණුම් අංකය (High Risk Borrowers List - Month End):</div>
+          <table class="bw-table">
+            <thead>
+              <tr>
+                <th style="width:6%; text-align:center">#</th>
+                <th style="width:20%">ගිණුම් අංකය</th>
+                <th style="width:28%">සාමාජිකයාගේ නම</th>
+                <th style="width:20%">ණය වර්ගය</th>
+                <th style="width:14%; text-align:right">හිඟ මුදල / ශේෂය</th>
+                <th style="width:12%; text-align:center">දුරකථන</th>
+              </tr>
+            </thead>
+            <tbody id="p4HighRiskMonthEndBody">
+              <tr><td colspan="6" style="text-align:center; font-style:italic"> ?ගිණුම් අංකය ??ගිණුම් අංකය  .</td></tr>
+            </tbody>
+          </table>
+
+          <!-- Signatures Section -->
+          <table class="sig-table" style="margin-top: 25mm !important;">
+            <tr>
+              <td style="width:100%; text-align:center; vertical-align:top">
+                <div class="sig-line" style="width: 220px !important;"></div>
+                <div class="sig-title">Loan Management Officer</div>
+                <div class="sig-sub">Prepared by</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/app.js?v=3.20"></script>
+  <script>
+    lucide.createIcons({ root: document.body });
+
+    let currentReportMonth = new Date().toISOString().slice(0, 7); // e.g. "2026-08"
+
+    window.onload = async () => {
+      const reportMonthInput = document.getElementById('reportMonth');
+      if (reportMonthInput) reportMonthInput.value = currentReportMonth;
+      await loadReportData();
+    };
+
+    function switchReportTab(tab) {
+      const tabEntry = document.getElementById('tabDataEntry');
+      const tabPreview = document.getElementById('tabPreview');
+      const btnEntry = document.getElementById('btnTabEntry');
+      const btnPreview = document.getElementById('btnTabPreview');
+
+      if (tab === 'entry') {
+        tabEntry.style.display = 'block';
+        tabPreview.style.display = 'none';
+        btnEntry.className = 'report-tab-btn active';
+        btnEntry.style.background = '#1e1b4b'; btnEntry.style.color = '#fff';
+        btnPreview.className = 'report-tab-btn';
+        btnPreview.style.background = 'transparent'; btnPreview.style.color = '#475569';
+      } else {
+        tabEntry.style.display = 'none';
+        tabPreview.style.display = 'block';
+        btnPreview.className = 'report-tab-btn active';
+        btnPreview.style.background = '#1e1b4b'; btnPreview.style.color = '#fff';
+        btnEntry.className = 'report-tab-btn';
+        btnEntry.style.background = 'transparent'; btnEntry.style.color = '#475569';
+        updatePrintBookletPreview();
+      }
+    }
+
+    function calculateNPLTotals() {
+      // Start Values
+      const sGross = parseFloat(document.getElementById('start_totalLoans').value) || 0;
+      const s6_12 = parseFloat(document.getElementById('start_overdue6_12').value) || 0;
+      const s12_18 = parseFloat(document.getElementById('start_overdue12_18').value) || 0;
+      const s18p  = parseFloat(document.getElementById('start_overdue18_plus').value) || 0;
+
+      const sTotOverdue = s6_12 + s12_18 + s18p;
+      const sProv = (s6_12 * 0.20) + (s12_18 * 0.50) + (s18p * 1.00);
+      const sNet = sGross - sProv;
+
+      document.getElementById('start_disp_totalOverdue').innerText = sTotOverdue.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('start_disp_provision').innerText  = sProv.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('start_disp_netBalance').innerText  = sNet.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+      // End Values
+      const eGross = parseFloat(document.getElementById('end_totalLoans').value) || 0;
+      const e6_12 = parseFloat(document.getElementById('end_overdue6_12').value) || 0;
+      const e12_18 = parseFloat(document.getElementById('end_overdue12_18').value) || 0;
+      const e18p  = parseFloat(document.getElementById('end_overdue18_plus').value) || 0;
+
+      const eTotOverdue = e6_12 + e12_18 + e18p;
+      const eProv = (e6_12 * 0.20) + (e12_18 * 0.50) + (e18p * 1.00);
+      const eNet = eGross - eProv;
+
+      document.getElementById('end_disp_totalOverdue').innerText = eTotOverdue.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('end_disp_provision').innerText  = eProv.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('end_disp_netBalance').innerText  = eNet.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    async function saveNPLStatementData() {
+      const m = document.getElementById('reportMonth').value || currentReportMonth;
+      const data = {
+        id: 'npl_' + m,
+        month: m,
+        savedAt: new Date().toISOString(),
+        start: {
+          totalLoans: parseFloat(document.getElementById('start_totalLoans').value) || 0,
+          overdue6_12: parseFloat(document.getElementById('start_overdue6_12').value) || 0,
+          overdue12_18: parseFloat(document.getElementById('start_overdue12_18').value) || 0,
+          overdue18_plus: parseFloat(document.getElementById('start_overdue18_plus').value) || 0,
+        },
+        end: {
+          totalLoans: parseFloat(document.getElementById('end_totalLoans').value) || 0,
+          overdue6_12: parseFloat(document.getElementById('end_overdue6_12').value) || 0,
+          overdue12_18: parseFloat(document.getElementById('end_overdue12_18').value) || 0,
+          overdue18_plus: parseFloat(document.getElementById('end_overdue18_plus').value) || 0,
+        }
+      };
+
+      // Save to IndexedDB (primary - included in full backups)
+      try { await window.db.set('npl_statements', data); } catch(e) { console.warn('IndexedDB save failed:', e); }
+      // Also keep localStorage as fallback
+      localStorage.setItem('lrms_npl_statement_' + m, JSON.stringify(data));
+
+      if (typeof lrmsAlert === 'function') await lrmsAlert(`? NPL Statement data for ${m} saved successfully!\n(IndexedDB + Backup ? include)`);
+      else alert(`Saved NPL Statement values for ${m}!`);
+      updatePrintBookletPreview();
+    }
+
+    async function loadReportData() {
+      currentReportMonth = document.getElementById('reportMonth').value || currentReportMonth;
+
+      let data = null;
+
+      // 1. Try IndexedDB first (primary store, included in backups)
+      try {
+        const idbRecord = await window.db.get('npl_statements', 'npl_' + currentReportMonth);
+        if (idbRecord) data = idbRecord;
+      } catch(e) { console.warn('IndexedDB read failed, falling back to localStorage:', e); }
+
+      // 2. Fallback to localStorage (for backward compatibility)
+      if (!data) {
+        const savedStr = localStorage.getItem('lrms_npl_statement_' + currentReportMonth);
+        if (savedStr) { try { data = JSON.parse(savedStr); } catch(e) { console.error(e); } }
+      }
+
+      if (data) {
+        try {
+          document.getElementById('start_totalLoans').value = data.start.totalLoans || '';
+          document.getElementById('start_overdue6_12').value = data.start.overdue6_12 || '';
+          document.getElementById('start_overdue12_18').value = data.start.overdue12_18 || '';
+          document.getElementById('start_overdue18_plus').value = data.start.overdue18_plus || '';
+
+          document.getElementById('end_totalLoans').value = data.end.totalLoans || '';
+          document.getElementById('end_overdue6_12').value = data.end.overdue6_12 || '';
+          document.getElementById('end_overdue12_18').value = data.end.overdue12_18 || '';
+          document.getElementById('end_overdue18_plus').value = data.end.overdue18_plus || '';
+        } catch(e) { console.error(e); }
+      } else {
+        // Clear inputs if no saved record for selected month
+        ['start_totalLoans','start_overdue6_12','start_overdue12_18','start_overdue18_plus',
+         'end_totalLoans','end_overdue6_12','end_overdue12_18','end_overdue18_plus'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.value = '';
+        });
+      }
+
+      calculateNPLTotals();
+      updatePrintBookletPreview();
+    }
+
+    async function updatePrintBookletPreview() {
+      const m = document.getElementById('reportMonth').value || currentReportMonth;
+      const [y, mon] = m.split('-');
+      const dateObj = new Date(parseInt(y), parseInt(mon) - 1, 1);
+      const monthNameSinhala = dateObj.toLocaleString('si-LK', { month: 'long', year: 'numeric' });
+      
+      document.getElementById('covMonthText').innerText = monthNameSinhala || (y + ' ' + mon);
+      document.getElementById('p2SubTitle').innerText = `${monthNameSinhala} - ගිණුම් අංකය?? ?ගිණුම් අංකය?`;
+
+      // 1. Fill NPL Statement Values
+      const sGross = parseFloat(document.getElementById('start_totalLoans').value) || 0;
+      const s6_12 = parseFloat(document.getElementById('start_overdue6_12').value) || 0;
+      const s12_18 = parseFloat(document.getElementById('start_overdue12_18').value) || 0;
+      const s18p  = parseFloat(document.getElementById('start_overdue18_plus').value) || 0;
+      const sTotOverdue = s6_12 + s12_18 + s18p;
+      const sProv = (s6_12 * 0.20) + (s12_18 * 0.50) + (s18p * 1.00);
+      const sNet = sGross - sProv;
+
+      const eGross = parseFloat(document.getElementById('end_totalLoans').value) || 0;
+      const e6_12 = parseFloat(document.getElementById('end_overdue6_12').value) || 0;
+      const e12_18 = parseFloat(document.getElementById('end_overdue12_18').value) || 0;
+      const e18p  = parseFloat(document.getElementById('end_overdue18_plus').value) || 0;
+      const eTotOverdue = e6_12 + e12_18 + e18p;
+      const eProv = (e6_12 * 0.20) + (e12_18 * 0.50) + (e18p * 1.00);
+      const eNet = eGross - eProv;
+
+      const fmt = num => (num || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+      const fmtVar = (s, e) => {
+        const diff = e - s;
+        return (diff >= 0 ? '+' : '') + fmt(diff);
+      };
+
+      document.getElementById('p2_start_gross').innerText = fmt(sGross);
+      document.getElementById('p2_end_gross').innerText  = fmt(eGross);
+      document.getElementById('p2_var_gross').innerText  = fmtVar(sGross, eGross);
+
+      document.getElementById('p2_start_6_12').innerText = fmt(s6_12);
+      document.getElementById('p2_end_6_12').innerText  = fmt(e6_12);
+      document.getElementById('p2_var_6_12').innerText  = fmtVar(s6_12, e6_12);
+
+      document.getElementById('p2_start_12_18').innerText = fmt(s12_18);
+      document.getElementById('p2_end_12_18').innerText  = fmt(e12_18);
+      document.getElementById('p2_var_12_18').innerText  = fmtVar(s12_18, e12_18);
+
+      document.getElementById('p2_start_18p').innerText = fmt(s18p);
+      document.getElementById('p2_end_18p').innerText  = fmt(e18p);
+      document.getElementById('p2_var_18p').innerText  = fmtVar(s18p, e18p);
+
+      document.getElementById('p2_start_totOverdue').innerText = fmt(sTotOverdue);
+      document.getElementById('p2_end_totOverdue').innerText  = fmt(eTotOverdue);
+      document.getElementById('p2_var_totOverdue').innerText  = fmtVar(sTotOverdue, eTotOverdue);
+
+      document.getElementById('p2_start_prov').innerText = `(${fmt(sProv)})`;
+      document.getElementById('p2_end_prov').innerText  = `(${fmt(eProv)})`;
+      document.getElementById('p2_var_prov').innerText  = fmtVar(sProv, eProv);
+
+      document.getElementById('p2_start_net').innerText = fmt(sNet);
+      document.getElementById('p2_end_net').innerText  = fmt(eNet);
+      document.getElementById('p2_var_net').innerText  = fmtVar(sNet, eNet);
+
+      // Ratios
+      const getPct = (part, total) => total > 0 ? ((part / total) * 100).toFixed(2) + '%' : '0.00%';
+      document.getElementById('r_start_6_12').innerText = getPct(s6_12, sGross);
+      document.getElementById('r_end_6_12').innerText  = getPct(e6_12, eGross);
+      document.getElementById('r_var_6_12').innerText  = (parseFloat(getPct(e6_12, eGross)) - parseFloat(getPct(s6_12, sGross))).toFixed(2) + '%';
+
+      document.getElementById('r_start_12_18').innerText = getPct(s12_18, sGross);
+      document.getElementById('r_end_12_18').innerText  = getPct(e12_18, eGross);
+      document.getElementById('r_var_12_18').innerText  = (parseFloat(getPct(e12_18, eGross)) - parseFloat(getPct(s12_18, sGross))).toFixed(2) + '%';
+
+      document.getElementById('r_start_18p').innerText = getPct(s18p, sGross);
+      document.getElementById('r_end_18p').innerText  = getPct(e18p, eGross);
+      document.getElementById('r_var_18p').innerText  = (parseFloat(getPct(e18p, eGross)) - parseFloat(getPct(s18p, sGross))).toFixed(2) + '%';
+
+      document.getElementById('r_start_tot').innerText = getPct(sTotOverdue, sGross);
+      document.getElementById('r_end_tot').innerText  = getPct(eTotOverdue, eGross);
+      document.getElementById('r_var_tot').innerText  = (parseFloat(getPct(eTotOverdue, eGross)) - parseFloat(getPct(sTotOverdue, sGross))).toFixed(2) + '%';
+
+      // Populate Top High-Risk Overdue Loans Table
+      // Criteria: overdueAmount >= 1,000,000 AND overdueInstallments > 2
+      // EXCLUDE: Legal Action - Courts, Legal Action - Cooperative Commissioner, Closed loans
+      try {
+        const allCustomers = await window.db.getAll('customers');
+
+        const isLegalStage = (s) => {
+          if (!s) return false;
+          const sl = s.trim().toLowerCase();
+          return sl.includes('courts') || sl.includes('cooperative commissioner');
         };
 
-        function switchReportTab(tab) {
-            const tabEntry = document.getElementById('tabDataEntry');
-            const tabPreview = document.getElementById('tabPreview');
-            const btnEntry = document.getElementById('btnTabEntry');
-            const btnPreview = document.getElementById('btnTabPreview');
+        const isClosedLoan = (s) => {
+          if (!s) return false;
+          const sl = s.trim().toLowerCase();
+          return sl.includes('closed') || sl.includes('settled') || sl.includes('written off') || sl.includes('write off');
+        };
 
-            if (tab === 'entry') {
-                tabEntry.style.display = 'block';
-                tabPreview.style.display = 'none';
-                btnEntry.className = 'report-tab-btn active';
-                btnEntry.style.background = '#1e1b4b'; btnEntry.style.color = '#fff';
-                btnPreview.className = 'report-tab-btn';
-                btnPreview.style.background = 'transparent'; btnPreview.style.color = '#475569';
-            } else {
-                tabEntry.style.display = 'none';
-                tabPreview.style.display = 'block';
-                btnPreview.className = 'report-tab-btn active';
-                btnPreview.style.background = '#1e1b4b'; btnPreview.style.color = '#fff';
-                btnEntry.className = 'report-tab-btn';
-                btnEntry.style.background = 'transparent'; btnEntry.style.color = '#475569';
-                updatePrintBookletPreview();
-            }
+        const overdueCustomers = allCustomers.filter(c => {
+          if (c.isDeleted) return false;
+
+          // Exclude legal action cases
+          if (isLegalStage(c.status)) return false;
+
+          // Exclude closed/settled loans
+          if (isClosedLoan(c.status)) return false;
+          if (c.isClosed || c.closed || c.isSettled) return false;
+
+          const loanAmt = parseFloat(c.loanAmount || c.amount || c.grantedAmount || 0);
+          const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
+          const effectiveAmt = Math.max(loanAmt, overdueAmt);
+
+          const rawInst = c.overdueInstallments ?? c.arrearsInstallments ?? c.dueInstallments ?? c.arrearsCount ?? c.installmentsInArrears ?? c.overdueMonths ?? c.overdueCount;
+          if (rawInst === undefined || rawInst === null || rawInst === '' || rawInst === 'N/A' || rawInst === 'n/a') {
+            return false; // Reject N/A or unspecified installment count
+          }
+
+          const instVal = parseInt(rawInst);
+          if (isNaN(instVal) || instVal <= 2) {
+            return false; // Reject installments <= 2
+          }
+
+          return effectiveAmt >= 1000000;
+        });
+
+        // Sort by overdueAmount / effectiveAmt descending, take top 10
+        overdueCustomers.sort((a, b) => {
+          const aArr = Math.max(parseFloat(a.overdueAmount || a.arrears || 0), parseFloat(a.loanAmount || a.amount || 0));
+          const bArr = Math.max(parseFloat(b.overdueAmount || b.arrears || 0), parseFloat(b.loanAmount || b.amount || 0));
+          return bArr - aArr;
+        });
+        const top10 = overdueCustomers.slice(0, 10);
+
+        const highRiskBody = document.getElementById('p2HighRiskBody');
+        if (top10.length === 0) {
+          highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">?ගිණුම් අංකය (??. 1,000,000 ?  ??  2 ? )  ?? .</td></tr>';
+        } else {
+          highRiskBody.innerHTML = top10.map((c, i) => {
+            const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
+            const amt = overdueAmt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            const cat = c.category || c.loanType || '-';
+            const status = c.status || 'Overdue';
+            return `<tr>
+              <td style="text-align:center">${i + 1}</td>
+              <td>${c.accountNo || c.loanAccountNo || '-'}</td>
+              <td>${c.name || '-'}</td>
+              <td>${cat}</td>
+              <td style="text-align:right; font-weight:bold">${amt}</td>
+              <td style="text-align:center">${status}</td>
+            </tr>`;
+          }).join('');
+        }
+      } catch(e) { console.error('High risk table error:', e); }
+
+
+      // 2. Fetch System Actions & Operations metrics for the selected month
+      try {
+        const allActions = await window.db.getAll('actions');
+        const monthPrefix = m; // "2026-08"
+
+        const monthActions = allActions.filter(a => a.date && a.date.startsWith(monthPrefix) && !a.isDeleted);
+
+        let calls = 0, promises = 0, promisesAmt = 0, visits = 0, letters = 0, demand = 0, sms = 0, wa = 0;
+        let promiseLogs = [];
+
+        const classifyAction = (typeStr) => {
+          const type = (typeStr || '').toLowerCase().trim();
+          const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
+          const isSMS = isDigital && (type.includes('sms') || type.includes('text'));
+          const isWA = isDigital && type.includes('whatsapp');
+          const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('දුරකථන??'));
+          const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes(' '));
+          const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes(' ') || type.includes(' '));
+          const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes(' ') || type.includes(' ') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('දුරකථන '));
+
+          return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS, isWA };
+        };
+
+        for (const a of monthActions) {
+          const cls = classifyAction(a.actionType);
+          if (cls.isCall) calls++;
+          if (cls.isVisit) visits++;
+          if (cls.isLetter) letters++;
+          if (cls.isDemand) demand++;
+          if (cls.isSMS) sms++;
+          if (cls.isWA) wa++;
+
+          if (a.response || a.followUpDate) {
+            promises++;
+            promiseLogs.push(a);
+          }
         }
 
-        function calculateNPLTotals() {
-            // Start Values
-            const sGross = parseFloat(document.getElementById('start_totalLoans').value) || 0;
-            const s6_12  = parseFloat(document.getElementById('start_overdue6_12').value) || 0;
-            const s12_18 = parseFloat(document.getElementById('start_overdue12_18').value) || 0;
-            const s18p   = parseFloat(document.getElementById('start_overdue18_plus').value) || 0;
+        document.getElementById('op_callsCount').innerText  = calls;
+        document.getElementById('op_promisesCount').innerText = promises;
+        document.getElementById('op_promisesAmt').innerText  = fmt(promisesAmt);
+        document.getElementById('op_visitsCount').innerText  = visits;
+        document.getElementById('op_lettersCount').innerText = letters;
+        document.getElementById('op_demandCount').innerText  = demand;
+        document.getElementById('op_digitalCount').innerText = (sms + wa);
+        document.getElementById('op_smsCount').innerText   = sms;
+        document.getElementById('op_waCount').innerText    = wa;
 
-            const sTotOverdue = s6_12 + s12_18 + s18p;
-            const sProv = (s6_12 * 0.20) + (s12_18 * 0.50) + (s18p * 1.00);
-            const sNet  = sGross - sProv;
-
-            document.getElementById('start_disp_totalOverdue').innerText = sTotOverdue.toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('start_disp_provision').innerText    = sProv.toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('start_disp_netBalance').innerText   = sNet.toLocaleString(undefined, {minimumFractionDigits: 2});
-
-            // End Values
-            const eGross = parseFloat(document.getElementById('end_totalLoans').value) || 0;
-            const e6_12  = parseFloat(document.getElementById('end_overdue6_12').value) || 0;
-            const e12_18 = parseFloat(document.getElementById('end_overdue12_18').value) || 0;
-            const e18p   = parseFloat(document.getElementById('end_overdue18_plus').value) || 0;
-
-            const eTotOverdue = e6_12 + e12_18 + e18p;
-            const eProv = (e6_12 * 0.20) + (e12_18 * 0.50) + (e18p * 1.00);
-            const eNet  = eGross - eProv;
-
-            document.getElementById('end_disp_totalOverdue').innerText = eTotOverdue.toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('end_disp_provision').innerText    = eProv.toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('end_disp_netBalance').innerText   = eNet.toLocaleString(undefined, {minimumFractionDigits: 2});
+        // Populate Promises Table on Page 3
+        const p3Body = document.getElementById('p3PromisesBody');
+        if (p3Body) {
+          if (promiseLogs.length === 0) {
+            p3Body.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">  ??අක්‍රීය ණය කාණ්ඩය  ?? .</td></tr>`;
+          } else {
+            const customers = await getAllCustomers();
+            p3Body.innerHTML = promiseLogs.slice(0, 10).map((a, idx) => {
+              const cust = customers.find(c => (c.accountNo || '').toString() === (a.customerAccountNo || '').toString());
+              const cName = cust ? cust.name : 'N/A';
+              const resp = a.response ? `"${a.response}"` : (a.officerNote || 'Follow-up scheduled');
+              const fDate = a.followUpDate ? ` (Due: ${a.followUpDate})` : '';
+              return `
+                <tr>
+                  <td style="text-align:center">${idx + 1}</td>
+                  <td>${a.customerAccountNo || 'N/A'}</td>
+                  <td>${cName}</td>
+                  <td>${resp}${fDate}</td>
+                </tr>`;
+            }).join('');
+          }
         }
 
-        async function saveNPLStatementData() {
-            const m = document.getElementById('reportMonth').value || currentReportMonth;
-            const data = {
-                id: 'npl_' + m,
-                month: m,
-                savedAt: new Date().toISOString(),
-                start: {
-                    totalLoans: parseFloat(document.getElementById('start_totalLoans').value) || 0,
-                    overdue6_12: parseFloat(document.getElementById('start_overdue6_12').value) || 0,
-                    overdue12_18: parseFloat(document.getElementById('start_overdue12_18').value) || 0,
-                    overdue18_plus: parseFloat(document.getElementById('start_overdue18_plus').value) || 0,
-                },
-                end: {
-                    totalLoans: parseFloat(document.getElementById('end_totalLoans').value) || 0,
-                    overdue6_12: parseFloat(document.getElementById('end_overdue6_12').value) || 0,
-                    overdue12_18: parseFloat(document.getElementById('end_overdue12_18').value) || 0,
-                    overdue18_plus: parseFloat(document.getElementById('end_overdue18_plus').value) || 0,
-                }
-            };
+        // Populate Customer Lists directly inside each Channel Table Row
+        const allCustomersList = await getAllCustomers();
+        const callsCusts = [], visitsCusts = [], lettersCusts = [], demandCusts = [], digitalCusts = [];
 
-            // Save to IndexedDB (primary - included in full backups)
-            try { await window.db.set('npl_statements', data); } catch(e) { console.warn('IndexedDB save failed:', e); }
-            // Also keep localStorage as fallback
-            localStorage.setItem('lrms_npl_statement_' + m, JSON.stringify(data));
+        for (const a of monthActions) {
+          const acc = (a.customerAccountNo || '').toString().trim();
+          if (!acc) continue;
+          const cust = allCustomersList.find(c => (c.accountNo || '').toString().trim() === acc);
+          const cName = cust ? cust.name : (a.customerName || '');
+          const label = cName ? `${acc} (${cName})` : acc;
+          const cls = classifyAction(a.actionType);
 
-            if (typeof lrmsAlert === 'function') await lrmsAlert(`? NPL Statement data for ${m} saved successfully!\n(IndexedDB + Backup ? include)`);
-            else alert(`Saved NPL Statement values for ${m}!`);
-            updatePrintBookletPreview();
+          if (cls.isCall && !callsCusts.includes(label)) callsCusts.push(label);
+          if (cls.isVisit && !visitsCusts.includes(label)) visitsCusts.push(label);
+          if (cls.isLetter && !lettersCusts.includes(label)) lettersCusts.push(label);
+          if (cls.isDemand && !demandCusts.includes(label)) demandCusts.push(label);
+          if (cls.isDigital && !digitalCusts.includes(label)) digitalCusts.push(label);
         }
 
-        async function loadReportData() {
-            currentReportMonth = document.getElementById('reportMonth').value || currentReportMonth;
+        const renderCustLabels = (arr) => {
+          if (arr.length === 0) return `<div style="font-size:8pt; color:#64748b; margin-top:3px; font-style:italic">  ගිණුම් අංකය?.</div>`;
+          return `<div style="font-size:8pt; color:#1e1b4b; margin-top:4px; font-weight:600; line-height:1.35">දුරකථන?? (${arr.length}): ${arr.join(', ')}</div>`;
+        };
 
-            let data = null;
+        const elCalls = document.getElementById('op_callsCustList');
+        if (elCalls) elCalls.innerHTML = renderCustLabels(callsCusts);
 
-            // 1. Try IndexedDB first (primary store, included in backups)
-            try {
-                const idbRecord = await window.db.get('npl_statements', 'npl_' + currentReportMonth);
-                if (idbRecord) data = idbRecord;
-            } catch(e) { console.warn('IndexedDB read failed, falling back to localStorage:', e); }
+        const elVisits = document.getElementById('op_visitsCustList');
+        if (elVisits) elVisits.innerHTML = renderCustLabels(visitsCusts);
 
-            // 2. Fallback to localStorage (for backward compatibility)
-            if (!data) {
-                const savedStr = localStorage.getItem('lrms_npl_statement_' + currentReportMonth);
-                if (savedStr) { try { data = JSON.parse(savedStr); } catch(e) { console.error(e); } }
-            }
+        const elLetters = document.getElementById('op_lettersCustList');
+        if (elLetters) elLetters.innerHTML = renderCustLabels(lettersCusts);
 
-            if (data) {
-                try {
-                    document.getElementById('start_totalLoans').value = data.start.totalLoans || '';
-                    document.getElementById('start_overdue6_12').value = data.start.overdue6_12 || '';
-                    document.getElementById('start_overdue12_18').value = data.start.overdue12_18 || '';
-                    document.getElementById('start_overdue18_plus').value = data.start.overdue18_plus || '';
+        const elDemand = document.getElementById('op_demandCustList');
+        if (elDemand) elDemand.innerHTML = renderCustLabels(demandCusts);
 
-                    document.getElementById('end_totalLoans').value = data.end.totalLoans || '';
-                    document.getElementById('end_overdue6_12').value = data.end.overdue6_12 || '';
-                    document.getElementById('end_overdue12_18').value = data.end.overdue12_18 || '';
-                    document.getElementById('end_overdue18_plus').value = data.end.overdue18_plus || '';
-                } catch(e) { console.error(e); }
-            } else {
-                // Clear inputs if no saved record for selected month
-                ['start_totalLoans','start_overdue6_12','start_overdue12_18','start_overdue18_plus',
-                 'end_totalLoans','end_overdue6_12','end_overdue12_18','end_overdue18_plus'].forEach(id => {
-                    const el = document.getElementById(id); if (el) el.value = '';
-                });
-            }
+        const elDigital = document.getElementById('op_digitalCustList');
+        if (elDigital) elDigital.innerHTML = renderCustLabels(digitalCusts);
 
-            calculateNPLTotals();
-            updatePrintBookletPreview();
+        // 3. Fetch Legal Actions for Page 4 (Filtered ONLY for Legal Action - Courts & Legal Action - Cooperative Commissioner for the selected month)
+        const customers = await getAllCustomers();
+        const monthLegalAccountNos = new Set();
+
+        // Check actions logged in this specific month for legal/LOD/demand notices
+        monthActions.forEach(a => {
+          const type = (a.actionType || '').toLowerCase();
+          if (type.includes('legal') || type.includes('court') || type.includes('cooperative') || type.includes('commissioner')) {
+            if (a.customerAccountNo) monthLegalAccountNos.add(a.customerAccountNo.toString().trim());
+          }
+        });
+
+        // Check customers whose status was set to Courts or Cooperative Commissioner in this month
+        const isStrictLegalStage = (statusStr) => {
+          if (!statusStr) return false;
+          const s = statusStr.trim().toLowerCase();
+          return s.includes('courts') || s.includes('cooperative commissioner') || s.includes('legal action');
+        };
+
+        const legalCusts = customers.filter(c => {
+          if (c.isDeleted) return false;
+          const status = (c.status || '').trim();
+          if (!status.includes('Courts') && !status.includes('Cooperative Commissioner') && status !== 'Legal Action - Courts' && status !== 'Legal Action - Cooperative Commissioner') return false;
+          
+          const cleanAcc = (c.accountNo || '').toString().trim();
+          const isMonthStatus = c.statusDate && c.statusDate.startsWith(monthPrefix);
+          const isMonthAction = monthLegalAccountNos.has(cleanAcc);
+          return isMonthStatus || isMonthAction || !c.statusDate;
+        });
+
+        const p4Body = document.getElementById('p4LegalBody');
+        if (p4Body) {
+          if (legalCusts.length === 0) {
+            p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">   ගිණුම් අංකය? (Courts / Cooperative Commissioner)  ගිණුම් අංකය?.</td></tr>`;
+          } else {
+            p4Body.innerHTML = legalCusts.map((c, idx) => {
+              const sDate = c.statusDate ? ` (${c.statusDate})` : '';
+              return `
+                <tr>
+                  <td style="text-align:center">${idx + 1}</td>
+                  <td style="font-weight:bold">${c.accountNo}</td>
+                  <td>${c.name}</td>
+                  <td>${c.category || 'N/A'}</td>
+                  <td style="font-weight:bold">${c.status}${sDate}</td>
+                </tr>`;
+            }).join('');
+          }
         }
 
-        async function updatePrintBookletPreview() {
-            const m = document.getElementById('reportMonth').value || currentReportMonth;
-            const [y, mon] = m.split('-');
-            const dateObj = new Date(parseInt(y), parseInt(mon) - 1, 1);
-            const monthNameSinhala = dateObj.toLocaleString('si-LK', { month: 'long', year: 'numeric' });
-            
-            document.getElementById('covMonthText').innerText = monthNameSinhala || (y + ' ' + mon);
-            document.getElementById('p2SubTitle').innerText = `${monthNameSinhala} - ???????????? ?????? ??????? ?????`;
+        // 4. Populate Demand Notices Issued This Month (Letter of Demand ONLY)
+        const demandActions = monthActions.filter(a => {
+          const type = (a.actionType || '').toLowerCase();
+          const note = (a.officerNote || a.remarks || '').toLowerCase();
+          return type.includes('demand') || type.includes('lod') || type.includes('letter of demand') || type.includes('entharava') || note.includes('letter of demand') || note.includes('lod');
+        });
 
-            // 1. Fill NPL Statement Values
-            const sGross = parseFloat(document.getElementById('start_totalLoans').value) || 0;
-            const s6_12  = parseFloat(document.getElementById('start_overdue6_12').value) || 0;
-            const s12_18 = parseFloat(document.getElementById('start_overdue12_18').value) || 0;
-            const s18p   = parseFloat(document.getElementById('start_overdue18_plus').value) || 0;
-            const sTotOverdue = s6_12 + s12_18 + s18p;
-            const sProv = (s6_12 * 0.20) + (s12_18 * 0.50) + (s18p * 1.00);
-            const sNet  = sGross - sProv;
-
-            const eGross = parseFloat(document.getElementById('end_totalLoans').value) || 0;
-            const e6_12  = parseFloat(document.getElementById('end_overdue6_12').value) || 0;
-            const e12_18 = parseFloat(document.getElementById('end_overdue12_18').value) || 0;
-            const e18p   = parseFloat(document.getElementById('end_overdue18_plus').value) || 0;
-            const eTotOverdue = e6_12 + e12_18 + e18p;
-            const eProv = (e6_12 * 0.20) + (e12_18 * 0.50) + (e18p * 1.00);
-            const eNet  = eGross - eProv;
-
-            const fmt = num => (num || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-            const fmtVar = (s, e) => {
-                const diff = e - s;
-                return (diff >= 0 ? '+' : '') + fmt(diff);
-            };
-
-            document.getElementById('p2_start_gross').innerText = fmt(sGross);
-            document.getElementById('p2_end_gross').innerText   = fmt(eGross);
-            document.getElementById('p2_var_gross').innerText   = fmtVar(sGross, eGross);
-
-            document.getElementById('p2_start_6_12').innerText = fmt(s6_12);
-            document.getElementById('p2_end_6_12').innerText   = fmt(e6_12);
-            document.getElementById('p2_var_6_12').innerText   = fmtVar(s6_12, e6_12);
-
-            document.getElementById('p2_start_12_18').innerText = fmt(s12_18);
-            document.getElementById('p2_end_12_18').innerText   = fmt(e12_18);
-            document.getElementById('p2_var_12_18').innerText   = fmtVar(s12_18, e12_18);
-
-            document.getElementById('p2_start_18p').innerText = fmt(s18p);
-            document.getElementById('p2_end_18p').innerText   = fmt(e18p);
-            document.getElementById('p2_var_18p').innerText   = fmtVar(s18p, e18p);
-
-            document.getElementById('p2_start_totOverdue').innerText = fmt(sTotOverdue);
-            document.getElementById('p2_end_totOverdue').innerText   = fmt(eTotOverdue);
-            document.getElementById('p2_var_totOverdue').innerText   = fmtVar(sTotOverdue, eTotOverdue);
-
-            document.getElementById('p2_start_prov').innerText = `(${fmt(sProv)})`;
-            document.getElementById('p2_end_prov').innerText   = `(${fmt(eProv)})`;
-            document.getElementById('p2_var_prov').innerText   = fmtVar(sProv, eProv);
-
-            document.getElementById('p2_start_net').innerText = fmt(sNet);
-            document.getElementById('p2_end_net').innerText   = fmt(eNet);
-            document.getElementById('p2_var_net').innerText   = fmtVar(sNet, eNet);
-
-            // Ratios
-            const getPct = (part, total) => total > 0 ? ((part / total) * 100).toFixed(2) + '%' : '0.00%';
-            document.getElementById('r_start_6_12').innerText = getPct(s6_12, sGross);
-            document.getElementById('r_end_6_12').innerText   = getPct(e6_12, eGross);
-            document.getElementById('r_var_6_12').innerText   = (parseFloat(getPct(e6_12, eGross)) - parseFloat(getPct(s6_12, sGross))).toFixed(2) + '%';
-
-            document.getElementById('r_start_12_18').innerText = getPct(s12_18, sGross);
-            document.getElementById('r_end_12_18').innerText   = getPct(e12_18, eGross);
-            document.getElementById('r_var_12_18').innerText   = (parseFloat(getPct(e12_18, eGross)) - parseFloat(getPct(s12_18, sGross))).toFixed(2) + '%';
-
-            document.getElementById('r_start_18p').innerText = getPct(s18p, sGross);
-            document.getElementById('r_end_18p').innerText   = getPct(e18p, eGross);
-            document.getElementById('r_var_18p').innerText   = (parseFloat(getPct(e18p, eGross)) - parseFloat(getPct(s18p, sGross))).toFixed(2) + '%';
-
-            document.getElementById('r_start_tot').innerText = getPct(sTotOverdue, sGross);
-            document.getElementById('r_end_tot').innerText   = getPct(eTotOverdue, eGross);
-            document.getElementById('r_var_tot').innerText   = (parseFloat(getPct(eTotOverdue, eGross)) - parseFloat(getPct(sTotOverdue, sGross))).toFixed(2) + '%';
-
-            // Populate Top High-Risk Overdue Loans Table
-            // Criteria: overdueAmount >= 1,000,000 AND overdueInstallments > 2
-            // EXCLUDE: Legal Action - Courts, Legal Action - Cooperative Commissioner, Closed loans
-            try {
-                const allCustomers = await window.db.getAll('customers');
-
-                const isLegalStage = (s) => {
-                    if (!s) return false;
-                    const sl = s.trim().toLowerCase();
-                    return sl.includes('courts') || sl.includes('cooperative commissioner');
-                };
-
-                const isClosedLoan = (s) => {
-                    if (!s) return false;
-                    const sl = s.trim().toLowerCase();
-                    return sl.includes('closed') || sl.includes('settled') || sl.includes('written off') || sl.includes('write off');
-                };
-
-                const overdueCustomers = allCustomers.filter(c => {
-                    if (c.isDeleted) return false;
-
-                    // Exclude legal action cases
-                    if (isLegalStage(c.status)) return false;
-
-                    // Exclude closed/settled loans
-                    if (isClosedLoan(c.status)) return false;
-                    if (c.isClosed || c.closed || c.isSettled) return false;
-
-                    const loanAmt = parseFloat(c.loanAmount || c.amount || c.grantedAmount || 0);
-                    const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
-                    const effectiveAmt = Math.max(loanAmt, overdueAmt);
-
-                    const rawInst = c.overdueInstallments ?? c.arrearsInstallments ?? c.dueInstallments ?? c.arrearsCount ?? c.installmentsInArrears ?? c.overdueMonths ?? c.overdueCount;
-                    if (rawInst === undefined || rawInst === null || rawInst === '' || rawInst === 'N/A' || rawInst === 'n/a') {
-                        return false; // Reject N/A or unspecified installment count
-                    }
-
-                    const instVal = parseInt(rawInst);
-                    if (isNaN(instVal) || instVal <= 2) {
-                        return false; // Reject installments <= 2
-                    }
-
-                    return effectiveAmt >= 1000000;
-                });
-
-                // Sort by overdueAmount / effectiveAmt descending, take top 10
-                overdueCustomers.sort((a, b) => {
-                    const aArr = Math.max(parseFloat(a.overdueAmount || a.arrears || 0), parseFloat(a.loanAmount || a.amount || 0));
-                    const bArr = Math.max(parseFloat(b.overdueAmount || b.arrears || 0), parseFloat(b.loanAmount || b.amount || 0));
-                    return bArr - aArr;
-                });
-                const top10 = overdueCustomers.slice(0, 10);
-
-                const highRiskBody = document.getElementById('p2HighRiskBody');
-                if (top10.length === 0) {
-                    highRiskBody.innerHTML = '<tr><td colspan="6" style="text-align:center; font-style:italic">??????? ????????? (??. 1,000,000 ? ???? ?? ????? 2 ? ????) ?????? ?? ?????.</td></tr>';
-                } else {
-                    highRiskBody.innerHTML = top10.map((c, i) => {
-                        const overdueAmt = parseFloat(c.overdueAmount || c.arrears || 0);
-                        const amt = overdueAmt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-                        const cat = c.category || c.loanType || '-';
-                        const status = c.status || 'Overdue';
-                        return `<tr>
-                            <td style="text-align:center">${i + 1}</td>
-                            <td>${c.accountNo || c.loanAccountNo || '-'}</td>
-                            <td>${c.name || '-'}</td>
-                            <td>${cat}</td>
-                            <td style="text-align:right; font-weight:bold">${amt}</td>
-                            <td style="text-align:center">${status}</td>
-                        </tr>`;
-                    }).join('');
-                }
-            } catch(e) { console.error('High risk table error:', e); }
-
-
-            // 2. Fetch System Actions & Operations metrics for the selected month
-            try {
-                const allActions = await window.db.getAll('actions');
-                const monthPrefix = m; // "2026-08"
-
-                const monthActions = allActions.filter(a => a.date && a.date.startsWith(monthPrefix) && !a.isDeleted);
-
-                let calls = 0, promises = 0, promisesAmt = 0, visits = 0, letters = 0, demand = 0, sms = 0, wa = 0;
-                let promiseLogs = [];
-
-                const classifyAction = (typeStr) => {
-                    const type = (typeStr || '').toLowerCase().trim();
-                    const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
-                    const isSMS = isDigital && (type.includes('sms') || type.includes('text'));
-                    const isWA = isDigital && type.includes('whatsapp');
-                    const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('?????????'));
-                    const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('?????'));
-                    const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('??????') || type.includes('?????'));
-                    const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('????') || type.includes('?????') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('??????????'));
-
-                    return { isDigital, isDemand, isVisit, isCall, isLetter, isSMS, isWA };
-                };
-
-                for (const a of monthActions) {
-                    const cls = classifyAction(a.actionType);
-                    if (cls.isCall) calls++;
-                    if (cls.isVisit) visits++;
-                    if (cls.isLetter) letters++;
-                    if (cls.isDemand) demand++;
-                    if (cls.isSMS) sms++;
-                    if (cls.isWA) wa++;
-
-                    if (a.response || a.followUpDate) {
-                        promises++;
-                        promiseLogs.push(a);
-                    }
-                }
-
-                document.getElementById('op_callsCount').innerText    = calls;
-                document.getElementById('op_promisesCount').innerText = promises;
-                document.getElementById('op_promisesAmt').innerText   = fmt(promisesAmt);
-                document.getElementById('op_visitsCount').innerText   = visits;
-                document.getElementById('op_lettersCount').innerText  = letters;
-                document.getElementById('op_demandCount').innerText   = demand;
-                document.getElementById('op_digitalCount').innerText  = (sms + wa);
-                document.getElementById('op_smsCount').innerText      = sms;
-                document.getElementById('op_waCount').innerText       = wa;
-
-                // Populate Promises Table on Page 3
-                const p3Body = document.getElementById('p3PromisesBody');
-                if (p3Body) {
-                    if (promiseLogs.length === 0) {
-                        p3Body.innerHTML = `<tr><td colspan="4" style="text-align:center; font-style:italic">???? ??? ???????? ?? ?????? ???? ?? ?????.</td></tr>`;
-                    } else {
-                        const customers = await getAllCustomers();
-                        p3Body.innerHTML = promiseLogs.slice(0, 10).map((a, idx) => {
-                            const cust = customers.find(c => (c.accountNo || '').toString() === (a.customerAccountNo || '').toString());
-                            const cName = cust ? cust.name : 'N/A';
-                            const resp = a.response ? `"${a.response}"` : (a.officerNote || 'Follow-up scheduled');
-                            const fDate = a.followUpDate ? ` (Due: ${a.followUpDate})` : '';
-                            return `
-                                <tr>
-                                    <td style="text-align:center">${idx + 1}</td>
-                                    <td>${a.customerAccountNo || 'N/A'}</td>
-                                    <td>${cName}</td>
-                                    <td>${resp}${fDate}</td>
-                                </tr>`;
-                        }).join('');
-                    }
-                }
-
-                // Populate Customer Lists directly inside each Channel Table Row
-                const allCustomersList = await getAllCustomers();
-                const callsCusts = [], visitsCusts = [], lettersCusts = [], demandCusts = [], digitalCusts = [];
-
-                for (const a of monthActions) {
-                    const acc = (a.customerAccountNo || '').toString().trim();
-                    if (!acc) continue;
-                    const cust = allCustomersList.find(c => (c.accountNo || '').toString().trim() === acc);
-                    const cName = cust ? cust.name : (a.customerName || '');
-                    const label = cName ? `${acc} (${cName})` : acc;
-                    const cls = classifyAction(a.actionType);
-
-                    if (cls.isCall && !callsCusts.includes(label)) callsCusts.push(label);
-                    if (cls.isVisit && !visitsCusts.includes(label)) visitsCusts.push(label);
-                    if (cls.isLetter && !lettersCusts.includes(label)) lettersCusts.push(label);
-                    if (cls.isDemand && !demandCusts.includes(label)) demandCusts.push(label);
-                    if (cls.isDigital && !digitalCusts.includes(label)) digitalCusts.push(label);
-                }
-
-                const renderCustLabels = (arr) => {
-                    if (arr.length === 0) return `<div style="font-size:8pt; color:#64748b; margin-top:3px; font-style:italic">???? ????????? ?????.</div>`;
-                    return `<div style="font-size:8pt; color:#1e1b4b; margin-top:4px; font-weight:600; line-height:1.35">????????? (${arr.length}): ${arr.join(', ')}</div>`;
-                };
-
-                const elCalls = document.getElementById('op_callsCustList');
-                if (elCalls) elCalls.innerHTML = renderCustLabels(callsCusts);
-
-                const elVisits = document.getElementById('op_visitsCustList');
-                if (elVisits) elVisits.innerHTML = renderCustLabels(visitsCusts);
-
-                const elLetters = document.getElementById('op_lettersCustList');
-                if (elLetters) elLetters.innerHTML = renderCustLabels(lettersCusts);
-
-                const elDemand = document.getElementById('op_demandCustList');
-                if (elDemand) elDemand.innerHTML = renderCustLabels(demandCusts);
-
-                const elDigital = document.getElementById('op_digitalCustList');
-                if (elDigital) elDigital.innerHTML = renderCustLabels(digitalCusts);
-
-                // 3. Fetch Legal Actions for Page 4 (Filtered ONLY for Legal Action - Courts & Legal Action - Cooperative Commissioner for the selected month)
-                const customers = await getAllCustomers();
-                const monthLegalAccountNos = new Set();
-
-                // Check actions logged in this specific month for legal/LOD/demand notices
-                monthActions.forEach(a => {
-                    const type = (a.actionType || '').toLowerCase();
-                    if (type.includes('legal') || type.includes('court') || type.includes('cooperative') || type.includes('commissioner')) {
-                        if (a.customerAccountNo) monthLegalAccountNos.add(a.customerAccountNo.toString().trim());
-                    }
-                });
-
-                // Check customers whose status was set to Courts or Cooperative Commissioner in this month
-                const isStrictLegalStage = (statusStr) => {
-                    if (!statusStr) return false;
-                    const s = statusStr.trim().toLowerCase();
-                    return s.includes('courts') || s.includes('cooperative commissioner') || s.includes('legal action');
-                };
-
-                const legalCusts = customers.filter(c => {
-                    if (c.isDeleted) return false;
-                    const status = (c.status || '').trim();
-                    if (!status.includes('Courts') && !status.includes('Cooperative Commissioner') && status !== 'Legal Action - Courts' && status !== 'Legal Action - Cooperative Commissioner') return false;
-                    
-                    const cleanAcc = (c.accountNo || '').toString().trim();
-                    const isMonthStatus = c.statusDate && c.statusDate.startsWith(monthPrefix);
-                    const isMonthAction = monthLegalAccountNos.has(cleanAcc);
-                    return isMonthStatus || isMonthAction || !c.statusDate;
-                });
-
-                const p4Body = document.getElementById('p4LegalBody');
-                if (p4Body) {
-                    if (legalCusts.length === 0) {
-                        p4Body.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ?????? ????? (Courts / Cooperative Commissioner) ??? ?????? ?????.</td></tr>`;
-                    } else {
-                        p4Body.innerHTML = legalCusts.map((c, idx) => {
-                            const sDate = c.statusDate ? ` (${c.statusDate})` : '';
-                            return `
-                                <tr>
-                                    <td style="text-align:center">${idx + 1}</td>
-                                    <td style="font-weight:bold">${c.accountNo}</td>
-                                    <td>${c.name}</td>
-                                    <td>${c.category || 'N/A'}</td>
-                                    <td style="font-weight:bold">${c.status}${sDate}</td>
-                                </tr>`;
-                        }).join('');
-                    }
-                }
-
-                // 4. Populate Demand Notices Issued This Month (Letter of Demand ONLY)
-                const demandActions = monthActions.filter(a => {
-                    const type = (a.actionType || '').toLowerCase();
-                    const note = (a.officerNote || a.remarks || '').toLowerCase();
-                    return type.includes('demand') || type.includes('lod') || type.includes('letter of demand') || type.includes('entharava') || note.includes('letter of demand') || note.includes('lod');
-                });
-
-                const p4DemandBody = document.getElementById('p4DemandBody');
-                if (p4DemandBody) {
-                    if (demandActions.length === 0) {
-                        p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">??? ???? ??? ??????? ?????? (Letter of Demand) ?????? ??? ?? ?????? ?????.</td></tr>`;
-                    } else {
-                        // Deduplicate by account no, keep latest action date
-                        const demandMap = new Map();
-                        demandActions.forEach(a => {
-                            const acc = (a.customerAccountNo || '').toString().trim();
-                            if (!demandMap.has(acc) || (a.date > demandMap.get(acc).date)) {
-                                demandMap.set(acc, a);
-                            }
-                        });
-                        const allCusts = await window.db.getAll('customers');
-                        let demIdx = 1;
-                        p4DemandBody.innerHTML = Array.from(demandMap.entries()).map(([acc, action]) => {
-                            const cust = allCusts.find(c => (c.accountNo || '').toString().trim() === acc);
-                            const name = cust ? cust.name : (action.customerName || 'N/A');
-                            const cat  = cust ? (cust.category || 'N/A') : 'N/A';
-                            return `<tr>
-                                <td style="text-align:center">${demIdx++}</td>
-                                <td style="font-weight:bold">${acc || 'N/A'}</td>
-                                <td>${name}</td>
-                                <td>${cat}</td>
-                                <td style="text-align:center">${action.date || '-'}</td>
-                            </tr>`;
-                        }).join('');
-                    }
-                }
-
-                // 5. Populate Month-End High Risk Borrowers List (p4HighRiskMonthEndBody)
-                const p4HighRiskMonthEndBody = document.getElementById('p4HighRiskMonthEndBody');
-                if (p4HighRiskMonthEndBody) {
-                    const highRiskCusts = customers.filter(c => {
-                        if (c.isDeleted) return false;
-                        const s = (c.status || '').toLowerCase();
-                        const cat = (c.category || '').toLowerCase();
-                        return s === 'high risk' || s.includes('high risk') || cat === 'high risk';
-                    });
-
-                    if (highRiskCusts.length === 0) {
-                        p4HighRiskMonthEndBody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-style:italic">???? ??????? ??????? (High Risk) ???????? ????????? ?????.</td></tr>`;
-                    } else {
-                        p4HighRiskMonthEndBody.innerHTML = highRiskCusts.map((c, idx) => {
-                            const amt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-                            return `<tr>
-                                <td style="text-align:center">${idx + 1}</td>
-                                <td style="font-weight:bold">${c.accountNo || '-'}</td>
-                                <td>${c.name || '-'}</td>
-                                <td>${c.category || c.loanType || '-'}</td>
-                                <td style="text-align:right; font-weight:bold">${amt}</td>
-                                <td style="text-align:center; font-weight:bold">${c.status || 'High Risk'}</td>
-                            </tr>`;
-                        }).join('');
-                    }
-                }
-
-            } catch(err) {
-                console.error("Error generating report preview:", err);
-            }
+        const p4DemandBody = document.getElementById('p4DemandBody');
+        if (p4DemandBody) {
+          if (demandActions.length === 0) {
+            p4DemandBody.innerHTML = `<tr><td colspan="5" style="text-align:center; font-style:italic">   ?ගිණුම් අංකය?? (Letter of Demand)   ?? ගිණුම් අංකය?.</td></tr>`;
+          } else {
+            // Deduplicate by account no, keep latest action date
+            const demandMap = new Map();
+            demandActions.forEach(a => {
+              const acc = (a.customerAccountNo || '').toString().trim();
+              if (!demandMap.has(acc) || (a.date > demandMap.get(acc).date)) {
+                demandMap.set(acc, a);
+              }
+            });
+            const allCusts = await window.db.getAll('customers');
+            let demIdx = 1;
+            p4DemandBody.innerHTML = Array.from(demandMap.entries()).map(([acc, action]) => {
+              const cust = allCusts.find(c => (c.accountNo || '').toString().trim() === acc);
+              const name = cust ? cust.name : (action.customerName || 'N/A');
+              const cat = cust ? (cust.category || 'N/A') : 'N/A';
+              return `<tr>
+                <td style="text-align:center">${demIdx++}</td>
+                <td style="font-weight:bold">${acc || 'N/A'}</td>
+                <td>${name}</td>
+                <td>${cat}</td>
+                <td style="text-align:center">${action.date || '-'}</td>
+              </tr>`;
+            }).join('');
+          }
         }
-    </script>
+
+        // 5. Populate Month-End High Risk Borrowers List (p4HighRiskMonthEndBody)
+        const p4HighRiskMonthEndBody = document.getElementById('p4HighRiskMonthEndBody');
+        if (p4HighRiskMonthEndBody) {
+          const highRiskCusts = customers.filter(c => {
+            if (c.isDeleted) return false;
+            const s = (c.status || '').toLowerCase();
+            const cat = (c.category || '').toLowerCase();
+            return s === 'high risk' || s.includes('high risk') || cat === 'high risk';
+          });
+
+          if (highRiskCusts.length === 0) {
+            p4HighRiskMonthEndBody.innerHTML = `<tr><td colspan="6" style="text-align:center; font-style:italic"> ?ගිණුම් අංකය (High Risk) ??ගිණුම් අංකය  .</td></tr>`;
+          } else {
+            p4HighRiskMonthEndBody.innerHTML = highRiskCusts.map((c, idx) => {
+              const amt = parseFloat(c.overdueAmount || c.arrears || c.loanAmount || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+              return `<tr>
+                <td style="text-align:center">${idx + 1}</td>
+                <td style="font-weight:bold">${c.accountNo || '-'}</td>
+                <td>${c.name || '-'}</td>
+                <td>${c.category || c.loanType || '-'}</td>
+                <td style="text-align:right; font-weight:bold">${amt}</td>
+                <td style="text-align:center; font-weight:bold">${c.status || 'High Risk'}</td>
+              </tr>`;
+            }).join('');
+          }
+        }
+
+      } catch(err) {
+        console.error("Error generating report preview:", err);
+      }
+    }
+  </script>
 </body>
 
 </html>

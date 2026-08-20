@@ -11,14 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css?v=4.2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=3.15">
     <style>
-        .a4-page, .a4-page * {
-            font-family: 'Noto Sans Sinhala', 'Inter', -apple-system, sans-serif;
-        }
         /* Screen Styles */
         .layout-wrapper {
             display: flex;
@@ -54,7 +48,7 @@
             min-height: 297mm;
             background: #ffffff !important;
             color: #000000 !important;
-            padding: 14mm 13mm 12mm 13mm;
+            padding: 20mm 15mm 15mm 15mm;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             display: flex;
@@ -136,9 +130,7 @@
             .a4-page {
                 width: 210mm;
                 height: 297mm;
-                max-height: 297mm;
-                overflow: hidden;
-                padding: 8mm 13mm;
+                padding: 10mm 15mm;
                 box-shadow: none !important;
                 margin: 0 !important;
                 border: none !important;
@@ -223,21 +215,21 @@
                 <div>
                     <label class="text-xs text-gray-500 font-semibold uppercase">Letter Type</label>
                     <select id="letterType" class="form-select w-full mt-1" onchange="updateTemplateFields(); renderLetter();">
-                        <option value="reminder1">First Reminder (???? ????????????.!)</option>
-                        <option value="reminder2">Second Reminder (?????? ????????????.!)</option>
-                        <option value="final_notice">Final Notice (????? ?????? ?????.!)</option>
-                        <option value="lod">Arbitration Notice / LOD (??????????)</option>
-                        <option value="legal_referral">Legal Department Referral (???? ???? ??? ???? ?????)</option>
-                        <option value="business_loan">Business Loan Repayment (?????????? ?? ????? ??????)</option>
-                        <option value="legal_reminder">Legal Reminder (?????? ???????????? !)</option>
-                        <option value="agreement_expired">Agreement Expired Notice (???????? ???? ????? ???)</option>
+                        <option value="reminder1">First Reminder (පළමු සිහිකැඳවීමයි.!)</option>
+                        <option value="reminder2">Second Reminder (දෙවැනි සිහිකැඳවීමයි.!)</option>
+                        <option value="final_notice">Final Notice (අවසාන දැනුම් දීමයි.!)</option>
+                        <option value="lod">Arbitration Notice / LOD (එන්තරවාසිය)</option>
+                        <option value="legal_referral">Legal Department Referral (නීති අංශය වෙත යොමු කිරීම)</option>
+                        <option value="business_loan">Business Loan Repayment (ව්‍යාපාරික ණය වාරික ගෙවීම්)</option>
+                        <option value="legal_reminder">Legal Reminder (නීතිමය සිහිකැඳවීමයි !)</option>
+                        <option value="agreement_expired">Agreement Expired Notice (ගිවිසුම් කාලය අවසන් වීම)</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-gray-500 font-semibold uppercase">Language</label>
                         <select id="letterLang" class="form-select w-full mt-1" onchange="renderLetter();">
-                            <option value="sin">Sinhala (?????)</option>
+                            <option value="sin">Sinhala (සිංහල)</option>
                             <option value="eng">English</option>
                         </select>
                     </div>
@@ -525,11 +517,11 @@
 
             let htmlContent = '';
 
-            // --- Header Construction ---
+            // ─── Header Construction ───
             let headerHtml = '';
             if (letterType !== 'legal_reminder') {
                 headerHtml = `
-                    <div style="border-bottom: 3px double #000000; padding-bottom: 8px; margin-bottom: 12px;">
+                    <div style="border-bottom: 3px double #000000; padding-bottom: 12px; margin-bottom: 18px;">
                         <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
                             <!-- Left Block: Official B&W Logo (user-uploaded) -->
                             <div class="logo-container">
@@ -538,10 +530,10 @@
                             
                             <!-- Middle Block: Org Name & Reg Details -->
                             <div style="flex: 1; min-width: 0;">
-                                <div style="font-size: 13px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.3; color: #000000; white-space: nowrap;">???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????</div>
-                                <div style="font-size: 11.5px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000; white-space: nowrap;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
+                                <div style="font-size: 13px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.3; color: #000000; white-space: nowrap;">සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතිය</div>
+                                <div style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
                                 <div style="font-size: 10px; font-weight: 700; display: flex; gap: 28px; color: #000000;">
-                                    <span>Reg No: ????/395</span>
+                                    <span>Reg No: කුලි/395</span>
                                     <span>Reg Date: 1987/03/24</span>
                                 </div>
                             </div>
@@ -553,28 +545,28 @@
             } else {
                 // For Legal Reminder: custom double-bordered top header (no normal letterhead)
                 headerHtml = `
-                    <div style="border-top: 3px double #000000; border-bottom: 3px double #000000; padding: 8px 0; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="border-top: 3px double #000000; border-bottom: 3px double #000000; padding: 12px 0; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
                         <!-- Left Block: coop logo -->
                         <div style="flex-shrink: 0; text-align: left;">
-                            <img src="assets/coop_logo.png" alt="Coop" style="height: 80px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
+                            <img src="assets/coop_logo.png" alt="Coop" style="height: 120px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
                         </div>
 
                         <!-- Center Block: Title -->
                         <div style="flex: 1; text-align: center;">
-                            <h1 style="font-size: 28px; font-weight: 900; letter-spacing: 0.5px; margin: 0; font-family: 'Inter', sans-serif; color: #000000; text-transform: uppercase;">
-                                ${lang === 'sin' ? '?????? ???????????? !' : 'LEGAL REMINDER!'}
+                            <h1 style="font-size: 34px; font-weight: 900; letter-spacing: 0.5px; margin: 0; font-family: 'Inter', sans-serif; color: #000000; text-transform: uppercase;">
+                                ${lang === 'sin' ? 'නීතිමය සිහිකැඳවීමයි !' : 'LEGAL REMINDER!'}
                             </h1>
                         </div>
 
                         <!-- Right Block: Lady Justice -->
                         <div style="flex-shrink: 0; text-align: right;">
-                            <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 80px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
+                            <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 120px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
                         </div>
                     </div>
                 `;
             }
 
-            // --- Footer Construction ---
+            // ─── Footer Construction ───
             let footerHtml = '';
             if (letterType !== 'legal_reminder') {
                 footerHtml = `
@@ -597,7 +589,7 @@
                                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                                         </svg>
                                         <div style="line-height: 1.2;">
-                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">?????? | ??????????? | Telephones</div>
+                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">දුරකථන | தொலைபேசிகள் | Telephones</div>
                                             <div style="font-size: 7pt; font-weight: 800;">+94 (0) 37 22 60 658</div>
                                         </div>
                                     </div>
@@ -608,7 +600,7 @@
                                             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                                         </svg>
                                         <div style="line-height: 1.2;">
-                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">???????? | ??????? | Facebook</div>
+                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">ෆේස්බුක් | முகநூல் | Facebook</div>
                                             <div style="font-size: 7pt; font-weight: 800;">GSCS Bank</div>
                                         </div>
                                     </div>
@@ -620,7 +612,7 @@
                                             <polyline points="22,6 12,13 2,6" />
                                         </svg>
                                         <div style="line-height: 1.2;">
-                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">?-???? | ?-?????? | E-mail</div>
+                                            <div style="font-size: 4.8pt; color: #555555; font-weight: 600;">ඊ-මේල් | ஈ-மெயில் | E-mail</div>
                                             <div style="font-size: 7pt; font-weight: 800; white-space: nowrap;">galapitiyagama.sanasa@gmail.com</div>
                                         </div>
                                     </div>
@@ -629,8 +621,8 @@
                                 
                                 <!-- Address Block -->
                                 <div style="font-size: 6.5pt; font-weight: 700; line-height: 1.4; color: #000000; text-align: center;">
-                                    <div>???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????, ??????????, ?????????.</div>
-                                    <div style="font-weight: 500; font-size: 6pt; color: #333333;">???????? ???????????? ?????? ??????????? ??????, ????????????, ???????????.</div>
+                                    <div>සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතිය, ගලපිටියාගම, නිකවැරටිය.</div>
+                                    <div style="font-weight: 500; font-size: 6pt; color: #333333;">வரம்பற்ற கலாபிட்டியகம சிக்கன கூட்டுறவுச் சங்கம், கலாபிட்டியகம, நிகவெரட்டிய.</div>
                                     <div style="font-weight: 800;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY, GALAPITIYAGAMA, NIKAWERATIYA.</div>
                                 </div>
                             </div>
@@ -648,9 +640,9 @@
                 footerHtml = '';
             }
 
-            // --- Templates Mapping ---
+            // ─── Templates Mapping ───
             if (letterType === 'lod') {
-                // ----- Letter of Demand (Arbitration Notice) -----
+                // ───── Letter of Demand (Arbitration Notice) ─────
                 if (lang === 'sin') {
                     htmlContent = `
                         ${headerHtml}
@@ -662,23 +654,23 @@
 
                             <!-- Borrower and Guarantor Details Block -->
                             <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.6; display: grid; grid-template-columns: 100px 1fr; gap: 4px; color: #000000;">
-                                <div style="font-weight: 700;">????? -</div>
+                                <div style="font-weight: 700;">ණයකරු -</div>
                                 <div>${memberId} - ${name}</div>
                                 
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${address}</div>
 
                                 ${g1Name ? `
-                                <div style="font-weight: 700; margin-top: 6px;">???? ????? -</div>
+                                <div style="font-weight: 700; margin-top: 6px;">පළමු ඇපකරු -</div>
                                 <div style="margin-top: 6px;">${g1Name}</div>
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${g1Address || '............................................................'}</div>
                                 ` : ''}
 
                                 ${g2Name ? `
-                                <div style="font-weight: 700; margin-top: 6px;">???? ????? -</div>
+                                <div style="font-weight: 700; margin-top: 6px;">දෙවන ඇපකරු -</div>
                                 <div style="margin-top: 6px;">${g2Name}</div>
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${g2Address || '............................................................'}</div>
                                 ` : ''}
                             </div>
@@ -686,49 +678,49 @@
                             <!-- Title -->
                             <div style="text-align: center; margin: 25px 0 20px 0;">
                                 <span style="font-size: 12pt; font-weight: bold; border-bottom: 1.5pt solid #000000; padding-bottom: 2px; text-transform: uppercase; color: #000000;">
-                                    ?????????? - (??)
+                                    එන්තරවාසිය - (ණය)
                                 </span>
                             </div>
 
                             <!-- Body -->
                             <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????? ??????? ???? 
-                                <strong>${loanGrantedDate}</strong> ??? <strong>${loanAccNo}</strong> ??? ???????? ??????? ?????????? 
-                                ??????? ????? / ???? ????? / ???? ????? ?????? ??? ?? ??????? ?? ???? 
-                                <strong>??. ${formatCurrency(demandPrincipal)}</strong> ?? ?? ???? ????? 
-                                <strong>??. ${formatCurrency(demandInterest)}</strong> ????? 
-                                <strong>??. ${formatCurrency(demandTotal)}</strong> ?????? ?????? ????.
+                                සීමා සහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතියේ පොත්පත් අනුව 
+                                <strong>${loanGrantedDate}</strong> දින <strong>${loanAccNo}</strong> දරන ගිවිසුම් ප්‍රකාර බැඳීම්කරයේ 
+                                ප්‍රධාන ණයකරු / පළමු ඇපකරු / දෙවන ඇපකරු ඔබගෙන් ඉහත කී සමිතියට ණය මුදල 
+                                <strong>රු. ${formatCurrency(demandPrincipal)}</strong> සහ ඊට අදාළ පොලිය 
+                                <strong>රු. ${formatCurrency(demandInterest)}</strong> එකතුව 
+                                <strong>රු. ${formatCurrency(demandTotal)}</strong> ඔබගෙන් අයවීමට තිබේ.
                             </div>
 
                             <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???? ?? ???? ??. ${formatCurrency(demandPrincipal)} ? ???? ???? ?? ??. ${formatCurrency(demandInterest)} ?? ${formatCurrency(demandTotal)} ? ?? ???? ???? 
-                                <strong>${demandDueDate}</strong> ??? ????? <strong>${demandDueTime}</strong> ? ??? ???? ??? ??? ??????? ???? ?? ??????? ??? ???? ???? ?? ??? ????? ?? ????. 
-                                ?? ???? ??????? ?????? ?? ???????? ??????? ????? ?? ????? 1972 ??? 05 ??? ??????? ????? ???? 58 ???? ???????? ???? ??????? ?????? ???? 
-                                ?????? ????? ???? ?????? ???? ??????? ??? ????? ?????? ?? ????? ??????? ?????? ???? ?????? ??? ????? ???? ????????? ??? ????? ???? 
-                                ????? ??????? ??????? ?? ????????????? ??? ??? ????? ???? ???? ????.
+                                මෙහි ණය මුදල රු. ${formatCurrency(demandPrincipal)} ද පොළී මුදල වන රු. ${formatCurrency(demandInterest)} රු ${formatCurrency(demandTotal)} ද වූ මුලු මුදල 
+                                <strong>${demandDueDate}</strong> දින දහවල් <strong>${demandDueTime}</strong> ට පෙර ගෙවන ලෙස ඔබට දැන්විය යුතු බව සමිතියේ ගරු කාරක සභාව අප වෙත නියෝග කර තිබේ. 
+                                මේ අනුව ක්‍රියා කිරීමට ඔබ අපොහොසත් වුවහොත් ඉදින් මේ ආරවුල 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වෙනි වගන්තියට අනුව ආරවුලක් වශයෙන් සලකා 
+                                ඔබගෙන් ලැබිය යුතු මුදලත් අදාල පොලියත් මෙම නඩුවට වියදම් වන සියලු වියදමත් ඔබගෙන් අයකර ගැනීමට බලය ලැබෙන තීරක තීන්දුවක් ලබා ගැනීම සඳහා 
+                                පළාත් සමුපකාර සංවර්ධන උප කොමසාරිස්තුමා වෙත මෙම ආරවුල යොමු කරනු ලැබේ.
                             </div>
 
                             <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 35px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ?? ??????????? ???? ??????? ??????? ?? ?????????? ???? ??????? ?? ?????? ??? ?????? ??? ??????? ???????? ??? ???? ????? ?????? ?? ??????? ???? ??????? ?? ????? ???? ?? ??????.
+                                මේ සම්බන්ධයෙන් අදාල සමිතියේ පොත්පත් හා ලියකියවිලි ආදිය පරීක්ෂා කර බැලීමට ඔබට අවශ්‍ය නම් සමිතියේ කළමනාකරු සමඟ නියම කරගත් දිනයක් හා වේලාවක් යොදා පරීක්ෂා කර බැලිය හැකි බව දන්වමි.
                             </div>
 
                             <!-- Signatures -->
                             <div style="margin-top: 40px; font-size: 10.5pt; color: #000000;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                                    <div>?????? ???:</div>
+                                    <div>අත්සන් කළේ:</div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                                     <div>
-                                        <span>??????? ???????? ........................</span><br><br>
-                                        <span>???? ........................</span>
+                                        <span>සමිතියේ මුද්‍රාව ........................</span><br><br>
+                                        <span>දිනය ........................</span>
                                     </div>
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">??? ??????</span>
+                                        <span style="font-weight: 700;">ගරු සභාපති</span>
                                     </div>
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">??? ?????</span>
+                                        <span style="font-weight: 700;">ගරු ලේකම්</span>
                                     </div>
                                 </div>
                             </div>
@@ -817,7 +809,7 @@
                     `;
                 }
             } else if (letterType === 'legal_reminder') {
-                // ----- Legal Reminder Notice (Image 3 - NO Top letterhead or Normal Footer) -----
+                // ───── Legal Reminder Notice (Image 3 - NO Top letterhead or Normal Footer) ─────
                 if (lang === 'sin') {
                     htmlContent = `
                         ${headerHtml}
@@ -829,73 +821,73 @@
 
                             <!-- Borrower and Guarantor Details Block -->
                             <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.7; display: grid; grid-template-columns: 110px 1fr; gap: 4px; color: #000000;">
-                                <div style="font-weight: 700;">????? -</div>
+                                <div style="font-weight: 700;">ණයකරු -</div>
                                 <div>${memberId} - ${name}</div>
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${address}</div>
                                 
                                 ${g1Name ? `
-                                <div style="font-weight: 700; margin-top: 6px;">???? ????? -</div>
+                                <div style="font-weight: 700; margin-top: 6px;">පළමු ඇපකරු -</div>
                                 <div style="margin-top: 6px;">${g1Name}</div>
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${g1Address || '............................................................'}</div>
                                 ` : ''}
 
                                 ${g2Name ? `
-                                <div style="font-weight: 700; margin-top: 6px;">???? ????? -</div>
+                                <div style="font-weight: 700; margin-top: 6px;">දෙවන ඇපකරු -</div>
                                 <div style="margin-top: 6px;">${g2Name}</div>
-                                <div style="font-weight: 700;">?????? -</div>
+                                <div style="font-weight: 700;">ලිපිනය -</div>
                                 <div>${g2Address || '............................................................'}</div>
                                 ` : ''}
                             </div>
 
                             <!-- Title (Centered, bold, underlined) -->
                             <div style="text-align: center; margin: 20px 0; font-weight: 800; font-size: 11.5pt; text-decoration: underline; text-underline-offset: 4px; color: #000000;">
-                                ???? ????????????? ???? ?????? ???????????? ????? ?????? ????? ?????????
+                                නැවත දැනුම්දීමකින් තොරව අධිකරණ ක්‍රියාමාර්ග ගැනීම පිළිබඳ අවසාන දැනුම්දීම
                             </div>
 
                             <!-- Body -->
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????? ??????? ???? 
-                                <strong>${loanGrantedDate}</strong> ??? <strong>${loanAccNo}</strong> ??? ???????? ??????? ?????????? 
-                                ??????? ????? / ???? ????? / ???? ????? ?????? ??? ?? ??????? ?? ???? 
-                                <strong>??. ${formatCurrency(demandPrincipal)}</strong> ?? ?? ???? ????? 
-                                <strong>??. ${formatCurrency(demandInterest)}</strong> ????? 
-                                <strong>??. ${formatCurrency(demandTotal)}</strong> ?????? ?????? ????.
+                                සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතියේ පොත්පත් අනුව 
+                                <strong>${loanGrantedDate}</strong> දින <strong>${loanAccNo}</strong> දරන ගිවිසුම් ප්‍රකාර බැඳීම්කරයේ 
+                                ප්‍රධාන ණයකරු / පළමු ඇපකරු / දෙවන ඇපකරු ඔබගෙන් ඉහත කී සමිතියට ණය මුදල 
+                                <strong>රු. ${formatCurrency(demandPrincipal)}</strong> සහ ඊට අදාළ පොලිය 
+                                <strong>රු. ${formatCurrency(demandInterest)}</strong> එකතුව 
+                                <strong>රු. ${formatCurrency(demandTotal)}</strong> ඔබගෙන් අයවීමට තිබේ.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ?? ???? <strong>${demandDueDate}</strong> ???? ?????? ??????????? 1983 ??? 32 ??? ??????? ????? (???????) ?????? ??????? ????? ?????? ????? 1972 ??? 05 ??? ??????? ????? ???? 58 ???? ??????? ???????? ???? ?????? ?????? ??????? ???? ???????? ?????? ?????? ???? ????? ???? ??????? ??????????????? ???? ???? ??? ???? ?? ??????? ??????? ?????? ?? ?????????? ????? ?????? ????.
+                                එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් සංශෝධිත ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නැවත කිසිදු දැනුම් දීමකින් තොරව කඩිනමින් නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???? ?????? ?? ????? ????? ????? ???? ????.
+                                ඔබගේ කටයුතු මත ඉදිරි පියවර තීරණය කරනු ලැබේ.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
-                                ??? ????? ??? ????? ????? ?????? ?? ???, ?????? ???????????? ?????? ????? ?????????????? ?????? ????? ??? ????? ????? ?????????.
+                                මෙම ලිපිය ඔබට ලැබෙන අවසන් අවවාදය වන අතර, නීතිමය ක්‍රියාමාර්ග තුලින් ඇතිවන අපහසුතාවන්ගෙන් සහනයක් පිණිස ඔබට ලැබෙන අවසන් අවස්ථාවයි.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???? ????? ???????? ?? ?????? ????????? ??????? ??????? ?????? ?????? ???, ??????? ??? ?????? ??? ??????.
-                                <br><strong>?????? ??? : 0372260658 / 0763154602</strong>
+                                ඔබගේ විශේෂ අවශ්‍යතා හෝ ගෙවීම් සැලැස්මක් පිළිබඳව සාකච්ඡා කිරීමට අවශ්‍ය නම්, කරුණාකර පහත දුරකථන අංක අමතන්න.
+                                <br><strong>දුරකථන අංක : 0372260658 / 0763154602</strong>
                             </div>
 
                             <!-- Signatures -->
                             <div style="margin-top: 35px; font-size: 10.5pt; color: #000000;">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
                                     <span>.......................................................</span>
-                                    <span style="font-weight: 700;">???? ???????</span>
-                                    <span>?? ???????? ????</span>
+                                    <span style="font-weight: 700;">නීති නියෝජිත</span>
+                                    <span>ණය කළමනාකරණ අංශය</span>
                                 </div>
                             </div>
 
                             <!-- Copies Section -->
                             <div style="margin-top: 35px; border-top: 1px dashed #000000; padding-top: 12px; font-size: 8.5pt; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; line-height: 1.5; color: #000000;">
                                 <div>
-                                    <div>?????? 01 - ??????? ??????? ????? ??????????????</div>
-                                    <div>?????? 02 - ??????? ??????? ???? ????</div>
-                                    <div>?????? 05 - ???? ???? ?????????? ????????? ?? ?? ??????? ??????</div>
+                                    <div>පිටපත් 01 - සමුපකාර සංවර්ධන සහකාර කොමසාරිස්තුමිය</div>
+                                    <div>පිටපත් 02 - සමුපකාර සංවර්ධන නීති අංශය</div>
+                                    <div>පිටපත් 05 - සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු සමිතිය</div>
                                 </div>
                                 <div>
-                                    <div>?????? 03 - ????? 01</div>
-                                    <div>?????? 04 - ????? 02</div>
+                                    <div>පිටපත් 03 - ඇපකරු 01</div>
+                                    <div>පිටපත් 04 - ඇපකරු 02</div>
                                 </div>
                             </div>
                         </div>
@@ -985,22 +977,19 @@
                     `;
                 }
             } else if (letterType === 'legal_referral') {
-                // ----- Referral to Legal Department Notice (Image 1) -----
-                const title = lang === 'sin' ? '???? ???? ??? ???? ????? ??????????.!' : 'REFERRAL TO LEGAL DEPARTMENT!';
+                // ───── Referral to Legal Department Notice (Image 1) ─────
+                const title = lang === 'sin' ? 'නීති අංශය වෙත යොමු කිරීම සම්බන්ධවයි.!' : 'REFERRAL TO LEGAL DEPARTMENT!';
                 
                 const titleBlock = `
-                    <div style="margin: 8px 0 10px 0;">
-                        <!-- Top row: coop logo left, lady justice right -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                            <img src="assets/coop_logo.png" alt="Coop" style="height: 70px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
-                            <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 70px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
-                        </div>
-                        <!-- Bottom row: full-width title box, never wraps -->
-                        <div style="text-align: center;">
-                            <span class="print-title-box" style="margin: 0; display: block; text-align: center; font-size: 11pt; white-space: nowrap; padding: 5px 20px;">
-                                ${title}
-                            </span>
-                        </div>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 15px 0 20px 0;">
+                        <!-- Left decoration: coop logo -->
+                        <img src="assets/coop_logo.png" alt="Coop" style="height: 120px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
+                        <!-- Center: White text inside black box -->
+                        <span class="print-title-box" style="margin: 0;">
+                            ${title}
+                        </span>
+                        <!-- Right decoration: Lady Justice -->
+                        <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 120px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
                     </div>
                 `;
 
@@ -1009,7 +998,7 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
@@ -1017,71 +1006,71 @@
                             ${titleBlock}
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">??????????? / ?????????,</div>
+                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 10px; color: #000000;">
-                                <div>${loanGrantedDate} ??? ??? ??? ??. ${loanAmountStr} ?? ???? ??????????.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(?????? ??? ${loanAccNo})</div>
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                                <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
+                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.55; color: #000000;">
-                                ?? ?????? ?? ????????? ?????? ??? ????? ?? ???? ?????????? ?????? ????????? ?? ?????????? ????? ?????? ???? ????? ??. ????? ?? ?? ??? ? ??????? ?? ?????? ??????? ?????? ???????? ?????? ?? ?????? ?????? ?? ????? ?????? ????? ???????? ??????? ??????????????? ???? ???? ??? ???? ?? ???????? ??????? ??? ???? ?????? ????.
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                                ඔබ විසින් අප සමිතියෙන් ලබාගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් යුතුව දැනුම් දීමට සිදුව ඇත. වරින් වර ඔබ වෙත ඒ පිළිබඳව අප විසින් දැනුවත් කිරීම් සිදුකරනු ලැබුවද ඔබ විසින් අඛණ්ඩව ණය ගෙවීම නොසලකා හැරීම සම්බන්ධව සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය සම්බන්ධව තොරතුරු ලබා දීමට සිදුවී තිබේ.
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 8px; font-size: 10.5pt; color: #000000;">
-                                ??? ?? ????? ????? <strong>${formattedLetterDate}</strong> ???? ??? ????? ?????? ?????? ????? ??.
+                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                                මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
                                 <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
                                     <tr>
-                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">??? ????? ???</td>
+                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">??? ????? ?? ????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPrincipal)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">හිඟ වාරික ණය මුදල</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPrincipal)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsInterest)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsInterest)}</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #000;">
-                                        <td style="padding: 4px 8px; font-weight: normal;">?? ?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPenalty)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">දඩ පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPenalty)}</td>
                                     </tr>
                                     <tr style="border-bottom: 4px double #000;">
-                                        <td style="padding: 6px 8px; font-weight: bold;">?????</td>
-                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">??. ${formatCurrency(arrearsTotal)}</td>
+                                        <td style="padding: 6px 8px; font-weight: bold;">එකතුව</td>
+                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">රු. ${formatCurrency(arrearsTotal)}</td>
                                     </tr>
                                 </table>
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.55; color: #000000;">
-                                ?? ???? <strong>${demandDueDate}</strong> ???? ?????? ??????????? 1983 ??? 32 ??? ??????? ????? (???????) ?????? ????? ?????? ????? 1972 ??? 05 ??? ??????? ????? ???? 58 ???? ??????? ???????? ?????? ?????? ???? ????? ???? ??????? ??????????????? ???? ???? ??? ???? ?? ??????? ??????? ?????? ?? ?????????? ????? ?????? ????.
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                                එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 10px; font-size: 10.5pt; color: #000000;">
-                                <div>????????,</div>
-                                <div>????,</div>
-                                <div style="display: flex; justify-content: flex-end; margin-top: 20px; padding-right: 50px;">
+                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                                <div>ස්තූතියි,</div>
+                                <div>මෙයට,</div>
+                                <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">????????</span>
+                                        <span style="font-weight: 700;">කළමනාකරු</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 12px; border-top: 1px dashed #000000; padding-top: 8px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
-                                ${g1Name ? `<div>?????? 01. ???? ????? - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
-                                ${g2Name ? `<div>?????? 02. ???? ????? - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
+                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                                ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
+                                ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
                         </div>
                         ${footerHtml}
@@ -1170,8 +1159,8 @@
                     `;
                 }
             } else if (letterType === 'business_loan') {
-                // ----- Business Loan Notice (Image 2) -----
-                const title = lang === 'sin' ? '?????????? ?? ????? ?????? ??????? ?????? ?????' : 'BUSINESS LOAN REPAYMENT NOTICE';
+                // ───── Business Loan Notice (Image 2) ─────
+                const title = lang === 'sin' ? 'ව්‍යාපාරික ණය වාරික ගෙවීම් සම්බන්ධ දැනුම් දීමයි' : 'BUSINESS LOAN REPAYMENT NOTICE';
                 
                 if (lang === 'sin') {
                     htmlContent = `
@@ -1191,62 +1180,62 @@
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">??????????? / ?????????,</div>
+                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
                             <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
-                                <div>${loanGrantedDate} ??? ??? ??? ??. ${loanAmountStr} ?? ???? ??????????.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(?????? ??? ${loanAccNo})</div>
+                                <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
+                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraphs -->
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ?? ?????? ?? ????????? ?????? ??? ?????????? ?? ????? ???? ????? ?????? ?????????? ???? ???? ?? ?????????? ?????? ???? ??????.
+                                ඔබ විසින් අප සමිතියෙන් ලබාගෙන ඇති ව්‍යාපාරික ණය මුදලට අදාල වාරික ගෙවීම් නිසියාකාරව සිදු නොවන බව කණගාටුවෙන් දැනුම් දීමට සිදුවේ.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???????, ???? ?? ???????? ???? ?????? ????? ???? ?????? ?????? ?????? ??? ??? ???????? ?????? ????. ???, ???? ?????? ???? ?????? ??? ????? ????? ?????? ????? ???? ????????, ?????? ???? ?? ??????? ???????? ?????? ??? ?????? ?????? ????.
+                                එබැවින්, ඔබගේ ණය ගිවිසුමට අනුව නියමිත දිනයට අදාල වාරිකය ගෙවීමට කටයුතු කරන ලෙස කාරුණිකව දැනුම් දෙමු. තවද, අදාල ගෙවීම් දිනය ඉක්මවා දින දෙකක් ඇතුලත වාරිකය ගෙවීම සිදු නොකලහොත්, නියමිත අමතර දඩ පොලියක් අයකිරීමට සිදුවන බවද මෙයින් දැනුම් දෙමු.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ?????????? ????????????? ???????? ????? ???????? ??? ????? ?????? ???? ????? ????? ???, ???? ???????? ??????? ????????? ??? ???? ????? ?????? ??? ??? ?????.
+                                ව්‍යාපාරික කාර්යබහුලත්වය හේතුවෙන් බැංකු කාර්යාලය වෙත පැමිණ ගෙවීම් සිදු කිරීම අපහසු නම්, අපගේ ක්ෂේත්‍ර නිලධාරී මහත්වරුන් වෙත ඔබගේ වාරික ගෙවීම් භාර දිය හැකිය.
                             </div>
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
-                                ???, ?????????? ?? ????? ?????? ?? ????? ???? ??????? ???????? ???? ?? ????? ????? ???? ??????? ???? ????????? ????????? ????.
+                                තවද, ව්‍යාපාරික ණය වාරික ගෙවීම් හෝ වෙනත් ඔබගේ ඉතුරුම් අවශ්‍යතා සඳහා ඔබ අසලටම පැමිණ සේවය ලබාදීමට අපගේ නිලධාරීන් සූදානමින් සිටී.
                             </div>
                             
                             <div style="margin-left: 40px; margin-bottom: 24px; font-size: 10.5pt; line-height: 1.6; font-weight: 700; color: #000000;">
-                                <div><u>???????? ?????????</u></div>
-                                <div style="font-weight: normal; margin-top: 4px;">????? - 0741805133</div>
-                                <div style="font-weight: normal;">????? - 0768867869</div>
+                                <div><u>ක්ෂේත්‍ර නිලධාරීන්</u></div>
+                                <div style="font-weight: normal; margin-top: 4px;">ගයාන් - 0741805133</div>
+                                <div style="font-weight: normal;">චානුක - 0768867869</div>
                             </div>
                             
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 25px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
-                                ???? ????? ?????? ??????? ????.
+                                ඔබගේ වටිනා සහයෝගය අපේක්ෂා කරමු.
                             </div>
 
                             <div style="margin-bottom: 25px; font-size: 11pt; font-weight: bold; border-top: 1px dashed #000000; border-bottom: 1px dashed #000000; padding: 6px 0; color: #000000;">
-                                ??? ????? ??? - ${arrearsInstallments.toFixed(2)}
+                                හිඟ වාරික ගණන - ${arrearsInstallments.toFixed(2)}
                             </div>
 
                             <!-- Signatures -->
                             <div style="margin-top: 25px; font-size: 10.5pt; color: #000000;">
-                                <div>????????,</div>
-                                <div>????,</div>
+                                <div>ස්තූතියි,</div>
+                                <div>මෙයට,</div>
                                 <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px;">
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">??? ??????</span>
+                                        <span style="font-weight: 700;">ගරු සභාපති</span>
                                     </div>
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">????????</span>
+                                        <span style="font-weight: 700;">කළමනාකරු</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Copies Section -->
                             <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
-                                ${g1Name ? `<div>?????? 01. ???? ????? - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
-                                ${g2Name ? `<div>?????? 02. ???? ????? - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
+                                ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
+                                ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
                         </div>
                         ${footerHtml}
@@ -1331,8 +1320,8 @@
                     `;
                 }
             } else if (letterType === 'agreement_expired') {
-                // ----- Agreement Expired Notice (Image 4) -----
-                const title = lang === 'sin' ? '?? ?????? ?????? ?? ????? ???????? ???? ????? ?? ??? ?? ?????????.' : 'NOTICE OF EXPIRATION OF THE LOAN AGREEMENT PERIOD';
+                // ───── Agreement Expired Notice (Image 4) ─────
+                const title = lang === 'sin' ? 'ඔබ විසින් ලබාගත් ණය මුදලේ ගිවිසුම් කාලය අවසන් වී ඇති බව දැනුම්දීම.' : 'NOTICE OF EXPIRATION OF THE LOAN AGREEMENT PERIOD';
                 
                 if (lang === 'sin') {
                     htmlContent = `
@@ -1352,71 +1341,71 @@
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">??????????? / ?????????,</div>
+                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
                             <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
-                                <div>${loanGrantedDate} ??? ??? ??? ??. ${loanAmountStr} ?? ???? ??????????.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(?????? ??? ${loanAccNo})</div>
+                                <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
+                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
-                                ?? ?????? ?? ????????? ?????? ??? ????? ?? ???? ???? ?? ?? ???????? ???? ????? ?? ??? ???, ?? ????? ???? ????? ????? ?????? ?? ???? ?????? ????? ?? ?????. ?? ????, ???? ????? ????? ?????? <strong>${demandDueDate}</strong> ???? ?????? ???? ????? ?????? ?????? ?????. ???? ?????? ???? ???????? ?? ??? ?????? ???????? ?????? ?????? ???? ??? ????? ?? ??????? ????.
+                                ඔබ විසින් අප සමිතියෙන් ලබාගත් ඉහත සඳහන් ණය අංකය යටතේ වූ ණය ගිවිසුමේ කාලය අවසන් වී ඇති අතර, ණය මුදලට අදාල සියලු වාරික ගෙවීම් හා පොලී ගෙවීම් අවසන් කල යුතුය. එම නිසා, අදාල සියලු වාරික ගෙවීම් <strong>${demandDueDate}</strong> දිනට ප්‍රථම ගෙවා අවසන් කිරීමට කටයුතු කරන්න. ඔබගේ සහයෝගය අපගේ විශ්වාසය හා මනා සබඳතාව තවදුරටත් පවත්වා ගැනීමට දායක වනු ඇතැයි අප විශ්වාස කරමු.
                             </div>
 
                             <!-- Table Intro -->
                             <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
-                                ??? ?? ????? ????? <strong>${formattedLetterDate}</strong> ???? ??? ????? ?????? ?????? ????? ??.
+                                මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
                             <div style="display: flex; justify-content: center; margin-bottom: 18px;">
                                 <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
                                     <tr>
-                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">??? ????? ???</td>
+                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">??? ????? ?? ????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPrincipal)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">හිඟ වාරික ණය මුදල</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPrincipal)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsInterest)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsInterest)}</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #000;">
-                                        <td style="padding: 4px 8px; font-weight: normal;">?? ?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPenalty)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">දඩ පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPenalty)}</td>
                                     </tr>
                                     <tr style="border-bottom: 4px double #000;">
-                                        <td style="padding: 6px 8px; font-weight: bold;">?????</td>
-                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">??. ${formatCurrency(arrearsTotal)}</td>
+                                        <td style="padding: 6px 8px; font-weight: bold;">එකතුව</td>
+                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">රු. ${formatCurrency(arrearsTotal)}</td>
                                     </tr>
                                 </table>
                             </div>
 
                             <!-- Body Paragraph 2 -->
                             <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
-                                ?? ???? <strong>${demandDueDate}</strong> ???? ?????? ??????????? 1983 ??? 32 ??? ??????? ????? (???????) ?????? ????? ?????? ????? 1972 ??? 05 ??? ??????? ????? ???? 58 ???? ??????? ???????? ?????? ?????? ???? ????? ???? ??????? ??????????????? ???? ???? ??? ???? ?? ??????? ??????? ?????? ?? ?????????? ????? ?????? ????.
+                                එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
 
                             <!-- Sign Off -->
                             <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
-                                <div>????????,</div>
-                                <div>????,</div>
+                                <div>ස්තූතියි,</div>
+                                <div>මෙයට,</div>
                                 <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
                                     <div style="text-align: center;">
                                         <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">????????</span>
+                                        <span style="font-weight: 700;">කළමනාකරු</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Copies Section -->
                             <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
-                                ${g1Name ? `<div>?????? 01. ???? ????? - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
-                                ${g2Name ? `<div>?????? 02. ???? ????? - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
+                                ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
+                                ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
                         </div>
                         ${footerHtml}
@@ -1510,7 +1499,7 @@
                     `;
                 }
             } else {
-                // ----- Standard Reminder Letters (1st, 2nd, and Final Notice) -----
+                // ───── Standard Reminder Letters (1st, 2nd, and Final Notice) ─────
                 let title = '';
                 let body1 = '';
                 let body2 = '';
@@ -1520,43 +1509,43 @@
                 if (lang === 'sin') {
                     // Sinhala Reminders
                     if (letterType === 'reminder1') {
-                        title = '???? ????????????.!';
-                        body1 = '?? ?????? ?? ????????? ??? ??? ??? ????? ?? ???? ?????????? ?????? ????????? ?? ?????????? ?????? ???? ????? ??.';
-                        body2 = `??? ?????? ??? ??? ??? 14?? ????? ?? ?????? ?? ????? ???? ????? ?????? ???????? ??????? ??? ???????? ????? ???????????? ?????? ?????? ?? ????? ??????.`;
+                        title = 'පළමු සිහිකැඳවීමයි.!';
+                        body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් දැනුම් දීමට සිදුව ඇත.';
+                        body2 = `මෙම ලිපියේ දින සිට දින 14ක් ඇතුලත ඔබ විසින් ණය මුදල් ගෙවා අවසන් කිරීමට අපොහොසත් වුවහොත් ඔබට විරුද්ධව ඉදිරි ක්‍රියාමාර්ග ගැනීමට සිදුවන බව දන්වා සිටිමි.`;
                         signers = `
                             <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
                                 <div style="text-align: center; color: #000000;">
                                     <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">????????</span>
+                                    <span style="font-weight: 700;">කළමනාකරු</span>
                                 </div>
                             </div>
                         `;
                     } else if (letterType === 'reminder2') {
-                        title = '?????? ????????????.!';
-                        body1 = '?? ?????? ?? ????????? ??? ??? ??? ?? ???? ?? ?? ??? ???? ?????? ?? ???? ??????? ?????????? ????? ????? ??? ? ???? ????? ???? ?? ???? ?? ?? ????? ??? ????? ????? ??.';
-                        body2 = `??? ?????? ??? ??? ??? 14?? ????? ?? ?????? ?? ????? ???? ????? ?????? ???????? ??????? ??? ???????? ????? ???????????? ?????? ?????? ?? ????? ??????.`;
+                        title = 'දෙවැනි සිහිකැඳවීමයි.!';
+                        body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගෙන ඇති ණය මුදල මේ වන විට ගෙවා නොමැති බව දෙවන වතාවටත් කණගාටුවෙන් දන්වා සිටින අතර ඒ සඳහා අයවිය යුතු ණය මුදල හා ණය පොලිය පහත සඳහන් පරිදි වේ.';
+                        body2 = `මෙම ලිපියේ දින සිට දින 14ක් ඇතුලත ඔබ විසින් ණය මුදල් ගෙවා අවසන් කිරීමට අපොහොසත් වුවහොත් ඔබට විරුද්ධව ඉදිරි ක්‍රියාමාර්ග ගැනීමට සිදුවන බව දන්වා සිටිමි.`;
                         signers = `
                             <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
                                 <div style="text-align: center; color: #000000;">
                                     <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">????????</span>
+                                    <span style="font-weight: 700;">කළමනාකරු</span>
                                 </div>
                             </div>
                         `;
                     } else if (letterType === 'final_notice') {
-                        title = '????? ?????? ?????.!';
-                        body1 = '?? ?????? ?? ????????? ??? ??? ??? ????? ?? ???? ?????????? ?????? ????????? ?? ?????????? ???? ??????? ?????? ???? ????? ??. ? ???? ?????? ??? 30 ??? ?? ???? ?? ???? ?? ?? ?????? ????? ?? ????? ??????????????? ??????? ????? ???????? ?????? ?? ????? ??????. ????? ????? ???????????? ?????????? ??? ????????? ?? ?? ?? ???? ?????? ??????? ?? ?????? ??? ????? ??? ????.';
+                        title = 'අවසාන දැනුම් දීමයි.!';
+                        body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් තෙවන වතාවටත් දැනුම් දීමට සිදුව ඇත. ඒ සමඟම පසුගිය දින 30 තුල අප ඔබගේ ණය මුදල අය කර ගැනීමට ගන්නා ලද සියළු ක්‍රියාමාර්ගයන් පිළිබඳව යහපත් ප්‍රතිපල නොලැබු බව දන්වා සිටිමු. කිසිම යහපත් ප්‍රතිචාරයක් නොලැබීමෙන් අපට හැඟීයන්නේ ඔබ එම ණය මුදල ගෙවීම් මගහැරීම සහ වංචනික ලෙස අතපසු කරන බවයි.';
                         body2 = '';
-                        finalParagraph = `?? ???? ??? ??????????? 1983 ??? 32 ??? ??????? ????? (???????) ?????? ??????? ????? ?????? ????? 1972 ??? 05 ??? ??????? ????? ???? 58 ???? ??????? ???? ?????? ?????? ??????? ?????? ???? ?????? ????? ???? ??????, ???? ??????? ??? ????? ????? ????? ??????? ?????? ???? ?????? ??? ????? ???????????? ??? ????? ???? ????? ??????? ?? ?????????????/????? ??? ??? ????? ???? ??? ?? ?????? ?????? ????.`;
+                        finalParagraph = `එම මුදල එසේ නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් සංශෝධිත ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය අනුව විසඳිය නොහැකි ආරවුලක් වශයෙන් සලකා ඔබගෙන් ලැබිය යුතු මුදලත්, අදාළ පොලියත් මෙම නඩුවට වැයවන සියලු වියදමත් ඔබගෙන් අයකර ගැනීමට බලය ලැබෙන එන්තරවාසියක් ලබා ගැනීම සඳහා පළාත් සමුපකාර උප කොමසාරිස්තුමා/තුමිය වෙත මෙම කරුණු යොමු කරන බව මෙයින් දැනුම් දෙමි.`;
                         signers = `
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding: 0 40px; color: #000000;">
+                            <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px; color: #000000;">
                                 <div style="text-align: center;">
                                     <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">??? ??????</span>
+                                    <span style="font-weight: 700;">ගරු සභාපති</span>
                                 </div>
                                 <div style="text-align: center;">
                                     <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">????????</span>
+                                    <span style="font-weight: 700;">කළමනාකරු</span>
                                 </div>
                             </div>
                         `;
@@ -1566,91 +1555,91 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Customer Address Left Header -->
-                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 8px 0 10px 0;">
+                            <div style="text-align: center; margin: 15px 0 20px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">??????????? / ?????????,</div>
+                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 10px; color: #000000;">
-                                <div>${loanGrantedDate} ??? ??? ??? ??. ${loanAmountStr} ?? ???? ??????????.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(?????? ??? ${loanAccNo})</div>
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                                <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
+                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.5; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; color: #000000;">
                                 ${body1}
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 8px; font-size: 10.5pt; color: #000000;">
-                                ??? ?? ????? ????? <strong>${formattedLetterDate}</strong> ???? ??? ????? ?????? ?????? ????? ??.
+                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                                මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
                                 <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
                                     <tr>
-                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">??? ????? ???</td>
+                                        <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">??? ????? ?? ????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPrincipal)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">හිඟ වාරික ණය මුදල</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPrincipal)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px 8px; font-weight: normal;">?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsInterest)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsInterest)}</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #000;">
-                                        <td style="padding: 4px 8px; font-weight: normal;">?? ?????</td>
-                                        <td style="padding: 4px 8px; text-align: right;">??. ${formatCurrency(arrearsPenalty)}</td>
+                                        <td style="padding: 4px 8px; font-weight: normal;">දඩ පොලිය</td>
+                                        <td style="padding: 4px 8px; text-align: right;">රු. ${formatCurrency(arrearsPenalty)}</td>
                                     </tr>
                                     <tr style="border-bottom: 4px double #000;">
-                                        <td style="padding: 6px 8px; font-weight: bold;">?????</td>
-                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">??. ${formatCurrency(arrearsTotal)}</td>
+                                        <td style="padding: 6px 8px; font-weight: bold;">එකතුව</td>
+                                        <td style="padding: 6px 8px; text-align: right; font-weight: bold;">රු. ${formatCurrency(arrearsTotal)}</td>
                                     </tr>
                                 </table>
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 10.5pt; line-height: 1.5; color: #000000;">
-                                <strong>${formattedLetterDate}</strong> ???? ????? ???? ??? ????? ??? ???? ??? ????? ???? ??? 14?? ????? ?????? ?????? ???? ??? ??????? ?? ??? ???? ???????? ?????? ?? ?? ????? ??????.
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                                <strong>${formattedLetterDate}</strong> දිනට ගෙවිය යුතු ඉහත දක්වා ඇති මුදල මෙම ලිපිය ලැබී දින 14ක් ඇතුලත ගෙවීම් සිදුකල යුතු අතර ප්‍රමාද වන දින ගණනට පොලියක්ද ඇතුලත් වන බව දන්වා සිටිමි.
                             </div>
 
                             ${body2 ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 10.5pt; line-height: 1.5; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
                                 ${body2}
                             </div>
                             ` : ''}
 
                             ${finalParagraph ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 10.5pt; line-height: 1.5; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
                                 ${finalParagraph}
                             </div>
                             ` : ''}
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 8px; font-size: 10.5pt; color: #000000;">
-                                <div>????????,</div>
-                                <div>????,</div>
+                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                                <div>ස්තූතියි,</div>
+                                <div>මෙයට,</div>
                                 ${signers}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 12px; border-top: 1px dashed #000000; padding-top: 8px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
-                                ${g1Name ? `<div>?????? 01. ???? ????? - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
-                                ${g2Name ? `<div>?????? 02. ???? ????? - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
+                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                                ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
+                                ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
                         </div>
                         ${footerHtml}
@@ -1822,10 +1811,6 @@
 
                 const actionData = {
                     customerAccountNo: accNo,
-                    loanAccountNo: (currentCust && currentCust.loanAccountNo) ? currentCust.loanAccountNo : (document.getElementById('cLoanAccNo').value || accNo),
-                    customerId: currentCust ? currentCust.id : null,
-                    customerName: currentCust ? currentCust.name : '',
-                    category: currentCust ? currentCust.category : '',
                     actionType: letterName,
                     date: document.getElementById('letterDate').value || new Date().toISOString().split('T')[0],
                     response: "Letter printed",
@@ -1847,4 +1832,3 @@
 </body>
 
 </html>
-

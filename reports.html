@@ -360,7 +360,7 @@
                     </div>
                     <!-- Right Block: Society Name + Document Title & Date underneath -->
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-size: 13.5px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.2; color: #000000; white-space: nowrap;">???? ???? ?????????? ????????? ?? ?? ??????? ?????? ??????? ??????</div>
+                        <div style="font-size: 13.5px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.2; color: #000000; white-space: nowrap;">ගලපිටියාගම විවිධ සේවා සමුපකාර සමිතියට අයත් සංසදය / ග්‍රාමීය බැංකුව</div>
                         <div style="font-size: 11.5px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000; white-space: nowrap;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
                         
                         <!-- Sub-bar: Document Title & Date -->
@@ -386,7 +386,7 @@
                     <i data-lucide="file-bar-chart" style="width:16px;height:16px"></i> <span>Recovery Reports</span>
                 </button>
                 <button id="btnOfficer" class="tab-btn" onclick="switchRptTab('Officer')">
-                    <i data-lucide="users" style="width:16px;height:16px"></i> <span>??????? ?????????? (Officer Performance)</span>
+                    <i data-lucide="users" style="width:16px;height:16px"></i> <span>නිලධාරී කාර්යසාධනය (Officer Performance)</span>
                 </button>
             </div>
 
@@ -482,7 +482,7 @@
                 <div class="card no-print" style="margin-bottom:18px">
                     <div class="card-body" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end">
                         <div style="flex:1; min-width:160px">
-                            <label class="form-label">???? (Target Month)</label>
+                            <label class="form-label">මාසය (Target Month)</label>
                             <input type="month" id="perfMonth" class="form-input">
                         </div>
                         <button onclick="loadOfficerPerf()" class="btn btn-primary">
@@ -494,13 +494,13 @@
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:20px;">
-                    <div class="perf-stat" style="border-top:4px solid #7c3aed"><div class="perf-stat-lbl">???? ???????????? (Total Actions)</div><div class="perf-stat-val" id="perfStatActions">0</div></div>
-                    <div class="perf-stat" style="border-top:4px solid #3b82f6"><div class="perf-stat-lbl">????????? ????? (Field Visits)</div><div class="perf-stat-val" id="perfStatVisits">0</div></div>
-                    <div class="perf-stat" style="border-top:4px solid #10b981"><div class="perf-stat-lbl">???????? (Promises)</div><div class="perf-stat-val" id="perfStatPromises">0</div></div>
-                    <div class="perf-stat" style="border-top:4px solid #f59e0b"><div class="perf-stat-lbl">???? ??? (Total Amount)</div><div class="perf-stat-val" id="perfStatAmt" style="font-size:1.1rem">0</div></div>
+                    <div class="perf-stat" style="border-top:4px solid #7c3aed"><div class="perf-stat-lbl">මුළු ක්‍රියාකාරකම් (Total Actions)</div><div class="perf-stat-val" id="perfStatActions">0</div></div>
+                    <div class="perf-stat" style="border-top:4px solid #3b82f6"><div class="perf-stat-lbl">ක්ෂේත්‍ර චාරිකා (Field Visits)</div><div class="perf-stat-val" id="perfStatVisits">0</div></div>
+                    <div class="perf-stat" style="border-top:4px solid #10b981"><div class="perf-stat-lbl">පොරොන්දු (Promises)</div><div class="perf-stat-val" id="perfStatPromises">0</div></div>
+                    <div class="perf-stat" style="border-top:4px solid #f59e0b"><div class="perf-stat-lbl">එකතු කළ මුදල (Total Amount)</div><div class="perf-stat-val" id="perfStatAmt" style="font-size:1.1rem">0</div></div>
                 </div>
                 <div class="card" style="margin-bottom:18px; padding:20px">
-                    <div style="font-size:0.85rem; font-weight:800; color:#374151; margin-bottom:14px; display:flex; align-items:center; gap:6px"><i data-lucide="bar-chart-2" style="width:16px;height:16px;color:#7c3aed"></i> <span>??????? ????????? ?????? (Officer Comparison)</span></div>
+                    <div style="font-size:0.85rem; font-weight:800; color:#374151; margin-bottom:14px; display:flex; align-items:center; gap:6px"><i data-lucide="bar-chart-2" style="width:16px;height:16px;color:#7c3aed"></i> <span>නිලධාරීන් සැසඳීමේ ප්‍රස්ථාරය (Officer Comparison)</span></div>
                     <div style="position:relative; height:220px">
                         <canvas id="officerChart"></canvas>
                     </div>
@@ -509,12 +509,12 @@
                     <table style="width:100%; border-collapse:collapse">
                         <thead>
                             <tr style="background:#f8fafc">
-                                <th style="padding:10px 14px; text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#374151">??????? (Officer)</th>
-                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">????????</th>
-                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">????????? ?????</th>
-                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">????</th>
-                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">????????</th>
-                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">???? (LKR)</th>
+                                <th style="padding:10px 14px; text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#374151">නිලධාරියා (Officer)</th>
+                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">ඇමතුම්</th>
+                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">ක්ෂේත්‍ර චාරිකා</th>
+                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">ලිපි</th>
+                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">ඇමතුම්</th>
+                                <th style="padding:10px 14px; text-align:center; font-size:0.75rem; font-weight:700; color:#374151">මුදල (LKR)</th>
                             </tr>
                         </thead>
                         <tbody id="officerTableBody">
@@ -689,7 +689,7 @@
                                 </div>
                                 <div>
                                     <div class="report-card-field-lbl">Category & Rate</div>
-                                    <div class="report-card-field-val">${c.category || '�'} (${c.interestRate || 0}%)</div>
+                                    <div class="report-card-field-val">${c.category || '�'} (${c.interestRate || 0}%)</div>
                                 </div>
                                 <div>
                                     <div class="report-card-field-lbl">Status Date</div>
@@ -697,7 +697,7 @@
                                 </div>
                                 <div>
                                     <div class="report-card-field-lbl">Phone</div>
-                                    <div class="report-card-field-val">${c.phone || '�'}</div>
+                                    <div class="report-card-field-val">${c.phone || '�'}</div>
                                 </div>
                                 <div class="report-card-guarantors">
                                     <div class="report-card-field-lbl" style="margin-bottom:2px">Guarantors</div>
