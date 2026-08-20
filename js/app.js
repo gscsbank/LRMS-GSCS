@@ -1353,11 +1353,25 @@ async function getOfficerPerformanceMetrics(monthPrefix = null) {
             }
 
             const type = (a.actionType || '').toLowerCase().trim();
-            const isDigital = type.includes('sms') || type.includes('whatsapp') || type.includes('text');
-            const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('එන්තරවාසි'));
-            const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('සංචාර'));
-            const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('ඇමතුම්') || type.includes('ඇමතුම'));
-            const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (type.includes('letter') || type.includes('ලිපි') || type.includes('ලිපිය') || type.includes('pastdue') || type.includes('attention') || type.includes('notice') || type.includes('reminder') || type.includes('සිහිකැඳවීම'));
+            const isSMS = type.includes('sms') || type.includes('text message') || type.includes('text');
+            const isWA = type.includes('whatsapp');
+            const isDigital = isSMS || isWA;
+            const isDemand = !isDigital && (type.includes('lod') || type.includes('demand') || type.includes('නොතීසි') || type.includes('එතැන්පත්') || type.includes('එන්තරවාසි') || type.includes('arbitration') || type.includes('legal referral'));
+            const isVisit = !isDigital && !isDemand && (type.includes('visit') || type.includes('visiting') || type.includes('field') || type.includes('residence') || type.includes('සංචාර') || type.includes('ක්ෂේත්‍ර') || type.includes('චාරිකා'));
+            const isCall = !isDigital && !isDemand && !isVisit && (type.includes('call') || type.includes('phone') || type.includes('දුරකථන') || type.includes('ඇමතුම්') || type.includes('ඇමතුම'));
+            const isLetter = !isDigital && !isDemand && !isVisit && !isCall && (
+                type.includes('letter') || 
+                type.includes('ලිපි') || 
+                type.includes('ලිපිය') || 
+                type.includes('attention') || 
+                type.includes('notice') || 
+                type.includes('pastdue') || 
+                type.includes('first reminder') || 
+                type.includes('second reminder') || 
+                type.includes('final notice') || 
+                type.includes('business loan repayment') || 
+                type.includes('agreement expired')
+            );
 
             if (isCall) metrics[officer].calls++;
             if (isVisit) metrics[officer].visits++;

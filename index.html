@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -153,7 +153,7 @@
                 <div class="brand-info">
                     <span class="nav-brand">GSCS Bank</span>
                     <span class="system-name">Loan Recovery System</span>
-                    <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
+                    <span class="powered-by">System Engine : <span class="power-glow" style="color:#60a5fa;font-weight:800">IRAASOFT OS</span></span>
                 </div>
                                     <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link active"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
@@ -284,17 +284,39 @@
                         </div>
                     </div>
                 </div>
-                                <!-- Priority Tasks Section -->
-                <div class="card" style="display: flex; flex-direction: column;">
-                    <div class="card-header">
-                        <h3><i data-lucide="bell" style="width:18px;height:18px;color:#7c3aed"></i> Priority Tasks</h3>
-                        <a href="reminders.html" style="font-size: 0.75rem; color: #7c3aed; font-weight: 700; text-decoration: none;">View All</a>
-                    </div>
-                    <div class="card-body" style="padding: 0; flex: 1; overflow-y: auto;">
-                        <div id="priorityRemindersList" style="display: flex; flex-direction: column;">
-                            <div style="padding: 20px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
-                                Loading priorities...
+                                <!-- Priority Tasks Section & System Engine Card -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="card" style="display: flex; flex-direction: column; flex: 1;">
+                        <div class="card-header">
+                            <h3><i data-lucide="bell" style="width:18px;height:18px;color:#7c3aed"></i> Priority Tasks</h3>
+                            <a href="reminders.html" style="font-size: 0.75rem; color: #7c3aed; font-weight: 700; text-decoration: none;">View All</a>
+                        </div>
+                        <div class="card-body" style="padding: 0; flex: 1; max-height: 140px; overflow-y: auto;">
+                            <div id="priorityRemindersList" style="display: flex; flex-direction: column;">
+                                <div style="padding: 20px; text-align: center; color: #9ca3af; font-size: 0.85rem;">
+                                    Loading priorities...
+                                </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- System Engine / IRAASOFT OS Card -->
+                    <div style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #1e40af 100%); border-radius: 16px; padding: 18px 22px; color: #ffffff; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.35); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <!-- Background Chip / Circuit SVG Watermark -->
+                        <svg style="position: absolute; right: -12px; bottom: -12px; width: 95px; height: 95px; opacity: 0.14; pointer-events: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path>
+                        </svg>
+                        <div style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 3px;">
+                            SYSTEM ENGINE
+                        </div>
+                        <div style="font-size: 1.45rem; font-weight: 900; letter-spacing: 0.04em; color: #ffffff; margin-bottom: 8px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 6px;">
+                            <span>IRAASOFT</span> <span style="color: #93c5fd; font-weight: 700;">OS</span>
+                        </div>
+                        <div style="display: inline-flex; align-items: center; gap: 7px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 4px 14px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <span style="width: 7px; height: 7px; background-color: #4ade80; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #4ade80;"></span>
+                            <span style="font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #ffffff;">ENTERPRISE V2.1</span>
                         </div>
                     </div>
                 </div>
@@ -312,7 +334,7 @@
                         <div class="filter-wrap" style="width:200px">
                             <select id="statusFilter" class="form-select" onchange="loadTableData()" style="height:38px; font-size:0.875rem; border-radius:10px; border:1px solid #e5e7eb; padding:0 12px; font-weight:500; color:#4b5563; outline:none; cursor:pointer">
                                 <option value="all">All Statuses</option>
-                                <option value="added_today">Added Today (අද එක් කළ)</option>
+                                <option value="added_today">Added Today (අද එක් වූ)</option>
                                 <option value="Normal">Normal</option>
                                 <option value="High Risk">High Risk</option>
                                 <option value="Legal Action">Legal Action</option>
@@ -422,7 +444,7 @@
             <!-- Early Warning NPL Risk Watchlist -->
             <div class="card" id="nplWatchlistCard" style="border-left: 4px solid #ef4444;">
                 <div class="card-header">
-                    <h3><i data-lucide="alert-triangle" style="width:18px;height:18px;color:#ef4444"></i> කල්තියා අවදානම් හඳුනාගැනීම (Early Warning NPL Risk)</h3>
+                    <h3><i data-lucide="alert-triangle" style="width:18px;height:18px;color:#ef4444"></i> කල්තියා අවදානම් ඇඟවීම (Early Warning NPL Risk)</h3>
                     <span class="pill" style="background:#fee2e2; color:#991b1b; font-size:0.72rem" id="nplWatchCount">0 Accounts</span>
                 </div>
                 <div class="card-body" style="padding:0">
@@ -430,7 +452,7 @@
                         <div style="padding:20px; text-align:center; color:#9ca3af; font-size:0.85rem; font-style:italic">Loading risk assessment...</div>
                     </div>
                     <div style="padding:10px 16px; border-top:1px solid #f3f4f6; text-align:right">
-                        <a href="reports.html" style="font-size:0.78rem; font-weight:700; color:#7c3aed; text-decoration:none">සම්පූර්ණ ලැයිස්තුව &rarr;</a>
+                        <a href="reports.html" style="font-size:0.78rem; font-weight:700; color:#7c3aed; text-decoration:none">රිපෝර්ටුවේ බලන්න &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -787,11 +809,11 @@
                                 </div>
                                 <div>
                                     <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Category</div>
-                                    <div style="font-size:.78rem;font-weight:600;color:var(--primary);margin-top:2px">${c.category || '�'}</div>
+                                    <div style="font-size:.78rem;font-weight:600;color:var(--primary);margin-top:2px">${c.category || '—'}</div>
                                 </div>
                                 <div>
                                     <div style="font-size:.67rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">Phone</div>
-                                    <div style="font-size:.78rem;font-weight:600;color:var(--text-primary);margin-top:2px">${c.phone || '�'}</div>
+                                    <div style="font-size:.78rem;font-weight:600;color:var(--text-primary);margin-top:2px">${c.phone || '—'}</div>
                                 </div>
                             </div>
                             ${c.address ? `<div style="display:flex;align-items:flex-start;gap:5px;font-size:.76rem;color:var(--text-secondary);margin-top:2px"><i data-lucide="map-pin" style="width:12px;height:12px;flex-shrink:0;margin-top:2px;color:var(--text-light)"></i>${c.address}</div>` : ''}
@@ -800,7 +822,7 @@
                         <div style="padding:10px 18px 14px;display:flex;gap:6px;border-top:1px solid var(--border-light);flex-wrap:wrap" onclick="event.stopPropagation()">
                             ${c.phone ? `<a href="tel:${c.phone}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.73rem;font-weight:700;color:var(--text-secondary);text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#10b981';this.style.borderColor='#10b981'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'"><i data-lucide='phone-call' style='width:12px;height:12px'></i>Call</a>` : ''}
                             ${c.phone ? `<a href="${waUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.73rem;font-weight:700;color:var(--text-secondary);text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#25d366';this.style.borderColor='#25d366'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='var(--border)'"><i data-lucide='message-square' style='width:12px;height:12px'></i>WhatsApp</a>` : ''}
-                            <a href="${mapsUrl}" target="_blank" title="${c.mapLink ? 'Saved map location' : c.address ? 'Search by address' : 'Open Google Maps'}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:${c.mapLink ? '#fef2f2' : 'var(--surface)'};border:1px solid ${c.mapLink ? '#fca5a5' : 'var(--border)'};border-radius:8px;font-size:.73rem;font-weight:700;color:${c.mapLink ? '#dc2626' : 'var(--text-secondary)'};text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#ea4335';this.style.borderColor='#ea4335';this.style.background='#fff1f0'" onmouseout="this.style.color='${c.mapLink ? '#dc2626' : 'var(--text-secondary)'}';this.style.borderColor='${c.mapLink ? '#fca5a5' : 'var(--border)'}';this.style.background='${c.mapLink ? '#fef2f2' : 'var(--surface)'}'"><i data-lucide='map-pin' style='width:12px;height:12px'></i>Locate${c.mapLink ? ' ?' : ''}</a>
+                            <a href="${mapsUrl}" target="_blank" title="${c.mapLink ? 'Saved map location' : c.address ? 'Search by address' : 'Open Google Maps'}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:${c.mapLink ? '#fef2f2' : 'var(--surface)'};border:1px solid ${c.mapLink ? '#fca5a5' : 'var(--border)'};border-radius:8px;font-size:.73rem;font-weight:700;color:${c.mapLink ? '#dc2626' : 'var(--text-secondary)'};text-decoration:none;transition:var(--transition)" onmouseover="this.style.color='#ea4335';this.style.borderColor='#ea4335';this.style.background='#fff1f0'" onmouseout="this.style.color='${c.mapLink ? '#dc2626' : 'var(--text-secondary)'}';this.style.borderColor='${c.mapLink ? '#fca5a5' : 'var(--border)'}';this.style.background='${c.mapLink ? '#fef2f2' : 'var(--surface)'}'"><i data-lucide='map-pin' style='width:12px;height:12px'></i>Locate${c.mapLink ? ' ★' : ''}</a>
                             <button onclick="handleDeleteLocal(event, '${c.accountNo}')" title="Delete" style="margin-left:auto;padding:5px 8px;border-radius:8px;color:#ef4444;background:#fee2e2;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'"><i data-lucide="trash-2" style="width:13px;height:13px"></i></button>
                             <button onclick="window.navigate('customer-detail.html?id=${c.id}')" title="View" style="padding:5px 8px;border-radius:8px;color:#7c3aed;background:#f5f3ff;border:none;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#f5f3ff'"><i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
                         </div>
@@ -839,7 +861,7 @@
                         <td style="font-weight:700;color:#1e1b4b">${c.accountNo}</td>
                         <td style="font-weight:500">
                             ${c.name}
-                            ${isAddedToday ? `<span class="badge badge-new" style="font-size:0.65rem;padding:2px 7px;margin-left:6px">? NEW TODAY</span>` : ''}
+                            ${isAddedToday ? `<span class="badge badge-new" style="font-size:0.65rem;padding:2px 7px;margin-left:6px">✨ NEW TODAY</span>` : ''}
                         </td>
                         <td>
                             <div style="font-weight:600;color:#1e1b4b">${amt}</div>
@@ -854,11 +876,11 @@
                 });
             }
 
-            // -- GPS & Map Helper Functions ------------------------
+            // ── GPS & Map Helper Functions ────────────────────────
             window.getGpsLocation = function(inputId) {
                 const btn = event.currentTarget;
                 const origHTML = btn.innerHTML;
-                btn.innerHTML = '? Getting...';
+                btn.innerHTML = '⏳ Getting...';
                 btn.disabled = true;
 
                 if (!navigator.geolocation) {
@@ -895,7 +917,7 @@
                 }
                 window.open(input.value.trim(), '_blank');
             };
-            // -----------------------------------------------------
+            // ─────────────────────────────────────────────────────
 
             // ---- Bulk Actions ----
             function updateBulkSelection() {
@@ -955,17 +977,17 @@
                         let messageText = "";
                         if (type === 'whatsapp') {
                             if (template === 'legal') {
-                                messageText = `*Final Legal Notice (අවසන් නෛතික නිවේදනය)*\n\nDear ${c.name},\nThis is a final warning regarding your significantly overdue loan account *${c.accountNo}*. Despite previous reminders, you have failed to settle the outstanding amount. Please be advised that if payment is not received within two days, we will have to initiate formal legal action through the Cooperative Commissioner without further notice. This may result in additional costs and legal complications for you.\n\nImmediate contact is required: ${bankContact} Galapitiyagama Sanasa Bank.`;
+                                messageText = `*Final Legal Notice (අවසාන නීතිමය නිවේදනය)*\n\nDear ${c.name},\nThis is a final warning regarding your significantly overdue loan account *${c.accountNo}*. Despite previous reminders, you have failed to settle the outstanding amount. Please be advised that if payment is not received within two days, we will have to initiate formal legal action through the Cooperative Commissioner without further notice. This may result in additional costs and legal complications for you.\n\nImmediate contact is required: ${bankContact} Galapitiyagama Sanasa Bank.`;
                             } else {
-                                messageText = `*Loan Recovery Reminder (ණය මුදල් ගෙවීමේ සිහිකැඳවීම් ලිපිය)*\n\nDear ${c.name},\nThis is a friendly reminder regarding your loan account *${c.accountNo}* at Galapitiyagama Sanasa Bank.\n\nFor more information, contact us: ${bankContact}\n\nThank you.`;
+                                messageText = `*Loan Recovery Reminder (ණය අයකර ගැනීමේ සිහිපත් කිරීම)*\n\nDear ${c.name},\nThis is a friendly reminder regarding your loan account *${c.accountNo}* at Galapitiyagama Sanasa Bank.\n\nFor more information, contact us: ${bankContact}\n\nThank you.`;
                             }
                             const message = encodeURIComponent(messageText);
                             window.open(`https://wa.me/${cleanPhone.startsWith('0') ? '94' + cleanPhone.substring(1) : cleanPhone}?text=${message}`, '_blank');
                         } else {
                             if (template === 'legal') {
-                                messageText = `FINAL WARNING (අවසන් නෛතික නිවේදනය): Dear ${c.name}, Your loan ${c.accountNo} is overdue. If not settled in 2 days, legal action will be taken through Cooperative Commissioner. Call: ${bankContact}`;
+                                messageText = `FINAL WARNING (අවසාන නීතිමය නිවේදනය): Dear ${c.name}, Your loan ${c.accountNo} is overdue. If not settled in 2 days, legal action will be taken through Cooperative Commissioner. Call: ${bankContact}`;
                             } else {
-                                messageText = `Loan Recovery Reminder (ණය මුදල් ගෙවීමේ සිහිකැඳවීම් ලිපිය): Dear ${c.name}, Reminder for loan ${c.accountNo}. Please settle overdue payments soon. Call: ${bankContact} GSCS Bank.`;
+                                messageText = `Loan Recovery Reminder (ණය අයකර ගැනීමේ සිහිපත් කිරීම): Dear ${c.name}, Reminder for loan ${c.accountNo}. Please settle overdue payments soon. Call: ${bankContact} GSCS Bank.`;
                             }
                             const message = encodeURIComponent(messageText);
                             const separator = (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? '&' : '?';
@@ -1094,7 +1116,7 @@
             }
             setInterval(updateTime, 1000);
 
-            // -- Interactive Form Map Picker Functions --------------
+            // ── Interactive Form Map Picker Functions ──────────────
             let _formMapTargetInputId = null;
             let _formMapLeaflet = null;
             let _formMapMarker = null;
@@ -1125,7 +1147,7 @@
                     if (!_formMapLeaflet) {
                         _formMapLeaflet = L.map('mapPickerContainer').setView([7.8731, 80.7718], 8);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '� OpenStreetMap contributors',
+                            attribution: '© OpenStreetMap contributors',
                             maxZoom: 19
                         }).addTo(_formMapLeaflet);
 
@@ -1163,14 +1185,14 @@
             };
 
             function fetchFormMapAddr(lat, lng) {
-                document.getElementById('mapSelectedAddr').textContent = `?? ${lat.toFixed(5)}, ${lng.toFixed(5)} � Loading address...`;
+                document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)} — Loading address...`;
                 fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
                     .then(r => r.json())
                     .then(d => {
                         const addr = d.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-                        document.getElementById('mapSelectedAddr').textContent = '?? ' + addr;
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + addr;
                     }).catch(() => {
-                        document.getElementById('mapSelectedAddr').textContent = `?? ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+                        document.getElementById('mapSelectedAddr').textContent = `📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
                     });
             }
 
@@ -1199,7 +1221,7 @@
                                 fetchFormMapAddr(ll.lat, ll.lng);
                             });
                         }
-                        document.getElementById('mapSelectedAddr').textContent = '?? ' + r.display_name;
+                        document.getElementById('mapSelectedAddr').textContent = '📍 ' + r.display_name;
                         document.getElementById('mapUseBtn').disabled = false;
                     }).catch(() => {
                         btn.textContent = 'Search'; btn.disabled = false;
@@ -1219,7 +1241,7 @@
                 }
                 closeFormMapPicker();
             };
-            // --------------------------------------------------------
+            // ────────────────────────────────────────────────────────
 
             window.initPage = async () => {
                 updateTime();
@@ -1245,8 +1267,8 @@
         </script>
     </main>
 
-    <script src="js/app.js?v=3.20"></script>
-    <script src="js/pdf-scanner.js?v=2.4"></script>
+    <script src="js/app.js?v=3.17"></script>
+    <script src="js/pdf-scanner.js?v=2.3"></script>
 <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 <input type="file" id="pdfUploadInput" accept="application/pdf" style="display:none" onchange="handlePDFUpload(event)">
 
@@ -1266,7 +1288,7 @@
 <div id="mapPickerModal">
     <div class="map-picker-box">
         <div class="map-picker-header">
-            <h3>📍 Mark Customer Location on Map</h3>
+            <h3>🗺️ Mark Customer Location on Map</h3>
             <button type="button" class="btn btn-ghost" onclick="closeFormMapPicker()" style="padding:4px 8px"><i data-lucide="x"></i></button>
         </div>
         <div class="map-search-bar">
