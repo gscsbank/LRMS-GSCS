@@ -1,5 +1,5 @@
 // js/app.js
-console.log("LRMS Script Version: 3.14 - OFFLINE_STABLE");
+console.log("LRMS Script Version: 3.22 - LOAN_ACTION_ISOLATION");
 
 // Global Data Cache
 window.lrmsCache = {
@@ -12,10 +12,15 @@ function invalidateCache(type = 'all', accountNo = null) {
     if (type === 'all' || type === 'customers') {
         window.lrmsCache.customers = null;
     }
-    if (accountNo) {
-        delete window.lrmsCache.actions[accountNo];
-    } else if (type === 'all' || type === 'actions') {
+    if (type === 'all' || type === 'actions') {
         window.lrmsCache.actions = {};
+    } else if (accountNo && window.lrmsCache.actions) {
+        const clean = String(accountNo).trim();
+        for (const k of Object.keys(window.lrmsCache.actions)) {
+            if (k === clean || k.includes(clean)) {
+                delete window.lrmsCache.actions[k];
+            }
+        }
     }
     window.lrmsCache.lastUpdated = null;
 }
@@ -435,7 +440,7 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
     const accDigits = digitsOnly(cleanAcc);
     const loanAccDigits = digitsOnly(cleanLoanAcc);
 
-    const cacheKey = cleanCustId ? `${cleanAcc}_${cleanCustId}` : (cleanLoanAcc ? `${cleanAcc}_${cleanLoanAcc}` : cleanAcc);
+    const cacheKey = cleanCustId ? `id_${cleanCustId}` : (cleanLoanAcc ? `loan_${cleanAcc}_${cleanLoanAcc}` : `acc_${cleanAcc}`);
 
     if (!forceRefresh && window.lrmsCache && window.lrmsCache.actions && window.lrmsCache.actions[cacheKey]) {
         console.log("Cache Hit: getCustomerActions", cacheKey);
@@ -457,19 +462,39 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
             const aAccDigits = digitsOnly(aAcc);
             const aLoanDigits = digitsOnly(aLoan);
 
-            // 1. Direct customerId match
-            if (cleanCustId && aCustId && aCustId === cleanCustId) return true;
-
-            // 2. Direct loanAccountNo match
-            if (cleanLoanAcc) {
-                if (aLoan && (aLoan === cleanLoanAcc || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits))) return true;
-                if (aAcc && (aAcc === cleanLoanAcc || (loanAccDigits && aAccDigits && loanAccDigits === aAccDigits))) return true;
+            // 1. If cleanCustId is provided (exact customer/loan doc record ID requested):
+            if (cleanCustId) {
+                if (aCustId) {
+                    return aCustId === cleanCustId;
+                }
+                // Action has no customerId stored: check loanAccountNo if available
+                if (aLoan && cleanLoanAcc) {
+                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits);
+                }
+                if (aLoan && !cleanLoanAcc) {
+                    return aLoan.toLowerCase() === cleanAcc.toLowerCase();
+                }
+                // Legacy action with neither customerId nor loanAccountNo: match by customerAccountNo
+                return cleanAcc ? (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits)) : false;
             }
 
-            // 3. Direct customerAccountNo match
+            // 2. If cleanLoanAcc is provided (specific loan account number requested):
+            if (cleanLoanAcc) {
+                if (aLoan) {
+                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits);
+                }
+                // If action has customerId but we only have cleanLoanAcc: match if aAcc matches
+                if (aAcc) {
+                    return aAcc === cleanLoanAcc || (loanAccDigits && aAccDigits && loanAccDigits === aAccDigits) ||
+                           (cleanAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits)));
+                }
+                return false;
+            }
+
+            // 3. Fallback: If only cleanAcc is provided:
             if (cleanAcc) {
-                if (aAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits))) return true;
-                if (aLoan && (aLoan === cleanAcc || (accDigits && aLoanDigits && accDigits === aLoanDigits))) return true;
+                return (aAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits))) ||
+                       (aLoan && (aLoan === cleanAcc || (accDigits && aLoanDigits && accDigits === aLoanDigits)));
             }
 
             return false;
@@ -534,9 +559,15 @@ async function getCustomersByStatus(status) {
 }
 
 // Helper Function: Edit Customer
-async function updateCustomer(accountNo, updatedData) {
+async function updateCustomer(accountNo, updatedData, customerId = null) {
     try {
-        const customer = await getCustomerByAccountNo(accountNo);
+        let customer = null;
+        if (customerId && typeof getCustomerById === 'function') {
+            customer = await getCustomerById(customerId);
+        }
+        if (!customer && accountNo) {
+            customer = await getCustomerByAccountNo(accountNo);
+        }
         if (customer) {
             // Merge: keep all existing fields, only overwrite what is in updatedData
             const merged = { ...customer, ...updatedData };
@@ -552,9 +583,15 @@ async function updateCustomer(accountNo, updatedData) {
 }
 
 // Helper Function: Delete Customer (Soft Delete)
-async function deleteCustomer(accountNo) {
+async function deleteCustomer(accountNo, customerId = null) {
     try {
-        const customer = await getCustomerByAccountNo(accountNo);
+        let customer = null;
+        if (customerId && typeof getCustomerById === 'function') {
+            customer = await getCustomerById(customerId);
+        }
+        if (!customer && accountNo) {
+            customer = await getCustomerByAccountNo(accountNo);
+        }
         if (customer) {
             await window.db.update("customers", customer.id, {
                 isDeleted: true,
@@ -568,7 +605,7 @@ async function deleteCustomer(accountNo) {
             const allDocs = await window.db.getAll("customers");
             const found = allDocs.find(d => {
                 const dAcc = (d.accountNo || "").toString().trim();
-                const sAcc = accountNo.toString().trim();
+                const sAcc = (accountNo || "").toString().trim();
                 return (dAcc === sAcc || Number(dAcc) === Number(sAcc)) && !d.isDeleted;
             });
             if (found) {
@@ -619,16 +656,29 @@ async function permanentlyDeleteCustomer(docId, accountNo) {
     try {
         if (!docId) throw new Error("docId is required for permanent deletion.");
 
-        const cleanAcc = accountNo.toString().trim();
+        const cleanAcc = (accountNo || '').toString().trim();
+        const targetCust = await window.db.get("customers", docId);
+        const targetLoanAcc = targetCust && targetCust.loanAccountNo ? String(targetCust.loanAccountNo).trim() : null;
 
         // 1. Delete Customer Doc
         await window.db.delete("customers", docId);
 
+        // Check if customer has other remaining loans
+        const remainingCusts = await window.db.getAll("customers");
+        const hasOtherLoans = remainingCusts.some(c => c.id !== docId && String(c.accountNo || '').trim() === cleanAcc);
+
         // 2. Delete associated actions
         const allActions = await window.db.getAll("actions");
         for (const action of allActions) {
+            const aCustId = action.customerId ? String(action.customerId).trim() : null;
+            const aLoan = action.loanAccountNo ? String(action.loanAccountNo).trim() : null;
             const aAcc = (action.customerAccountNo || "").toString().trim();
-            if (aAcc === cleanAcc || Number(aAcc) === Number(cleanAcc)) {
+
+            if (aCustId && aCustId === docId) {
+                await window.db.delete("actions", action.id);
+            } else if (!aCustId && targetLoanAcc && aLoan && aLoan === targetLoanAcc) {
+                await window.db.delete("actions", action.id);
+            } else if (!hasOtherLoans && (aAcc === cleanAcc || Number(aAcc) === Number(cleanAcc))) {
                 await window.db.delete("actions", action.id);
             }
         }
@@ -636,13 +686,20 @@ async function permanentlyDeleteCustomer(docId, accountNo) {
         // 3. Delete associated documents
         const allDocs = await window.db.getAll("documents");
         for (const doc of allDocs) {
+            const dCustId = doc.customerId ? String(doc.customerId).trim() : null;
+            const dLoan = doc.loanAccountNo ? String(doc.loanAccountNo).trim() : null;
             const dAcc = (doc.customerAccountNo || "").toString().trim();
-            if (dAcc === cleanAcc || Number(dAcc) === Number(cleanAcc)) {
+
+            if (dCustId && dCustId === docId) {
+                await window.db.delete("documents", doc.id);
+            } else if (!dCustId && targetLoanAcc && dLoan && dLoan === targetLoanAcc) {
+                await window.db.delete("documents", doc.id);
+            } else if (!hasOtherLoans && (dAcc === cleanAcc || Number(dAcc) === Number(cleanAcc))) {
                 await window.db.delete("documents", doc.id);
             }
         }
 
-        await logActivity("Permanent Delete", `Hard deleted customer and all data for Acc: ${accountNo}`, "danger");
+        await logActivity("Permanent Delete", `Hard deleted customer and all data for Doc: ${docId} (Acc: ${accountNo})`, "danger");
         return true;
     } catch (error) {
         console.error("CRITICAL ERROR in permanentlyDeleteCustomer:", error);
@@ -973,13 +1030,33 @@ async function saveDocument(docData) {
     }
 }
 
-async function getCustomerDocuments(accountNo) {
+async function getCustomerDocuments(accountNo, customerId = null, loanAccountNo = null) {
     try {
-        const cleanAcc = accountNo.toString().trim();
+        if (!accountNo && !customerId && !loanAccountNo) return [];
+        const cleanAcc = (accountNo || '').toString().trim();
+        const cleanLoanAcc = (loanAccountNo || '').toString().trim();
+        const cleanCustId = customerId ? String(customerId).trim() : null;
+
         const allDocs = await window.db.getAll("documents");
-        return allDocs.filter(d => {
+        return (allDocs || []).filter(d => {
+            if (!d) return false;
             const dAcc = (d.customerAccountNo || "").toString().trim();
-            return dAcc === cleanAcc || Number(dAcc) === Number(cleanAcc);
+            const dLoan = (d.loanAccountNo || "").toString().trim();
+            const dCustId = d.customerId ? String(d.customerId).trim() : null;
+
+            if (cleanCustId) {
+                if (dCustId) return dCustId === cleanCustId;
+                if (dLoan && cleanLoanAcc) return dLoan.toLowerCase() === cleanLoanAcc.toLowerCase();
+                return cleanAcc ? (dAcc === cleanAcc || Number(dAcc) === Number(cleanAcc)) : false;
+            }
+            if (cleanLoanAcc) {
+                if (dLoan) return dLoan.toLowerCase() === cleanLoanAcc.toLowerCase();
+                return (dAcc === cleanLoanAcc || (cleanAcc && dAcc === cleanAcc));
+            }
+            if (cleanAcc) {
+                return dAcc === cleanAcc || Number(dAcc) === Number(cleanAcc) || dLoan === cleanAcc;
+            }
+            return false;
         });
     } catch (error) {
         console.error("Error fetching documents:", error);
@@ -1212,7 +1289,9 @@ async function loadPriorityReminders() {
 
         listEl.innerHTML = '';
         for (const p of priorities) {
-            const cust = await getCustomerByAccountNo(p.customerAccountNo);
+            const cust = (p.customerId && typeof getCustomerById === 'function') 
+                ? await getCustomerById(p.customerId) 
+                : await getCustomerByAccountNo(p.customerAccountNo);
             const pDate = new Date(p.followUpDate);
             const isOverdue = pDate < todayDate;
             const isToday = p.followUpDate === todayStr;
@@ -1227,8 +1306,11 @@ async function loadPriorityReminders() {
             item.onmouseover = () => item.style.background = '#f9fafb';
             item.onmouseout = () => item.style.background = 'transparent';
             item.onclick = () => {
-                if (typeof window.navigate === 'function') window.navigate(`customer-detail.html?accountNo=${p.customerAccountNo}`);
-                else window.location.href = `customer-detail.html?accountNo=${p.customerAccountNo}`;
+                const targetUrl = p.customerId 
+                    ? `customer-detail.html?id=${encodeURIComponent(p.customerId)}&accountNo=${encodeURIComponent(p.customerAccountNo)}`
+                    : `customer-detail.html?accountNo=${encodeURIComponent(p.customerAccountNo)}`;
+                if (typeof window.navigate === 'function') window.navigate(targetUrl);
+                else window.location.href = targetUrl;
             };
 
             item.innerHTML = `

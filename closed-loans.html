@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -181,8 +181,8 @@
                         const tr = document.createElement('tr');
                         tr.style.cursor = 'pointer';
                         tr.onclick = () => {
-                            if (typeof window.navigate === 'function') window.navigate(`customer-detail.html?accountNo=${c.accountNo}`);
-                            else window.location.href = `customer-detail.html?accountNo=${c.accountNo}`;
+                            const navUrl = c.id ? `customer-detail.html?id=${encodeURIComponent(c.id)}&accountNo=${encodeURIComponent(c.accountNo)}` : `customer-detail.html?accountNo=${encodeURIComponent(c.accountNo)}`; if (typeof window.navigate === 'function') window.navigate(navUrl);
+                            else window.location.href = navUrl;
                         };
                         tr.innerHTML = `
                             <td style="font-weight:700;color:var(--text-primary)">${c.accountNo}</td>

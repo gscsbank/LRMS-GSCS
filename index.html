@@ -1013,7 +1013,7 @@
                 pending.sort((a, b) => new Date(a.followUpDate) - new Date(b.followUpDate));
 
                 for (const action of pending) {
-                    const customer = await getCustomerByAccountNo(action.customerAccountNo);
+                    const customer = (action.customerId && typeof getCustomerById === 'function') ? await getCustomerById(action.customerId) : await getCustomerByAccountNo(action.customerAccountNo);
                     const custName = customer ? customer.name : 'Unknown';
                     const followDateObj = new Date(action.followUpDate);
                     const isPast = followDateObj < new Date(new Date().setHours(0, 0, 0, 0));
@@ -1087,7 +1087,7 @@
                     const r = item.risk;
                     const badgesHtml = r.badges.map(b => `<span style="display:inline-block; background:#fee2e2; color:#991b1b; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600; margin-right:4px; margin-top:2px;">${b}</span>`).join('');
                     return `
-                        <div onclick="window.navigate('customer-detail.html?accountNo=${c.accountNo}')" style="padding:10px 16px; border-bottom:1px solid #f3f4f6; cursor:pointer; display:flex; align-items:center; justify-content:space-between; transition:background 0.2s;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
+                        <div onclick="window.navigate(c.id ? 'customer-detail.html?id=' + encodeURIComponent(c.id) + '&accountNo=' + encodeURIComponent(c.accountNo) : 'customer-detail.html?accountNo=' + encodeURIComponent(c.accountNo))" style="padding:10px 16px; border-bottom:1px solid #f3f4f6; cursor:pointer; display:flex; align-items:center; justify-content:space-between; transition:background 0.2s;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
                             <div>
                                 <div style="font-weight:700; font-size:0.85rem; color:#1e1b4b">${c.name} <span style="color:#6b7280; font-weight:500">(${c.accountNo})</span></div>
                                 <div style="margin-top:2px">${badgesHtml}</div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -374,8 +374,11 @@
             const selector = document.getElementById('customerSelector');
             allCustomers.forEach(c => {
                 const opt = document.createElement('option');
-                opt.value = c.accountNo;
-                opt.textContent = `${c.accountNo} - ${c.name}`;
+                opt.value = c.id || c.accountNo;
+                const loanLabel = (c.loanAccountNo && c.loanAccountNo !== c.accountNo) ? ` (Loan: ${c.loanAccountNo})` : '';
+                opt.textContent = `${c.accountNo} - ${c.name}${loanLabel}`;
+                opt.dataset.id = c.id || '';
+                opt.dataset.accountNo = c.accountNo || '';
                 selector.appendChild(opt);
             });
 
@@ -387,9 +390,16 @@
 
             // Read URL Params if any
             const params = new URLSearchParams(window.location.search);
+            const idFromUrl = params.get('id');
             const accFromUrl = params.get('accountNo');
-            if (accFromUrl) {
-                const foundOpt = Array.from(selector.options).find(opt => opt.value.toString() === accFromUrl.toString());
+            if (idFromUrl) {
+                const foundOpt = Array.from(selector.options).find(opt => opt.value.toString() === idFromUrl.toString() || (opt.dataset && opt.dataset.id === idFromUrl));
+                if (foundOpt) {
+                    selector.value = foundOpt.value;
+                    onCustomerSelect();
+                }
+            } else if (accFromUrl) {
+                const foundOpt = Array.from(selector.options).find(opt => opt.value.toString() === accFromUrl.toString() || (opt.dataset && opt.dataset.accountNo === accFromUrl));
                 if (foundOpt) {
                     selector.value = foundOpt.value;
                     onCustomerSelect();
@@ -402,15 +412,15 @@
         // Populate form fields on customer select
         function onCustomerSelect() {
             const selector = document.getElementById('customerSelector');
-            const accNo = selector.value;
-            if (!accNo) {
+            const selectedVal = selector.value;
+            if (!selectedVal) {
                 currentCust = null;
                 resetFormInputs();
                 renderLetter();
                 return;
             }
 
-            currentCust = allCustomers.find(c => c.accountNo.toString() === accNo.toString());
+            currentCust = allCustomers.find(c => (c.id && c.id.toString() === selectedVal.toString()) || (c.accountNo && c.accountNo.toString() === selectedVal.toString()));
             if (!currentCust) return;
 
             document.getElementById('cName').value = currentCust.name || '';
@@ -1810,7 +1820,10 @@
                 const noteText = `Auto-generated printable letter in ${document.getElementById('letterLang').value === 'sin' ? 'Sinhala' : 'English'}. Total Outstanding: LKR ${totalVal.toLocaleString()}`;
 
                 const actionData = {
-                    customerAccountNo: accNo,
+                    customerAccountNo: (currentCust && currentCust.accountNo) || accNo,
+                    loanAccountNo: (currentCust && currentCust.loanAccountNo) || document.getElementById('cLoanAccNo').value.trim() || accNo,
+                    customerId: (currentCust && currentCust.id) || null,
+                    customerName: (currentCust && currentCust.name) || '',
                     actionType: letterName,
                     date: document.getElementById('letterDate').value || new Date().toISOString().split('T')[0],
                     response: "Letter printed",

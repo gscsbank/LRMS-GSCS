@@ -826,6 +826,8 @@
 
             let currentAccountNo = null;
             let currentCustomerId = null;
+            let currentLoanAccountNo = null;
+            let currentCustomer = null;
 
             window.initPage = async () => {
                 const params = new URLSearchParams(window.location.search);
@@ -869,16 +871,25 @@
                 let customer = null;
                 if (currentCustomerId && typeof getCustomerById === 'function') {
                     customer = await getCustomerById(currentCustomerId);
-                    // Sync currentAccountNo from fetched record for compatibility
-                    if (customer) currentAccountNo = customer.accountNo;
+                    // Sync currentAccountNo & currentLoanAccountNo from fetched record
+                    if (customer) {
+                        currentAccountNo = customer.accountNo;
+                        currentCustomerId = customer.id;
+                        currentLoanAccountNo = customer.loanAccountNo || customer.accountNo;
+                    }
                 }
                 if (!customer && currentAccountNo) {
                     customer = await getCustomerByAccountNo(currentAccountNo);
+                    if (customer) {
+                        currentCustomerId = customer.id;
+                        currentLoanAccountNo = customer.loanAccountNo || customer.accountNo;
+                    }
                 }
                 if (!customer) {
                     await lrmsAlert("Customer not found in Database!");
                     return;
                 }
+                currentCustomer = customer;
 
                 const headerName = document.getElementById('headerName');
                 if (headerName) headerName.innerText = customer.name;
@@ -918,7 +929,10 @@
                 if (profileLastPaidDate) profileLastPaidDate.innerText = customer.lastPaidDate || 'N/A';
 
                 const genLink = document.getElementById('generateLetterLink');
-                if (genLink) genLink.href = `letters.html?accountNo=${customer.accountNo}`;
+                if (genLink) {
+                    const idParam = customer.id ? `&id=${encodeURIComponent(customer.id)}` : '';
+                    genLink.href = `letters.html?accountNo=${encodeURIComponent(customer.accountNo)}${idParam}`;
+                }
 
                 // Populate Print-Only Table
                 const printCustName = document.getElementById('printCustName');
@@ -1141,7 +1155,7 @@
             }
 
             async function loadTimeline() {
-                const actions = await getCustomerActions(currentAccountNo);
+                const actions = await getCustomerActions(currentAccountNo, currentCustomerId, currentLoanAccountNo);
                 const container = document.getElementById('timelineContainer');
                 const printBody = document.getElementById('printHistoryBody');
                 const actionCount = document.getElementById('actionCount');
@@ -1231,6 +1245,9 @@
                     e.preventDefault();
                     const actionData = {
                         customerAccountNo: currentAccountNo,
+                        loanAccountNo: currentLoanAccountNo || currentAccountNo,
+                        customerId: currentCustomerId || (currentCustomer && currentCustomer.id) || null,
+                        customerName: (currentCustomer && currentCustomer.name) || '',
                         actionType: document.getElementById('actionType').value,
                         date: document.getElementById('actionDate').value,
                         response: document.getElementById('actionResponse').value.trim() || null,
@@ -1252,14 +1269,14 @@
                     const status = document.getElementById('statusSelect').value;
                     const date = document.getElementById('statusDateInput').value;
                     if (!date) { await lrmsAlert("Select a date."); return; }
-                    if (await updateCustomerStatus(currentAccountNo, status, date)) loadCustomerDetails();
+                    if (await updateCustomerStatus(currentAccountNo, status, date, currentCustomerId)) loadCustomerDetails();
                     else await lrmsAlert("Failed to update.");
                 });
             }
 
             window.confirmDeleteCustomer = async function () {
                 if (await lrmsConfirm("Delete this customer and all history?")) {
-                    if (await deleteCustomer(currentAccountNo)) {
+                    if (await deleteCustomer(currentAccountNo, currentCustomerId)) {
                         if (typeof window.navigate === 'function') window.navigate("index.html");
                         else window.location.href = "index.html";
                     }
@@ -1272,7 +1289,10 @@
                 if (!m) return;
                 m.classList.toggle('open');
                 if (m.classList.contains('open')) {
-                    getCustomerByAccountNo(currentAccountNo).then(c => {
+                    const fetchPromise = (currentCustomerId && typeof getCustomerById === 'function')
+                        ? getCustomerById(currentCustomerId)
+                        : getCustomerByAccountNo(currentAccountNo);
+                    fetchPromise.then(c => {
                         if (!c) return;
                         document.getElementById('editAccNo').value = c.accountNo || '';
                         document.getElementById('editCustName').value = c.name;
@@ -1317,7 +1337,7 @@
                         phone: document.getElementById('editPhone').value.trim(),
                         mapLink: document.getElementById('editMapLink').value.trim()
                     };
-                    if (await updateCustomer(currentAccountNo, d)) { 
+                    if (await updateCustomer(currentAccountNo, d, currentCustomerId)) { 
                         if (d.accountNo && d.accountNo !== currentAccountNo) {
                             const idParam = currentCustomerId ? `&id=${encodeURIComponent(currentCustomerId)}` : '';
                             window.location.href = `customer-detail.html?accountNo=${encodeURIComponent(d.accountNo)}${idParam}`;
@@ -1374,7 +1394,7 @@
             // ─────────────────────────────────────────────────────
 
             window.openEditActionModal = async function (id) {
-                const customerActions = await getCustomerActions(currentAccountNo);
+                const customerActions = await getCustomerActions(currentAccountNo, currentCustomerId, currentLoanAccountNo);
                 const a = customerActions.find(item => item.id === id);
                 if (!a) return;
                 document.getElementById('editActionId').value = id;
@@ -1422,7 +1442,7 @@
             }
 
             async function loadDocuments() {
-                const docs = await getCustomerDocuments(currentAccountNo);
+                const docs = await getCustomerDocuments(currentAccountNo, currentCustomerId, currentLoanAccountNo);
                 const container = document.getElementById('docsContainer');
                 if (!container) return;
                 container.innerHTML = '';
@@ -1470,6 +1490,8 @@
                     reader.onload = async (event) => {
                         const docData = {
                             customerAccountNo: currentAccountNo,
+                            loanAccountNo: currentLoanAccountNo || currentAccountNo,
+                            customerId: currentCustomerId || (currentCustomer && currentCustomer.id) || null,
                             name: name,
                             fileData: event.target.result,
                             date: new Date().toISOString().split('T')[0]

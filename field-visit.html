@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1191,7 +1191,13 @@
                                 <button class="outcome-pill ${selVal==='visited-nothome'?'active visited-nothome':''}" onclick="setCardStatus('${c.accountNo}', 'visited-nothome')">Not Home</button>
                                 <button class="outcome-pill ${selVal==='visited-refused'?'active visited-refused':''}" onclick="setCardStatus('${c.accountNo}', 'visited-refused')">Refused</button>
                             </div>
-                            <textarea class="visit-note" placeholder="Write response notes here..." oninput="updateCardNotes('${c.accountNo}', this)">${notes}</textarea>
+                            <textarea class="visit-note" data-acc="${c.accountNo}" placeholder="Write response notes here..." oninput="updateCardNotes('${c.accountNo}', this)">${notes}</textarea>
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;background:var(--bg-app);padding:6px 10px;border-radius:8px;border:1px solid var(--border-light)">
+                                <label style="font-size:0.75rem;font-weight:700;color:var(--text-secondary);display:flex;align-items:center;gap:5px;cursor:pointer">
+                                    <i data-lucide="bell-ring" style="width:14px;height:14px;color:var(--primary)"></i> Follow-up Date:
+                                </label>
+                                <input type="date" class="form-input visit-followup" data-acc="${c.accountNo}" style="height:28px;padding:2px 8px;font-size:0.75rem;border-radius:6px;width:auto;font-weight:600" value="${saved.followUpDate || ''}" onchange="updateCardFollowUp('${c.accountNo}', this)">
+                            </div>
                         </div>
 
                         <!-- Set Location Panel -->
@@ -1393,6 +1399,17 @@
             const acc = sel.dataset.acc;
             const visitDate = document.getElementById('visitDate').value;
             const records = getRecordsForDate(visitDate);
+            document.querySelectorAll('.visit-followup').forEach(inp => {
+                const card = inp.closest('.fv-cust-card');
+                if (card) {
+                    const cardAcc = inp.dataset.acc || card.querySelector('.outcome-pill')?.getAttribute('onclick')?.match(/\'([^']+)\'/)?.[1];
+                    if (cardAcc) {
+                        if (!records[cardAcc]) records[cardAcc] = { status: 'pending' };
+                        records[cardAcc].followUpDate = inp.value || null;
+                    }
+                }
+            });
+
             if (!records[acc]) records[acc] = {};
             records[acc].status = sel.value;
             saveRecordsForDate(visitDate, records);
@@ -1481,7 +1498,7 @@
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-promised' ? 'background:#000;' : ''}"></div>
-                                    <span>Visited - Promised Date: ___________</span>
+                                    <span>Visited - Promised Date: ${saved.followUpDate ? '<strong>' + saved.followUpDate + '</strong>' : '___________'}</span>
                                 </div>
                                 <div class="print-checkbox-item">
                                     <div class="print-checkbox-square" style="${status === 'visited-nothome' ? 'background:#000;' : ''}"></div>
@@ -1495,7 +1512,10 @@
                         </div>
 
                         <div style="margin-top:8pt">
-                            <div style="font-size:7.5pt;font-weight:800;text-transform:uppercase;color:#222">Field Notes / නිලධාරී සටහන්:</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <div style="font-size:7.5pt;font-weight:800;text-transform:uppercase;color:#222">Field Notes / නිලධාරී සටහන්:</div>
+                                ${saved.followUpDate ? `<div style="font-size:7.5pt;font-weight:800;color:#be123c">Follow-up: ${saved.followUpDate}</div>` : ''}
+                            </div>
                             ${notes ? `<div style="font-size:8.5pt;font-weight:600;margin-top:2px;border:1px solid #ccc;padding:4pt;border-radius:4px">${notes}</div>` : `
                             <div class="print-lines-box">
                                 <div class="print-writing-line"></div>
@@ -1534,6 +1554,17 @@
                 }
             });
 
+            document.querySelectorAll('.visit-followup').forEach(inp => {
+                const card = inp.closest('.fv-cust-card');
+                if (card) {
+                    const cardAcc = inp.dataset.acc || card.querySelector('.outcome-pill')?.getAttribute('onclick')?.match(/\'([^']+)\'/)?.[1];
+                    if (cardAcc) {
+                        if (!records[cardAcc]) records[cardAcc] = { status: 'pending' };
+                        records[cardAcc].followUpDate = inp.value || null;
+                    }
+                }
+            });
+
             if (!records[acc]) records[acc] = {};
 
             // Toggle
@@ -1545,6 +1576,29 @@
 
             saveRecordsForDate(visitDate, records);
             renderActiveView();
+        };
+
+        // Update card follow-up date
+        window.updateCardFollowUp = function(acc, input) {
+            const visitDate = document.getElementById('visitDate').value;
+            const records = getRecordsForDate(visitDate);
+            if (!records[acc]) records[acc] = { status: 'pending' };
+            
+            records[acc].followUpDate = input.value || null;
+            saveRecordsForDate(visitDate, records);
+            
+            // Sync to other follow-up inputs for this acc
+            document.querySelectorAll(`.visit-followup[data-acc="${acc}"]`).forEach(el => {
+                if (el !== input) el.value = input.value;
+            });
+            
+            // Re-render print view to sync worksheets dynamically
+            const savedRecords = getRecordsForDate(visitDate);
+            renderPrintView(currentCustomers.filter(c => {
+                const name = (c.name || '').toLowerCase();
+                const accNo = (c.accountNo || '').toLowerCase();
+                return name.includes(searchTerm) || accNo.includes(searchTerm);
+            }), savedRecords);
         };
 
         // Update card notes
@@ -1608,7 +1662,7 @@
                             date: visitDate,
                             response: rec.notes || null,
                             officerNote: `Field visit outcome recorded via Field Assistant`,
-                            followUpDate: null
+                            followUpDate: rec.followUpDate || null
                         });
                         savedCount++;
                     } catch(e) { 

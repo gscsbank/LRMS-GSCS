@@ -1,4 +1,4 @@
-?<!DOCTYPE html>
+﻿?<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -157,7 +157,7 @@
                         const allActions = await window.db.getAll("actions");
                         allReminders = allActions.filter(a => a.followUpDate && !a.isDeleted);
                         for (let r of allReminders) {
-                            const c = await getCustomerByAccountNo(r.customerAccountNo);
+                            const c = (r.customerId && typeof getCustomerById === 'function') ? await getCustomerById(r.customerId) : await getCustomerByAccountNo(r.customerAccountNo);
                             r.customerName = c ? c.name : 'Unknown';
                             r.loanAmount = c ? c.loanAmount : 0;
                         }
@@ -248,8 +248,8 @@
                         tr.style.cursor = 'pointer';
                         tr.onclick = (e) => {
                             if (!e.target.closest('button')) {
-                                if (typeof window.navigate === 'function') window.navigate(`customer-detail.html?accountNo=${r.customerAccountNo}`);
-                                else window.location.href = `customer-detail.html?accountNo=${r.customerAccountNo}`;
+                                const navUrl = r.customerId ? `customer-detail.html?id=${encodeURIComponent(r.customerId)}&accountNo=${encodeURIComponent(r.customerAccountNo)}` : `customer-detail.html?accountNo=${encodeURIComponent(r.customerAccountNo)}`; if (typeof window.navigate === 'function') window.navigate(navUrl);
+                                else window.location.href = navUrl;
                             }
                         };
                         tr.innerHTML = `

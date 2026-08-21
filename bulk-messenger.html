@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -400,6 +400,8 @@
                     const today = new Date().toISOString().split('T')[0];
                     const actionRecord = {
                         customerAccountNo: (c.accountNo || c.loanAccountNo || '').toString().trim(),
+                        loanAccountNo: (c.loanAccountNo || c.accountNo || '').toString().trim(),
+                        customerId: c.id || null,
                         customerName: c.name || '',
                         actionType: actionType,
                         date: today,
