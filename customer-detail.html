@@ -337,6 +337,9 @@
             </div>
 
             <div style="max-width:1100px;margin:0 auto">
+                <!-- Multi-Loan Switcher Bar for Members with Multiple Loans -->
+                <div id="memberLoansContainer" class="no-print" style="margin-bottom: 16px; display: none;"></div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <!-- Profile Card -->
                     <div class="lg:col-span-2 card no-print">
@@ -933,6 +936,58 @@
                 if (genLink) {
                     const idParam = customer.id ? `&id=${encodeURIComponent(customer.id)}` : '';
                     genLink.href = `letters.html?accountNo=${encodeURIComponent(customer.accountNo)}${idParam}`;
+                }
+
+                // Check and render all loans for this member
+                try {
+                    const allDocs = await window.db.getAll("customers");
+                    const cleanCustAcc = String(customer.accountNo || '').trim();
+                    const cleanCustAccDigits = digitsOnly(cleanCustAcc);
+                    const memberLoans = (allDocs || []).filter(c => 
+                        !c.isDeleted && 
+                        c.isDeleted !== 'true' &&
+                        (String(c.accountNo || '').trim() === cleanCustAcc || 
+                         (cleanCustAccDigits && digitsOnly(c.accountNo) === cleanCustAccDigits))
+                    );
+
+                    const loansContainer = document.getElementById('memberLoansContainer');
+                    if (loansContainer) {
+                        if (memberLoans.length > 1) {
+                            loansContainer.style.display = 'block';
+                            loansContainer.innerHTML = `
+                                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:12px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:0.8rem; font-weight:700; color:#475569;">
+                                        <i data-lucide="layers" style="width:16px;height:16px;color:#7c3aed;"></i>
+                                        <span>මෙම සාමාජිකයාගේ සියලු ණය ගිණුම් (${memberLoans.length}) - මාරු වීමට තෝරන්න:</span>
+                                    </div>
+                                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                                        ${memberLoans.map((ln, idx) => {
+                                            const isCurrent = (ln.id && customer.id) ? (ln.id === customer.id) : (ln.loanAccountNo === customer.loanAccountNo);
+                                            const loanNo = ln.loanAccountNo || ln.accountNo || `Loan ${idx+1}`;
+                                            const cat = ln.category || 'Loan';
+                                            const bal = ln.balanceAmount ? `(LKR ${Number(ln.balanceAmount).toLocaleString()})` : '';
+                                            const activeStyle = isCurrent 
+                                                ? 'background:#7c3aed; color:#ffffff; border-color:#7c3aed; font-weight:700; box-shadow:0 2px 8px rgba(124,58,237,0.3); pointer-events:none;' 
+                                                : 'background:#f8fafc; color:#334155; border-color:#cbd5e1; font-weight:600; cursor:pointer;';
+                                            return `
+                                                <button type="button" onclick="window.location.href='customer-detail.html?id=${encodeURIComponent(ln.id || '')}&accountNo=${encodeURIComponent(ln.accountNo || '')}'" 
+                                                        style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; border:1.5px solid; font-size:0.82rem; transition:all 0.15s; ${activeStyle}">
+                                                    <span>💳 ${cat}</span>
+                                                    <span style="opacity:0.85; font-size:0.75rem;">[${loanNo}]</span>
+                                                    <span style="font-size:0.75rem;">${bal}</span>
+                                                </button>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            loansContainer.style.display = 'none';
+                            loansContainer.innerHTML = '';
+                        }
+                    }
+                } catch(loanErr) {
+                    console.warn("Could not check multi loans:", loanErr);
                 }
 
                 // Populate Print-Only Table

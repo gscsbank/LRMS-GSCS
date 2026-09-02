@@ -12,8 +12,8 @@ function digitsOnly(str) {
 // ── Utility: find DB customer matching a PDF row ──────────────────────────────
 // Checks:
 // 1. Ignores "Loan Closed" and Deleted profiles
-// 2. Pass 1: Exact / Digits match on full Loan Account No (e.g. "01-3030102-00905")
-// 3. Pass 2: Member Account No + Category (Naya Wargaya) for multi-loan members
+// 2. Pass 1: Strict Match on Loan Account No (e.g. "01-3030102-00905")
+// 3. Pass 2: Member Account No + Category (for legacy records without loanAccountNo)
 function findDBMatch(existingCustomers, pdfRow) {
     const pdfLoanAcc   = String(pdfRow.loanAccountNo || '').trim();
     const pdfMemberAcc = String(pdfRow.accountNo || '').trim();
@@ -29,33 +29,42 @@ function findDBMatch(existingCustomers, pdfRow) {
         ex.status !== 'Loan Closed'
     );
 
-    // PASS 1: Match by exact full Loan Account Number (e.g. "01-3030102-00905")
+    // PASS 1: Strict Match by full or digit-matching Loan Account Number
     if (pdfLoanAcc) {
         const match = activeCandidates.find(ex => {
             const exLoanAcc = String(ex.loanAccountNo || '').trim();
-            return exLoanAcc === pdfLoanAcc || (pdflDigits.length >= 8 && digitsOnly(exLoanAcc) === pdflDigits);
+            const exlDigits = digitsOnly(exLoanAcc);
+            if (!exLoanAcc) return false;
+            return exLoanAcc.toLowerCase() === pdfLoanAcc.toLowerCase() || 
+                   (pdflDigits.length >= 6 && exlDigits.length >= 6 && exlDigits === pdflDigits);
         });
         if (match) return match;
     }
 
-    // PASS 2: Match by Member Account Number (Samajika Angkaya) + Loan Category
+    // PASS 2: Match by Member Account Number ONLY for legacy records that don't yet have a specific loanAccountNo
     if (pdfMemberAcc) {
         const memberMatches = activeCandidates.filter(ex => {
             const exAccD     = digitsOnly(ex.accountNo);
             const exLoanAccD = digitsOnly(ex.loanAccountNo);
-            return (exAccD === pdfmDigits || exLoanAccD === pdfmDigits || String(ex.accountNo || '').trim() === pdfMemberAcc);
+            return (exAccD === pdfmDigits || (exLoanAccD && exLoanAccD === pdfmDigits) || String(ex.accountNo || '').trim() === pdfMemberAcc);
         });
 
-        if (memberMatches.length === 1) {
-            return memberMatches[0];
-        } else if (memberMatches.length > 1) {
-            // Member has MULTIPLE loans! Match by Loan Category (Naya Wargaya)
-            const catMatch = memberMatches.find(ex => String(ex.category || '').trim().toLowerCase() === pdfCategory.toLowerCase());
-            if (catMatch) return catMatch;
+        // If an existing record for this member does NOT have a distinct loanAccountNo yet,
+        // and matches the category, we can bind this loan to it.
+        const unboundCategoryMatch = memberMatches.find(ex => {
+            const exLoan = String(ex.loanAccountNo || '').trim();
+            const exCat = String(ex.category || '').trim().toLowerCase();
+            const isUnbound = !exLoan || exLoan === String(ex.accountNo || '').trim() || digitsOnly(exLoan) === digitsOnly(ex.accountNo);
+            return isUnbound && (exCat === pdfCategory.toLowerCase() || !ex.category);
+        });
 
-            // Fallback: return first matching member record
-            return memberMatches[0];
+        if (unboundCategoryMatch) {
+            return unboundCategoryMatch;
         }
+
+        // If all existing records for this member already belong to specific other loanAccountNumbers,
+        // this is a NEW / SEPARATE loan for this member -> return null so a distinct loan profile is created!
+        return null;
     }
 
     return null;
@@ -373,10 +382,17 @@ async function fixDuplicateCustomers() {
     const allDocs = await window.db.getAll('customers');
     const active  = allDocs.filter(c => !c.isDeleted && c.isDeleted !== 'true');
 
-    // Group by digitsOnly(accountNo) + category
+    // Group by unique loanAccountNo when available, or digitsOnly(accountNo) + category for legacy records
     const groups = {};
     for (const c of active) {
-        const key = digitsOnly(c.accountNo) + '_' + String(c.category || '').trim().toLowerCase();
+        const cleanLoanDigits = digitsOnly(c.loanAccountNo);
+        const cleanAccDigits  = digitsOnly(c.accountNo);
+        const hasDistinctLoanNo = cleanLoanDigits && cleanLoanDigits.length >= 6 && cleanLoanDigits !== cleanAccDigits;
+        
+        const key = hasDistinctLoanNo 
+            ? ('loan_' + cleanLoanDigits) 
+            : ('acc_' + cleanAccDigits + '_' + String(c.category || '').trim().toLowerCase());
+
         if (!key) continue;
         if (!groups[key]) groups[key] = [];
         groups[key].push(c);

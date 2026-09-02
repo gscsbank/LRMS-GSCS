@@ -365,28 +365,49 @@ async function getAllCustomers(forceRefresh = false) {
     }
 }
 
-// Helper Function: Get customer by Account No
+// Helper Function: Get customer by Account No (supports Loan Account No or Member Account No)
 async function getCustomerByAccountNo(accountNo) {
     if (!accountNo) return null;
     const cleanAcc = accountNo.toString().trim();
+    const cleanDigits = digitsOnly(cleanAcc);
 
     // Check Cache
     if (window.lrmsCache.customers) {
-        const found = window.lrmsCache.customers.find(c =>
-            (c.accountNo || "").toString().trim() === cleanAcc ||
-            Number(c.accountNo) === Number(cleanAcc)
+        // 1. Try exact or digit match on loanAccountNo first
+        const foundLoan = window.lrmsCache.customers.find(c =>
+            (c.loanAccountNo || "").toString().trim().toLowerCase() === cleanAcc.toLowerCase() ||
+            (cleanDigits && cleanDigits.length >= 6 && digitsOnly(c.loanAccountNo) === cleanDigits)
         );
-        if (found) return found;
+        if (foundLoan) return foundLoan;
+
+        // 2. Try member accountNo
+        const foundMember = window.lrmsCache.customers.find(c =>
+            (c.accountNo || "").toString().trim() === cleanAcc ||
+            Number(c.accountNo) === Number(cleanAcc) ||
+            (cleanDigits && digitsOnly(c.accountNo) === cleanDigits)
+        );
+        if (foundMember) return foundMember;
     }
 
     try {
         console.log("Fetching Customer from DB:", cleanAcc);
         const allDocs = await window.db.getAll("customers");
-        const found = allDocs.find(c =>
-            !c.isDeleted &&
-            ((c.accountNo || "").toString().trim() === cleanAcc || Number(c.accountNo) === Number(cleanAcc))
+        const active = (allDocs || []).filter(c => !c.isDeleted && c.isDeleted !== 'true');
+
+        // 1. Try loanAccountNo match
+        const matchLoan = active.find(c =>
+            (c.loanAccountNo || "").toString().trim().toLowerCase() === cleanAcc.toLowerCase() ||
+            (cleanDigits && cleanDigits.length >= 6 && digitsOnly(c.loanAccountNo) === cleanDigits)
         );
-        return found || null;
+        if (matchLoan) return matchLoan;
+
+        // 2. Try member accountNo match
+        const matchMember = active.find(c =>
+            (c.accountNo || "").toString().trim() === cleanAcc ||
+            Number(c.accountNo) === Number(cleanAcc) ||
+            (cleanDigits && digitsOnly(c.accountNo) === cleanDigits)
+        );
+        return matchMember || null;
     } catch (error) {
         console.error("Error fetching customer:", error);
         return null;
@@ -403,7 +424,7 @@ async function getCustomerById(id) {
             if (found) return found;
         }
         const record = await window.db.get("customers", id);
-        return (record && !record.isDeleted) ? record : null;
+        return (record && !record.isDeleted && record.isDeleted !== 'true') ? record : null;
     } catch (error) {
         console.error("Error fetching customer by ID:", error);
         return null;
@@ -431,7 +452,7 @@ async function addAction(actionData) {
     }
 }
 
-// Helper Function: Get actions for a customer
+// Helper Function: Get actions for a customer / loan account
 async function getCustomerActions(accountNo, customerId = null, loanAccountNo = null, forceRefresh = false) {
     if (!accountNo && !customerId && !loanAccountNo) return [];
     const cleanAcc = (accountNo || '').toString().trim();
@@ -440,7 +461,7 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
     const accDigits = digitsOnly(cleanAcc);
     const loanAccDigits = digitsOnly(cleanLoanAcc);
 
-    const cacheKey = cleanCustId ? `id_${cleanCustId}` : (cleanLoanAcc ? `loan_${cleanAcc}_${cleanLoanAcc}` : `acc_${cleanAcc}`);
+    const cacheKey = cleanCustId ? `id_${cleanCustId}` : (cleanLoanAcc ? `loan_${cleanLoanAcc}` : `acc_${cleanAcc}`);
 
     if (!forceRefresh && window.lrmsCache && window.lrmsCache.actions && window.lrmsCache.actions[cacheKey]) {
         console.log("Cache Hit: getCustomerActions", cacheKey);
@@ -462,36 +483,42 @@ async function getCustomerActions(accountNo, customerId = null, loanAccountNo = 
             const aAccDigits = digitsOnly(aAcc);
             const aLoanDigits = digitsOnly(aLoan);
 
-            // 1. If cleanCustId is provided (exact customer/loan doc record ID requested):
-            if (cleanCustId) {
-                if (aCustId) {
-                    return aCustId === cleanCustId;
-                }
-                // Action has no customerId stored: check loanAccountNo if available
-                if (aLoan && cleanLoanAcc) {
-                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits);
-                }
-                if (aLoan && !cleanLoanAcc) {
-                    return aLoan.toLowerCase() === cleanAcc.toLowerCase();
-                }
-                // Legacy action with neither customerId nor loanAccountNo: match by customerAccountNo
-                return cleanAcc ? (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits)) : false;
+            // 1. Direct Customer ID Match (exact unique loan record in DB)
+            if (cleanCustId && aCustId && aCustId === cleanCustId) {
+                return true;
             }
 
-            // 2. If cleanLoanAcc is provided (specific loan account number requested):
+            // 2. Direct Loan Account Number Match (strict loan isolation)
             if (cleanLoanAcc) {
                 if (aLoan) {
-                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || (loanAccDigits && aLoanDigits && loanAccDigits === aLoanDigits);
+                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || 
+                           (loanAccDigits && aLoanDigits && loanAccDigits.length >= 6 && aLoanDigits.length >= 6 && loanAccDigits === aLoanDigits);
                 }
-                // If action has customerId but we only have cleanLoanAcc: match if aAcc matches
-                if (aAcc) {
-                    return aAcc === cleanLoanAcc || (loanAccDigits && aAccDigits && loanAccDigits === aAccDigits) ||
-                           (cleanAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits)));
+                // If the action has a customerId that doesn't match, it belongs to another loan
+                if (aCustId && cleanCustId && aCustId !== cleanCustId) {
+                    return false;
+                }
+                // Legacy action (no loanAccountNo and no customerId): preserve for this member
+                if (!aLoan && !aCustId && cleanAcc) {
+                    return aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits);
                 }
                 return false;
             }
 
-            // 3. Fallback: If only cleanAcc is provided:
+            // 3. Match by customerId when cleanLoanAcc is not directly passed
+            if (cleanCustId) {
+                if (aLoan && cleanLoanAcc) {
+                    return aLoan.toLowerCase() === cleanLoanAcc.toLowerCase() || 
+                           (loanAccDigits && aLoanDigits && loanAccDigits.length >= 6 && aLoanDigits.length >= 6 && loanAccDigits === aLoanDigits);
+                }
+                // Legacy action
+                if (!aLoan && !aCustId && cleanAcc) {
+                    return aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits);
+                }
+                return false;
+            }
+
+            // 4. Fallback: If only member accountNo is provided (e.g. general member summary):
             if (cleanAcc) {
                 return (aAcc && (aAcc === cleanAcc || (accDigits && aAccDigits && accDigits === aAccDigits))) ||
                        (aLoan && (aLoan === cleanAcc || (accDigits && aLoanDigits && accDigits === aLoanDigits)));
