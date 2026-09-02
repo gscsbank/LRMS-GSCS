@@ -427,135 +427,54 @@
             }
         };
 
-        // Populate form fields on customer select
-        function onCustomerSelect() {
-            const selector = document.getElementById('customerSelector');
-            const selectedVal = selector.value;
-            if (!selectedVal) {
-                currentCust = null;
-                resetFormInputs();
-                renderLetter();
-                return;
-            }
-
-            currentCust = allCustomers.find(c => (c.id && c.id.toString() === selectedVal.toString()) || (c.accountNo && c.accountNo.toString() === selectedVal.toString()));
-            if (!currentCust) return;
-
-            document.getElementById('cName').value = currentCust.name || '';
-            document.getElementById('cAddress').value = currentCust.address || '';
-            document.getElementById('cLoanAccNo').value = currentCust.loanAccountNo || currentCust.accountNo || '';
-            document.getElementById('cG1Name').value = currentCust.guarantor1 || '';
-            document.getElementById('cG1Address').value = currentCust.guarantor1Address || '';
-            document.getElementById('cG2Name').value = currentCust.guarantor2 || '';
-            document.getElementById('cG2Address').value = currentCust.guarantor2Address || '';
-
-            // Set defaults for loan amounts
-            document.getElementById('demandPrincipal').value = currentCust.loanAmount || 0;
-            calculateTotal();
-            renderLetter();
-        }
-
-        function resetFormInputs() {
-            document.getElementById('cName').value = '';
-            document.getElementById('cAddress').value = '';
-            document.getElementById('cLoanAccNo').value = '';
-            document.getElementById('cG1Name').value = '';
-            document.getElementById('cG1Address').value = '';
-            document.getElementById('cG2Name').value = '';
-            document.getElementById('cG2Address').value = '';
-        }
-
-        // Toggle inputs between Reminders and LOD
-        function updateTemplateFields() {
-            const type = document.getElementById('letterType').value;
-            const remSection = document.getElementById('reminderFields');
-            const lodSection = document.getElementById('lodFields');
-
-            if (type === 'lod' || type === 'legal_reminder') {
-                remSection.classList.add('hidden');
-                lodSection.classList.remove('hidden');
-            } else {
-                remSection.classList.remove('hidden');
-                lodSection.classList.add('hidden');
-            }
-            calculateTotal();
-        }
-
-        // Auto-calculate the total of outstanding amounts
-        function calculateTotal() {
-            const type = document.getElementById('letterType').value;
-            let total = 0;
-
-            if (type === 'lod' || type === 'legal_reminder') {
-                const principal = parseFloat(document.getElementById('demandPrincipal').value) || 0;
-                const interest = parseFloat(document.getElementById('demandInterest').value) || 0;
-                total = principal + interest;
-            } else {
-                const principal = parseFloat(document.getElementById('arrPrincipal').value) || 0;
-                const interest = parseFloat(document.getElementById('arrInterest').value) || 0;
-                const penalty = parseFloat(document.getElementById('arrPenalty').value) || 0;
-                total = principal + interest + penalty;
-            }
-
-            document.getElementById('arrTotal').value = total.toFixed(2);
-        }
-
-        // Main Rendering Engine
+        // Render Letter Function
         function renderLetter() {
-            const letterContainer = document.getElementById('letterA4Page');
+            const letterContainer = document.getElementById('renderedLetter');
             if (!letterContainer) return;
 
             const letterType = document.getElementById('letterType').value;
             const lang = document.getElementById('letterLang').value;
-            const dateVal = document.getElementById('letterDate').value;
-            const formattedLetterDate = dateVal ? new Date(dateVal).toLocaleDateString(lang === 'sin' ? 'si-LK' : 'en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
+            const letterDateVal = document.getElementById('letterDate').value;
+            const formattedLetterDate = letterDateVal ? new Date(letterDateVal).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB');
 
-            // Fields values
-            const name = document.getElementById('cName').value || '............................................................';
-            const address = document.getElementById('cAddress').value || '............................................................';
-            const memberId = currentCust ? currentCust.accountNo : '....................';
-            const loanAccNo = document.getElementById('cLoanAccNo').value || '....................';
+            const name = document.getElementById('cName').value.trim() || '...................................................';
+            const memberId = document.getElementById('cAccNo').value.trim() || '............';
+            const address = document.getElementById('cAddress').value.trim() || '...........................................................................';
+            const loanAccNo = document.getElementById('cLoanAccNo').value.trim() || '........................';
+            const loanGrantedDate = document.getElementById('cLoanDate').value.trim() || '............';
+            const loanAmountVal = parseFloat(document.getElementById('cLoanAmt').value) || 0;
+            const loanAmountStr = loanAmountVal ? loanAmountVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '..................';
             
-            const g1Name = document.getElementById('cG1Name').value || '';
-            const g1Address = document.getElementById('cG1Address').value || '';
-            const g2Name = document.getElementById('cG2Name').value || '';
-            const g2Address = document.getElementById('cG2Address').value || '';
+            const demandPrincipal = parseFloat(document.getElementById('demandPrincipal').value) || 0;
+            const demandInterest = parseFloat(document.getElementById('demandInterest').value) || 0;
+            const demandTotal = parseFloat(document.getElementById('demandTotal').value) || (demandPrincipal + demandInterest);
+            const demandDueDate = document.getElementById('demandDueDate').value ? new Date(document.getElementById('demandDueDate').value).toLocaleDateString('en-GB') : '..................';
+            const demandDueTime = document.getElementById('demandDueTime').value || '12.00';
 
-            const arrearsInstallments = parseInt(document.getElementById('arrInstallments').value) || 0;
+            const arrearsInstallments = parseFloat(document.getElementById('arrInstallments').value) || 0;
             const arrearsPrincipal = parseFloat(document.getElementById('arrPrincipal').value) || 0;
             const arrearsInterest = parseFloat(document.getElementById('arrInterest').value) || 0;
             const arrearsPenalty = parseFloat(document.getElementById('arrPenalty').value) || 0;
-            const arrearsTotal = parseFloat(document.getElementById('arrTotal').value) || 0;
+            const arrearsTotal = parseFloat(document.getElementById('arrTotal').value) || (arrearsPrincipal + arrearsInterest + arrearsPenalty);
 
-            const demandPrincipal = parseFloat(document.getElementById('demandPrincipal').value) || 0;
-            const demandInterest = parseFloat(document.getElementById('demandInterest').value) || 0;
-            const demandTotal = parseFloat(document.getElementById('arrTotal').value) || 0;
-            const demandDateVal = document.getElementById('duePaymentDate').value;
-            const demandDueDate = demandDateVal ? new Date(demandDateVal).toLocaleDateString(lang === 'sin' ? 'si-LK' : 'en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '';
-            const demandDueTime = document.getElementById('duePaymentTime').value || '12.00 PM';
+            const g1Name = document.getElementById('cG1Name').value.trim();
+            const g1Address = document.getElementById('cG1Address').value.trim();
+            const g2Name = document.getElementById('cG2Name').value.trim();
+            const g2Address = document.getElementById('cG2Address').value.trim();
 
-            // Original loan info if selected
-            const loanGrantedDateVal = currentCust ? currentCust.loanDate : '';
-            const loanGrantedDate = loanGrantedDateVal ? new Date(loanGrantedDateVal).toLocaleDateString(lang === 'sin' ? 'si-LK' : 'en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '....................';
-            const initialLoanAmount = currentCust ? currentCust.loanAmount : 0;
-            const loanAmountStr = initialLoanAmount ? initialLoanAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '....................';
-
-            // String Formatters
             const formatCurrency = (val) => val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             let htmlContent = '';
 
-            // ─── Signature Block Construction ───
-            // showSig = checkbox "Include Signatures"
+            // Signature Block Construction
             const showSig = document.getElementById('includeSignatures') && document.getElementById('includeSignatures').checked;
 
-            // Single Manager Signature (Right-Aligned) - used in reminder1, reminder2, legal_referral, agreement_expired
             const singleManagerSig = (lang === 'sin') ? `
                 <div style="display: flex; justify-content: flex-end; margin-top: 15px; padding-right: 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
-                            <span style="font-weight: 700;">කළමනාකරු</span>
+                            <span style="font-weight: 700;">à¶šà·…à¶¸à¶±à·à¶šà¶»à·”</span>
                         </div>
                     </div>
                 </div>
@@ -570,19 +489,18 @@
                 </div>
             `;
 
-            // Two-Party Signature (Chairman Left, Manager Right) - used in business_loan, final_notice
             const twoPartySig = (lang === 'sin') ? `
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px; padding: 0 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
-                            <span style="font-weight: 700;">ගරු සභාපති</span>
+                            <span style="font-weight: 700;">à¶œà¶»à·” à·ƒà¶·à·à¶´à¶­à·’</span>
                         </div>
                     </div>
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
-                            <span style="font-weight: 700;">කළමනාකරු</span>
+                            <span style="font-weight: 700;">à¶šà·…à¶¸à¶±à·à¶šà¶»à·”</span>
                         </div>
                     </div>
                 </div>
@@ -603,34 +521,33 @@
                 </div>
             `;
 
-            // LOD Signature (Seal Left, Chairman Middle, Secretary Right) - used in lod
             const lodSig = (lang === 'sin') ? `
                 <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                        <div>අත්සන් කළේ:</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <div>à¶…à¶­à·Šà·ƒà¶±à·Š à¶šà·…à·š:</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
-                            <span>සමිතියේ මුද්‍රාව ........................</span><br><br>
-                            <span>දිනය ........................</span>
+                            <span>à·ƒà¶¸à·’à¶­à·’à¶ºà·š à¶¸à·”à¶¯à·Šâ€à¶»à·à·€ ........................</span><br><br>
+                            <span>à¶¯à·’à¶±à¶º ........................</span>
                         </div>
                         <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                             ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                             <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
-                                <span style="font-weight: 700;">ගරු සභාපති</span>
+                                <span style="font-weight: 700;">à¶œà¶»à·” à·ƒà¶·à·à¶´à¶­à·’</span>
                             </div>
                         </div>
                         <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                             <span style="display:block;height:65px;"></span>
                             <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
-                                <span style="font-weight: 700;">ගරු ලේකම්</span>
+                                <span style="font-weight: 700;">à¶œà¶»à·” à¶½à·šà¶šà¶¸à·Š</span>
                             </div>
                         </div>
                     </div>
                 </div>
             ` : `
                 <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                         <div>Signed by:</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -654,56 +571,37 @@
                 </div>
             `;
 
-            // ─── Header Construction ───
+            // Header Construction
             let headerHtml = '';
             if (letterType !== 'legal_reminder') {
                 headerHtml = `
                     <div style="border-bottom: 2.5px double #000000; padding-bottom: 8px; margin-bottom: 12px;">
                         <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                            <!-- Left Block: Official B&W Logo (user-uploaded) -->
                             <div class="logo-container">
                                 <img src="assets/logo.png" alt="GSCS Logo">
                             </div>
-                            
-                            <!-- Middle Block: Org Name & Reg Details -->
                             <div style="flex: 1; min-width: 0;">
-                                <div style="font-size: 13px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.3; color: #000000; white-space: nowrap;">සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතිය</div>
+                                <div style="font-size: 13px; font-weight: 800; margin: 0 0 2px 0; font-family: 'Inter', sans-serif; line-height: 1.3; color: #000000; white-space: nowrap;">à·ƒà·“à¶¸à· à¶»à·„à·’à¶­ à¶œà¶½à¶´à·’à¶§à·’à¶ºà·à¶œà¶¸ à·ƒà¶šà·ƒà·”à¶»à·”à·€à¶¸à·Š à·„à· à¶«à¶º à¶œà¶±à·”à¶¯à·™à¶±à·” à¶´à·’à·…à·’à¶¶à¶³ à·ƒà¶¸à·”à¶´à¶šà·à¶» à·ƒà¶¸à·’à¶­à·’à¶º</div>
                                 <div style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; color: #000000;">GALAPITIYAGAMA THRIFT &amp; CREDIT CO-OPERATIVE SOCIETY</div>
                                 <div style="font-size: 10px; font-weight: 700; display: flex; gap: 28px; color: #000000;">
-                                    <span>Reg No: කුලි/395</span>
+                                    <span>Reg No: à¶šà·”à¶½à·’/395</span>
                                     <span>Reg Date: 1987/03/24</span>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 `;
             } else {
-                // For Legal Reminder: custom double-bordered top header (no normal letterhead)
                 headerHtml = `
-                    <div style="border-top: 3px double #000000; border-bottom: 3px double #000000; padding: 12px 0; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
-                        <!-- Left Block: coop logo -->
-                        <div style="flex-shrink: 0; text-align: left;">
-                            <img src="assets/coop_logo.png" alt="Coop" style="height: 55px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
-                        </div>
-
-                        <!-- Center Block: Title -->
-                        <div style="flex: 1; text-align: center;">
-                            <h1 style="font-size: 22px; font-weight: 900; letter-spacing: 0.5px; margin: 0; font-family: 'Inter', sans-serif; color: #000000; text-transform: uppercase;">
-                                ${lang === 'sin' ? 'නීතිමය සිහිකැඳවීමයි !' : 'LEGAL REMINDER!'}
-                            </h1>
-                        </div>
-
-                        <!-- Right Block: Lady Justice -->
-                        <div style="flex-shrink: 0; text-align: right;">
-                            <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 55px; width: auto; display: inline-block; vertical-align: middle; filter: grayscale(100%) contrast(1.2);">
-                        </div>
+                    <div style="border-top: 2.5px double #000000; border-bottom: 2.5px double #000000; padding: 10px 0; margin-bottom: 18px; text-align: center;">
+                        <h1 style="font-size: 22px; font-weight: 900; letter-spacing: 0.5px; margin: 0; font-family: 'Inter', sans-serif; color: #000000; text-transform: uppercase;">
+                            ${lang === 'sin' ? 'à¶±à·“à¶­à·’à¶¸à¶º à·ƒà·’à·„à·’à¶šà·à¶³à·€à·“à¶¸à¶ºà·’ !' : 'LEGAL REMINDER!'}
+                        </h1>
                     </div>
                 `;
             }
 
-            // ─── Footer Construction ───
+            // â”€â”€â”€ Footer Construction â”€â”€â”€
             let footerHtml = '';
             if (letterType !== 'legal_reminder') {
                 footerHtml = `
@@ -1082,15 +980,10 @@
                 const title = lang === 'sin' ? 'නීති අංශය වෙත යොමු කිරීම සම්බන්ධවයි.!' : 'REFERRAL TO LEGAL DEPARTMENT!';
                 
                 const titleBlock = `
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 15px 0 20px 0;">
-                        <!-- Left decoration: coop logo -->
-                        <img src="assets/coop_logo.png" alt="Coop" style="height: 55px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
-                        <!-- Center: White text inside black box -->
-                        <span class="print-title-box" style="margin: 0;">
+                    <div style="text-align: center; margin: 15px 0 20px 0;">
+                        <span class="print-title-box">
                             ${title}
                         </span>
-                        <!-- Right decoration: Lady Justice -->
-                        <img src="assets/lady_justice.png" alt="Lady Justice" style="height: 55px; width: auto; display: inline-block; filter: grayscale(100%) contrast(1.2);">
                     </div>
                 `;
 
