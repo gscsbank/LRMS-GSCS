@@ -532,7 +532,8 @@
             
             const demandPrincipal = parseFloat(document.getElementById('demandPrincipal')?.value) || currentCust?.arrearsPrincipal || currentCust?.balanceAmount || currentCust?.loanAmount || 0;
             const demandInterest = parseFloat(document.getElementById('demandInterest')?.value) || currentCust?.arrearsInterest || 0;
-            const demandTotal = demandPrincipal + demandInterest;
+            const _arrTotalField = parseFloat(document.getElementById('arrTotal')?.value) || 0;
+            const demandTotal = _arrTotalField > 0 ? _arrTotalField : (demandPrincipal + demandInterest);
             const demandDueDate = document.getElementById('duePaymentDate')?.value ? new Date(document.getElementById('duePaymentDate').value).toLocaleDateString('en-GB') : '..................';
             const demandDueTime = document.getElementById('duePaymentTime')?.value || '12.00 PM';
 
@@ -540,7 +541,7 @@
             const arrearsPrincipal = parseFloat(document.getElementById('arrPrincipal')?.value) || currentCust?.arrearsPrincipal || 0;
             const arrearsInterest = parseFloat(document.getElementById('arrInterest')?.value) || currentCust?.arrearsInterest || 0;
             const arrearsPenalty = parseFloat(document.getElementById('arrPenalty')?.value) || currentCust?.penaltyInterest || 0;
-            const arrearsTotal = parseFloat(document.getElementById('arrTotal')?.value) || (arrearsPrincipal + arrearsInterest + arrearsPenalty);
+            const arrearsTotal = _arrTotalField > 0 ? _arrTotalField : (arrearsPrincipal + arrearsInterest + arrearsPenalty);
 
             const g1Name = (document.getElementById('cG1Name')?.value || '').trim() || currentCust?.guarantor1 || currentCust?.guarantor1Name || '';
             const g1Address = (document.getElementById('cG1Address')?.value || '').trim() || currentCust?.guarantor1Address || '';
