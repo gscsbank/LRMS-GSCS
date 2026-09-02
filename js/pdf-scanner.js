@@ -1,4 +1,4 @@
-// js/pdf-scanner.js v2.4
+// js/pdf-scanner.js v2.7
 
 if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -89,19 +89,63 @@ async function handlePDFUpload(event) {
                 let currentCategory   = "General Loan";
                 let lastCustomer      = null;
 
-                const categoryMap = {
-                    "CIKsl Kh"           : "Instant Loan",
-                    "iajYla;S Kh"        : "Swashakthi Loan 01",
-                    "idudkH Kh"          : "General Loan",
-                    "jHdmdßl Kh"         : "Business Loan",
-                    "os.= ld,Sk Kh"      : "Long Term Loan",
-                    "W;aij Kh"           : "Festival Loan",
-                    "w;aje, lKavdhï Kh"  : "Athwela Team Loan",
-                    "w;udre Kh"          : "Athamaru Loan"
-                };
+                const categoryRules = [
+                    // Specific Multi-word / Prefixed rules first
+                    { match: /01\s*-\s*(?:w;|ath|අත්|Adv)/i, name: "Advanced Loan" },
+                    { match: /අත්තිකාරම්/, name: "Advanced Loan" },
+                    { match: /අත්තිකාරම/, name: "Advanced Loan" },
+                    { match: /Advance/i, name: "Advanced Loan" },
+                    { match: /aththikar/i, name: "Advanced Loan" },
+                    { match: /athikar/i, name: "Advanced Loan" },
+                    { match: /w;a;sldr/, name: "Advanced Loan" },
+                    { match: /w;sldr/, name: "Advanced Loan" },
+                    { match: /w;a;s/, name: "Advanced Loan" },
 
-                const rowRegex = /^([\w-]+)\s+(\d+)\s+(.+?)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+(\d+)\s+([\d.]+)\s*%\s+([\d,]+(?:\.\d+)?)\s+([\d.]+)\s+(\d{4}-\d{2}-\d{2})(?:\s+(\d{4}-\d{2}-\d{2}))?/;
-                const guarantorRegex = /w[a-z]+mlre\s*:\s*01\s*-\s*(\d+)\s+(.*?)(?:\s+w[a-z]+mlre\s*:\s*02\s*-\s*(\d+)\s+(.*))?/;
+                    // Athwela
+                    { match: /අත්වැල/, name: "Athwela Team Loan" },
+                    { match: /w;aje,/, name: "Athwela Team Loan" },
+                    { match: /Athwela/i, name: "Athwela Team Loan" },
+
+                    // Athamaru
+                    { match: /අතමාරු/, name: "Athamaru Loan" },
+                    { match: /w;udre/, name: "Athamaru Loan" },
+                    { match: /Athamaru/i, name: "Athamaru Loan" },
+
+                    // Other Categories
+                    { match: /සාමාන්‍ය/, name: "General Loan" },
+                    { match: /idudkH/, name: "General Loan" },
+                    { match: /General/i, name: "General Loan" },
+
+                    { match: /ක්ෂණික/, name: "Instant Loan" },
+                    { match: /CIKsl/, name: "Instant Loan" },
+                    { match: /Instant/i, name: "Instant Loan" },
+
+                    { match: /ස්වශක්ති/, name: "Swashakthi Loan 01" },
+                    { match: /iajYla;S/, name: "Swashakthi Loan 01" },
+                    { match: /Swashakthi/i, name: "Swashakthi Loan 01" },
+
+                    { match: /ව්‍යාපාරික/, name: "Business Loan" },
+                    { match: /jHdmdßl/, name: "Business Loan" },
+                    { match: /Business/i, name: "Business Loan" },
+
+                    { match: /දිගු\s*කාලීන/, name: "Long Term Loan" },
+                    { match: /දිගුකාලීන/, name: "Long Term Loan" },
+                    { match: /os\.=\s*ld,Sk/, name: "Long Term Loan" },
+                    { match: /os\.=/, name: "Long Term Loan" },
+                    { match: /Long\s*Term/i, name: "Long Term Loan" },
+
+                    { match: /උත්සව/, name: "Festival Loan" },
+                    { match: /W;aij/, name: "Festival Loan" },
+                    { match: /Festival/i, name: "Festival Loan" }
+                ];
+
+                // Regex 1: SmartCoop "All Loans" format (සියලුම ණය ලේඛනය)
+                // Col Order: [MemberAcc] [Name] [LoanAcc] [LoanDate] [LoanAmt] [Months] [MonthlyInst] [Balance] [ArrInst] [0] [ArrAmt] [Rate] [Interest] [Penalty] [LastPaidDate]
+                const allLoansRegex = /^(\d{5,12})\s+(.+?)(?:\s+|\b)(\d{2}-\d{6,8}-\d{4,6}|\w+-\w+-\w+)\s+(\d{4}-\d{2}-\d{2})\s+([\d,]+(?:\.\d+)?)\s+(\d+)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+([\d.]+)\s*%?\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)(?:\s+(\d{4}-\d{2}-\d{2}|-|N\/A))?/;
+
+                // Regex 2: SmartCoop "Arrears Report" format (කල්පසු ණය ලේඛනය)
+                // MUST start with hyphenated loan account number so it never mistakes member numbers for loan numbers
+                const arrearsRegex = /^(\d{2}-\d{6,8}-\d{4,6}|[A-Za-z0-9]+-[A-Za-z0-9]+-[A-Za-z0-9]+)\s+(\d+)\s+(.+?)\s+([\d,]+(?:\.\d+)?)\s+([\d,]+(?:\.\d+)?)\s+(\d+)\s+([\d.]+)\s*%\s+([\d,]+(?:\.\d+)?)\s+([\d.]+)\s+(\d{4}-\d{2}-\d{2})(?:\s+(\d{4}-\d{2}-\d{2}))?/;
 
                 // ── Page loop ─────────────────────────────────────────────────
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -133,33 +177,83 @@ async function handlePDFUpload(event) {
                         lineStr = lineStr.replace(/\s+/g, ' ').trim();
                         if (!lineStr) continue;
 
-                        // Category header detection
-                        if (lineStr.startsWith('01-') && !lineStr.match(/^01-\d{7}-\d{5}/)) {
-                            const catKey = lineStr.substring(3).trim();
-                            for (const key in categoryMap) {
-                                if (catKey.includes(key) || key.includes(catKey)) {
-                                    currentCategory = categoryMap[key];
+                        // Category header detection (check non-loan lines against all category rules)
+                        const isLoanRow = allLoansRegex.test(lineStr) || arrearsRegex.test(lineStr);
+                        if (!isLoanRow) {
+                            for (const rule of categoryRules) {
+                                if (rule.match.test(lineStr)) {
+                                    currentCategory = rule.name;
                                     break;
                                 }
                             }
                         }
 
-                        // Data row
-                        const rowMatch = lineStr.match(rowRegex);
-                        if (rowMatch) {
+                        // Try All Loans Format first
+                        const matchA = lineStr.match(allLoansRegex);
+                        if (matchA) {
+                            const arrInst   = parseFloat(matchA[9].replace(/,/g, '')) || 0;
+                            const arrAmt    = parseFloat(matchA[11].replace(/,/g, '')) || 0;
+                            const balAmt    = parseFloat(matchA[8].replace(/,/g, '')) || 0;
+                            const lnAmt     = parseFloat(matchA[5].replace(/,/g, '')) || 0;
+                            const monthlyInst = parseFloat(matchA[7].replace(/,/g, '')) || 0;
+                            const lnRate    = parseFloat(matchA[12]) || 0;
+                            const lnDate    = matchA[4].trim();
+                            const lastPaid  = (matchA[15] && matchA[15].match(/^\d{4}-\d{2}-\d{2}$/)) ? matchA[15].trim() : null;
+                            const rawName   = matchA[2].replace(/\b\d{7,12}\b/g, '').trim();
+
                             lastCustomer = {
-                                loanAccountNo       : rowMatch[1],
-                                accountNo           : rowMatch[2],
-                                name                : rowMatch[3].trim(),
-                                loanAmount          : parseFloat(rowMatch[4].replace(/,/g, '')),
-                                balanceAmount       : parseFloat(rowMatch[5].replace(/,/g, '')),
-                                interestRate        : parseFloat(rowMatch[7]),
-                                arrearsAmount       : parseFloat(rowMatch[8].replace(/,/g, '')),
-                                arrearsInstallments : parseFloat(rowMatch[9]),
-                                loanDate            : rowMatch[10],
-                                lastPaidDate        : rowMatch[11] || null,
+                                accountNo           : matchA[1].trim(),
+                                name                : rawName,
+                                loanAccountNo       : matchA[3].trim(),
+                                loanDate            : lnDate,
+                                loanAmount          : lnAmt,
+                                installmentAmount   : monthlyInst,
+                                balanceAmount       : balAmt,
+                                interestRate        : lnRate,
+                                arrearsAmount       : arrAmt,
+                                arrearsInstallments : arrInst,
+                                lastPaidDate        : lastPaid,
                                 category            : currentCategory,
-                                status              : "High Risk",
+                                status              : arrInst > 3 ? "High Risk" : "Normal",
+                                statusDate          : new Date().toISOString().split('T')[0],
+                                addedDate           : new Date().toISOString().split('T')[0],
+                                createdDate         : new Date().toISOString().split('T')[0],
+                                phone               : '',
+                                address             : '',
+                                guarantor1          : '',
+                                guarantor1Address   : '',
+                                guarantor2          : '',
+                                guarantor2Address   : ''
+                            };
+                            extractedCustomers.push(lastCustomer);
+                            continue;
+                        }
+
+                        // Fallback: Try Arrears Format (Old)
+                        const matchB = lineStr.match(arrearsRegex);
+                        if (matchB) {
+                            const lnAmt   = parseFloat(matchB[4].replace(/,/g, '')) || 0;
+                            const balAmt  = parseFloat(matchB[5].replace(/,/g, '')) || 0;
+                            const lnRate  = parseFloat(matchB[7]) || 0;
+                            const arrAmt  = parseFloat(matchB[8].replace(/,/g, '')) || 0;
+                            const arrInst = parseFloat(matchB[9]) || 0;
+                            const lnDate  = matchB[10].trim();
+                            const lastPaid = matchB[11] || null;
+                            const rawNameB = matchB[3].replace(/\b\d{7,12}\b/g, '').trim();
+
+                            lastCustomer = {
+                                loanAccountNo       : matchB[1].trim(),
+                                accountNo           : matchB[2].trim(),
+                                name                : rawNameB,
+                                loanAmount          : lnAmt,
+                                balanceAmount       : balAmt,
+                                interestRate        : lnRate,
+                                arrearsAmount       : arrAmt,
+                                arrearsInstallments : arrInst,
+                                loanDate            : lnDate,
+                                lastPaidDate        : lastPaid,
+                                category            : currentCategory,
+                                status              : arrInst > 3 ? "High Risk" : "Normal",
                                 statusDate          : new Date().toISOString().split('T')[0],
                                 addedDate           : new Date().toISOString().split('T')[0],
                                 createdDate         : new Date().toISOString().split('T')[0],
@@ -172,7 +266,6 @@ async function handlePDFUpload(event) {
                             };
                             extractedCustomers.push(lastCustomer);
                         }
-                        // Note: Guarantor 1 and Guarantor 2 details are NOT extracted/updated from PDF as per user preference (entered manually)
                     }
                 }
 
@@ -194,21 +287,53 @@ async function handlePDFUpload(event) {
                             if (c.loanAccountNo && (!match.loanAccountNo || match.loanAccountNo === match.accountNo)) {
                                 match.loanAccountNo = c.loanAccountNo;
                             }
+                            // Clean up name if match had embedded digits
+                            if (c.name && (!match.name || match.name.match(/\b\d{7,12}\b/))) {
+                                match.name = c.name;
+                            }
                             match.loanAmount         = c.loanAmount;
                             match.balanceAmount       = c.balanceAmount;
                             match.arrearsAmount       = c.arrearsAmount;
                             match.arrearsInstallments = c.arrearsInstallments;
+                            if (c.category) match.category = c.category;
+                            if (c.installmentAmount) match.installmentAmount = c.installmentAmount;
+                            if (c.loanDate && !match.loanDate) match.loanDate = c.loanDate;
+                            if (c.interestRate) match.interestRate = c.interestRate;
                             if (c.lastPaidDate)  match.lastPaidDate = c.lastPaidDate;
-                            // Guarantor 1 & 2 details are kept as manually entered (not overwritten from PDF)
-                            if (c.arrearsInstallments > 3 && match.status === 'Normal') {
-                                match.status = 'High Risk';
+
+                            // Automatic Bidirectional Status Management:
+                            // Protect manual terminal statuses ('Loan Closed' and any 'Legal Action' variants)
+                            const currentStatus = String(match.status || 'Normal');
+                            const isProtected = currentStatus === 'Loan Closed' || currentStatus.toLowerCase().includes('legal');
+
+                            if (!isProtected) {
+                                if (c.arrearsInstallments > 3) {
+                                    // Arrears > 3 -> Automatically mark as High Risk
+                                    if (match.status !== 'High Risk') {
+                                        match.status = 'High Risk';
+                                        match.statusDate = new Date().toISOString().split('T')[0];
+                                    }
+                                } else {
+                                    // Arrears <= 3 (Loan paid / recovered) -> Automatically return to Normal
+                                    if (match.status !== 'Normal') {
+                                        match.status = 'Normal';
+                                        match.statusDate = new Date().toISOString().split('T')[0];
+                                    }
+                                }
                             }
+
+                            // Guarantor 1 & 2 details are kept as manually entered (never overwritten from PDF)
                             await window.db.update('customers', match.id, match);
                         } else {
                             newCount++;
-                            if (c.arrearsInstallments <= 3) c.status = 'Normal';
+                            c.status = (c.arrearsInstallments > 3) ? 'High Risk' : 'Normal';
                             c.addedDate = c.addedDate || new Date().toISOString().split('T')[0];
                             c.createdDate = c.createdDate || new Date().toISOString().split('T')[0];
+                            // Guarantors remain blank for manual entry
+                            c.guarantor1 = '';
+                            c.guarantor1Address = '';
+                            c.guarantor2 = '';
+                            c.guarantor2Address = '';
                             await window.db.add('customers', c);
                         }
                     } catch (rowErr) {
@@ -225,6 +350,7 @@ async function handlePDFUpload(event) {
                 let msg = `Scan Complete!<br><br>Found in PDF: <b>${extractedCustomers.length}</b> records<br>Updated Existing: <b>${updatedCount}</b> profiles<br>Created New: <b>${newCount}</b> profiles`;
                 if (typeof lrmsAlert === 'function') await lrmsAlert(msg);
                 else alert(`Scan Complete!\nUpdated: ${updatedCount}\nCreated: ${newCount}`);
+                window.location.reload();
 
             } catch (err) {
                 console.error('PDF parse error:', err);

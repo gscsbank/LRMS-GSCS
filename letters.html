@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -344,6 +344,10 @@
                     <input type="checkbox" id="saveActionHistory" class="rounded text-violet-600 border-gray-300 focus:ring-violet-500" checked>
                     <label for="saveActionHistory" class="text-xs text-gray-600 font-bold select-none cursor-pointer">Save to Customer Action History</label>
                 </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="includeSignatures" class="rounded text-violet-600 border-gray-300 focus:ring-violet-500" onchange="renderLetter()">
+                    <label for="includeSignatures" class="text-xs text-gray-600 font-bold select-none cursor-pointer">✍️ Include Signatures (කළමනාකරු + සභාපති)</label>
+                </div>
                 <button onclick="handlePrint()" class="btn btn-primary w-full justify-center py-3 text-base">
                     <i data-lucide="printer"></i> Print &amp; Log Letter
                 </button>
@@ -526,6 +530,115 @@
             const formatCurrency = (val) => val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             let htmlContent = '';
+
+            // ─── Signature Block Construction ───
+            // showSig = checkbox "Include Signatures"
+            const showSig = document.getElementById('includeSignatures') && document.getElementById('includeSignatures').checked;
+
+            // Single Manager Signature (Right-Aligned) - used in reminder1, reminder2, legal_referral, agreement_expired
+            const singleManagerSig = (lang === 'sin') ? `
+                <div style="display: flex; justify-content: flex-end; margin-top: 25px; padding-right: 40px; color: #000000;">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">කළමනාකරු</span>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div style="display: flex; justify-content: flex-end; margin-top: 25px; padding-right: 40px; color: #000000;">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">Manager</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Two-Party Signature (Chairman Left, Manager Right) - used in business_loan, final_notice
+            const twoPartySig = (lang === 'sin') ? `
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 40px; color: #000000;">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">ගරු සභාපති</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">කළමනාකරු</span>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 40px; color: #000000;">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">Hon. President</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                        <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
+                            <span style="font-weight: 700;">Manager</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // LOD Signature (Seal Left, Chairman Middle, Secretary Right) - used in lod
+            const lodSig = (lang === 'sin') ? `
+                <div style="margin-top: 35px; font-size: 10.5pt; color: #000000;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div>අත්සන් කළේ:</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <span>සමිතියේ මුද්‍රාව ........................</span><br><br>
+                            <span>දිනය ........................</span>
+                        </div>
+                        <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                            <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
+                                <span style="font-weight: 700;">ගරු සභාපති</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            <span style="display:block;height:65px;"></span>
+                            <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
+                                <span style="font-weight: 700;">ගරු ලේකම්</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div style="margin-top: 35px; font-size: 10.5pt; color: #000000;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div>Signed by:</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <span>Society Seal ........................</span><br><br>
+                            <span>Date ........................</span>
+                        </div>
+                        <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
+                            <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
+                                <span style="font-weight: 700;">Hon. President</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+                            <span style="display:block;height:65px;"></span>
+                            <div style="width:190px;border-top:1.5px solid #000;padding-top:4px;">
+                                <span style="font-weight: 700;">Hon. Secretary</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
             // ─── Header Construction ───
             let headerHtml = '';
@@ -715,25 +828,7 @@
                             </div>
 
                             <!-- Signatures -->
-                            <div style="margin-top: 40px; font-size: 10.5pt; color: #000000;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                                    <div>අත්සන් කළේ:</div>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                    <div>
-                                        <span>සමිතියේ මුද්‍රාව ........................</span><br><br>
-                                        <span>දිනය ........................</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">ගරු සභාපති</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">ගරු ලේකම්</span>
-                                    </div>
-                                </div>
-                            </div>
+                            ${lodSig}
                         </div>
                         ${footerHtml}
                     `;
@@ -795,25 +890,7 @@
                             </div>
 
                             <!-- Signatures -->
-                            <div style="margin-top: 40px; font-size: 10.5pt; color: #000000;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                                    <div>Signed by:</div>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                    <div>
-                                        <span>Society Seal ........................</span><br><br>
-                                        <span>Date ........................</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Hon. President</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Hon. Secretary</span>
-                                    </div>
-                                </div>
-                            </div>
+                            ${lodSig}
                         </div>
                         ${footerHtml}
                     `;
@@ -1069,12 +1146,7 @@
                             <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
-                                <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">කළමනාකරු</span>
-                                    </div>
-                                </div>
+                                ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1151,12 +1223,7 @@
                             <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
-                                <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Manager</span>
-                                    </div>
-                                </div>
+                                ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1230,16 +1297,7 @@
                             <div style="margin-top: 25px; font-size: 10.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">ගරු සභාපති</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">කළමනාකරු</span>
-                                    </div>
-                                </div>
+                                ${twoPartySig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1308,16 +1366,7 @@
                             <div style="margin-top: 25px; font-size: 10.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Hon. President</span>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Manager</span>
-                                    </div>
-                                </div>
+                                ${twoPartySig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1404,12 +1453,7 @@
                             <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
-                                <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">කළමනාකරු</span>
-                                    </div>
-                                </div>
+                                ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1491,12 +1535,7 @@
                             <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
-                                <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                    <div style="text-align: center;">
-                                        <span>.......................................................</span><br>
-                                        <span style="font-weight: 700;">Manager</span>
-                                    </div>
-                                </div>
+                                ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
@@ -1522,43 +1561,18 @@
                         title = 'පළමු සිහිකැඳවීමයි.!';
                         body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් දැනුම් දීමට සිදුව ඇත.';
                         body2 = `මෙම ලිපියේ දින සිට දින 14ක් ඇතුලත ඔබ විසින් ණය මුදල් ගෙවා අවසන් කිරීමට අපොහොසත් වුවහොත් ඔබට විරුද්ධව ඉදිරි ක්‍රියාමාර්ග ගැනීමට සිදුවන බව දන්වා සිටිමි.`;
-                        signers = `
-                            <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                <div style="text-align: center; color: #000000;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">කළමනාකරු</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = singleManagerSig;
                     } else if (letterType === 'reminder2') {
                         title = 'දෙවැනි සිහිකැඳවීමයි.!';
                         body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගෙන ඇති ණය මුදල මේ වන විට ගෙවා නොමැති බව දෙවන වතාවටත් කණගාටුවෙන් දන්වා සිටින අතර ඒ සඳහා අයවිය යුතු ණය මුදල හා ණය පොලිය පහත සඳහන් පරිදි වේ.';
                         body2 = `මෙම ලිපියේ දින සිට දින 14ක් ඇතුලත ඔබ විසින් ණය මුදල් ගෙවා අවසන් කිරීමට අපොහොසත් වුවහොත් ඔබට විරුද්ධව ඉදිරි ක්‍රියාමාර්ග ගැනීමට සිදුවන බව දන්වා සිටිමි.`;
-                        signers = `
-                            <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                <div style="text-align: center; color: #000000;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">කළමනාකරු</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = singleManagerSig;
                     } else if (letterType === 'final_notice') {
                         title = 'අවසාන දැනුම් දීමයි.!';
                         body1 = 'ඔබ විසින් අප සමිතියෙන් ලබා ගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් තෙවන වතාවටත් දැනුම් දීමට සිදුව ඇත. ඒ සමඟම පසුගිය දින 30 තුල අප ඔබගේ ණය මුදල අය කර ගැනීමට ගන්නා ලද සියළු ක්‍රියාමාර්ගයන් පිළිබඳව යහපත් ප්‍රතිපල නොලැබු බව දන්වා සිටිමු. කිසිම යහපත් ප්‍රතිචාරයක් නොලැබීමෙන් අපට හැඟීයන්නේ ඔබ එම ණය මුදල ගෙවීම් මගහැරීම සහ වංචනික ලෙස අතපසු කරන බවයි.';
                         body2 = '';
                         finalParagraph = `එම මුදල එසේ නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් සංශෝධිත ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය අනුව විසඳිය නොහැකි ආරවුලක් වශයෙන් සලකා ඔබගෙන් ලැබිය යුතු මුදලත්, අදාළ පොලියත් මෙම නඩුවට වැයවන සියලු වියදමත් ඔබගෙන් අයකර ගැනීමට බලය ලැබෙන එන්තරවාසියක් ලබා ගැනීම සඳහා පළාත් සමුපකාර උප කොමසාරිස්තුමා/තුමිය වෙත මෙම කරුණු යොමු කරන බව මෙයින් දැනුම් දෙමි.`;
-                        signers = `
-                            <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px; color: #000000;">
-                                <div style="text-align: center;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">ගරු සභාපති</span>
-                                </div>
-                                <div style="text-align: center;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">කළමනාකරු</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = twoPartySig;
                     }
 
                     htmlContent = `
@@ -1660,43 +1674,18 @@
                         title = 'FIRST REMINDER NOTICE!';
                         body1 = 'We regret to inform you that the repayments for the above-mentioned loan obtained by you from our society are not being made properly.';
                         body2 = `If you fail to settle this loan amount within 14 days from the date of this letter, we will be compelled to initiate legal action against you.`;
-                        signers = `
-                            <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                <div style="text-align: center; color: #000000;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">Manager</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = singleManagerSig;
                     } else if (letterType === 'reminder2') {
                         title = 'SECOND REMINDER NOTICE!';
                         body1 = 'We regret to inform you for the second time that the loan obtained by you from our society has not been settled yet, and the loan amount and interest due are as follows.';
                         body2 = `If you fail to settle this loan amount within 14 days from the date of this letter, we will be compelled to initiate legal action against you.`;
-                        signers = `
-                            <div style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 50px;">
-                                <div style="text-align: center; color: #000000;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">Manager</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = singleManagerSig;
                     } else if (letterType === 'final_notice') {
                         title = 'FINAL NOTICE!';
                         body1 = 'We regret to inform you for the third time that the above-mentioned loan obtained from our society is not being paid properly. Furthermore, we inform you that all actions taken by us in the past 30 days to recover your loan have not yielded positive results. Due to the lack of any positive response, we suspect that you are intentionally avoiding and fraudulently delaying the payment of the loan.';
                         body2 = '';
                         finalParagraph = `If this amount is not paid accordingly, please be informed that we will refer this matter to the Provincial Deputy Commissioner of Cooperative Development. This is to obtain an award/decree enabling us to recover the amount due from you, along with the relevant interest and all expenses incurred for this case, treating it as an unresolved dispute under Section 58 of the Cooperative Societies Act No. 05 of 1972, as amended by the Cooperative Societies (Amendment) Act No. 32 of 1983.`;
-                        signers = `
-                            <div style="display: flex; justify-content: space-between; margin-top: 30px; padding: 0 40px; color: #000000;">
-                                <div style="text-align: center;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">Hon. President</span>
-                                </div>
-                                <div style="text-align: center;">
-                                    <span>.......................................................</span><br>
-                                    <span style="font-weight: 700;">Manager</span>
-                                </div>
-                            </div>
-                        `;
+                        signers = twoPartySig;
                     }
 
                     htmlContent = `

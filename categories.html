@@ -1,6 +1,5 @@
-?<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,30 +8,22 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
-                <script src="js/db.js?v=3.15"></script>
+    <script src="js/db.js?v=3.15"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css?v=4.2">
 </head>
-
 <body>
-    
-
-    <!-- Main Content -->
-        <!-- Modern Top Navigation -->
     <nav class="modern-top-nav">
         <div class="nav-container">
-                        <div class="nav-logo">
-                <div class="logo-wrapper">
-                    <img src="assets/logo.png" alt="Logo">
-                </div>
+            <div class="nav-logo">
+                <div class="logo-wrapper"><img src="assets/logo.png" alt="Logo"></div>
                 <div class="brand-info">
                     <span class="nav-brand">GSCS Bank</span>
                     <span class="system-name">Loan Recovery System</span>
                     <span class="powered-by">Powered by <span class="power-glow">Iraasoft</span></span>
                 </div>
             </div>
-            
-                                                                        <div class="nav-links" id="topNavLinks">
+            <div class="nav-links" id="topNavLinks">
                 <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a>
                 <a href="calendar.html" class="nav-link"><i data-lucide="calendar"></i> <span>Calendar</span></a>
                 <a href="bulk-messenger.html" class="nav-link"><i data-lucide="send"></i> <span>Messenger</span></a>
@@ -46,10 +37,7 @@
                 <a href="legal-actions.html" class="nav-link"><i data-lucide="scale"></i> <span>Legal Actions</span></a>
                 <a href="closed-loans.html" class="nav-link"><i data-lucide="archive"></i> <span>Closed Loans</span></a>
             </div>
-
             <div class="nav-right">
-                
-                
                 <div class="nav-dropdown">
                     <button class="nav-circle-btn"><i data-lucide="user"></i></button>
                     <div class="dropdown-menu align-right" style="width:220px">
@@ -69,164 +57,105 @@
             </div>
         </div>
     </nav>
-    <!-- Main -->
     <main class="main-content">
-        <!-- Header -->
         <header class="top-header">
-            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print"><div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div></div>
-
-            
+            <div style="margin-left:auto; text-align:right; margin-right:20px" class="no-print">
+                <div id="currentTime" style="font-size:1.2rem; font-weight:800; color:#1e1b4b">00:00:00</div>
+            </div>
             <div>
                 <h2>Loan Categories</h2>
                 <p>Manage and group different loan types</p>
             </div>
         </header>
-
-        <!-- Content Area -->
         <div class="content-area">
             <div id="loading" style="text-align:center;padding:100px;color:#7c3aed">
                 <i data-lucide="loader-2" class="animate-spin" style="width:40px;height:40px"></i>
             </div>
-
-            <div id="categoriesGrid"
-                style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:24px"
-                class="hidden">
-                <!-- Data populated here -->
-            </div>
+            <div id="categoriesGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:24px" class="hidden"></div>
         </div>
-            </div>
-        </div>
-
         <script>
-            {
-                window.initPage = async () => {
-                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
-                    if (sessionStorage.getItem('lrms_role') === 'admin') {
-                        document.getElementById('adminMenuLink')?.classList.remove('hidden');
-                        document.getElementById('settingsMenuLink')?.classList.remove('hidden');
-                    }
-                    setTimeout(fetchAndGroupCategories, 150);
-                };
-
-                window.fetchAndGroupCategories = async function() {
-                    try {
-                        const allCust = await getAllCustomers();
-                        const activeCust = allCust.filter(c => c.status !== 'Loan Closed');
-                        const grouped = {};
-
-                        activeCust.forEach(c => {
-                            const cat = c.category || 'Uncategorized';
-                            if (!grouped[cat]) {
-                                grouped[cat] = {
-                                    name: cat,
-                                    count: 0,
-                                    totalAmount: 0,
-                                    customers: []
-                                };
-                            }
-                            grouped[cat].count += 1;
-                            grouped[cat].totalAmount += (c.loanAmount || 0);
-                            grouped[cat].customers.push(c);
-                        });
-                        renderCategories(Object.values(grouped));
-                    } catch (err) { console.error(err); }
+        {
+            window.initPage = async () => {
+                if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                if (sessionStorage.getItem('lrms_role') === 'admin') {
+                    document.getElementById('adminMenuLink')?.classList.remove('hidden');
+                    document.getElementById('settingsMenuLink')?.classList.remove('hidden');
                 }
+                setTimeout(fetchAndGroupCategories, 150);
+            };
 
-                window.renderCategories = function(catArray) {
-                    const ld = document.getElementById('loading');
-                    if (ld) ld.classList.add('hidden');
-                    const grid = document.getElementById('categoriesGrid');
-                    if (!grid) return;
-                    grid.classList.remove('hidden');
-                    grid.innerHTML = '';
-
-                    if (catArray.length === 0) {
-                        grid.innerHTML = `<div class="card" style="grid-column:1/-1;padding:60px;text-align:center;color:#9ca3af;font-style:italic">No active loans found.</div>`;
-                        return;
-                    }
-
-                    // Sort by highest value 
-                    catArray.sort((a, b) => b.totalAmount - a.totalAmount);
-
-                    catArray.forEach(cat => {
-                        const colors = ['violet', 'amber', 'emerald', 'red'];
-                        const color = colors[cat.name.length % colors.length];
-
-                        const preview = cat.customers.slice(0, 3).map(c => `
-                            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-                                <div style="width:4px;height:4px;border-radius:50%;background:var(--violet-400)"></div>
-                                <div style="font-size:0.75rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-                                    ${c.name} <span style="opacity:0.6">(${c.accountNo})</span>
-                                </div>
-                            </div>`).join('');
-
-                        const hiddenCount = cat.count > 3 ? `<div style="font-size:0.7rem;color:var(--text-muted);font-weight:600;margin-top:8px;padding-left:12px">+ ${cat.count - 3} more...</div>` : '';
-
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.style.cursor = 'pointer';
-                        card.onclick = () => {
-                            if (typeof window.navigate === 'function') window.navigate('index.html');
-                            else window.location.href = `index.html`;
-                        };
-
-                        card.innerHTML = `
-                            <div class="card-header" style="border-bottom:none;padding-bottom:0">
-                                <div>
-                                    <h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary)">${cat.name}</h3>
-                                    <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--text-secondary);margin-top:4px">
-                                        <i data-lucide="users" style="width:14px;height:14px"></i> ${cat.count} Customers
-                                    </div>
-                                </div>
-                                <div class="stat-icon ${color}" style="width:48px;height:48px;border-radius:14px">
-                                    <i data-lucide="layers" style="width:24px;height:24px"></i>
-                                </div>
-                            </div>
-                            <div class="card-body" style="padding-top:10px">
-                                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px">
-                                    <p style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:2px">Total Exposure</p>
-                                    <p style="font-family:'Poppins',sans-serif;font-size:1.25rem;font-weight:800;color:var(--text-primary)">
-                                        LKR ${cat.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </p>
-                                </div>
-                                <div style="padding-left:4px">
-                                    ${preview}
-                                    ${hiddenCount}
-                                </div>
-                            </div>
-                            <div style="background:var(--violet-50);padding:10px 24px;display:flex;align-items:center;justify-content:flex-end;font-size:0.8rem;font-weight:700;color:var(--violet-700);border-top:1px solid var(--violet-100)">
-                                See Dashboard <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:6px"></i>
-                            </div>
-                        `;
-                        grid.appendChild(card);
+            window.fetchAndGroupCategories = async function() {
+                try {
+                    const allCust = await getAllCustomers();
+                    const activeCust = allCust.filter(c => c.status !== 'Loan Closed');
+                    const grouped = {};
+                    activeCust.forEach(c => {
+                        const cat = c.category || 'Uncategorized';
+                        if (!grouped[cat]) grouped[cat] = { name: cat, count: 0, totalAmount: 0, customers: [] };
+                        grouped[cat].count += 1;
+                        grouped[cat].totalAmount += (c.loanAmount || 0);
+                        grouped[cat].customers.push(c);
                     });
-                    if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+                    renderCategories(Object.values(grouped));
+                } catch (err) { console.error(err); }
+            };
+
+            window.renderCategories = function(catArray) {
+                const ld = document.getElementById('loading');
+                if (ld) ld.classList.add('hidden');
+                const grid = document.getElementById('categoriesGrid');
+                if (!grid) return;
+                grid.classList.remove('hidden');
+                grid.innerHTML = '';
+
+                if (catArray.length === 0) {
+                    grid.innerHTML = '<div class="card" style="grid-column:1/-1;padding:60px;text-align:center;color:#9ca3af;font-style:italic">No active loans found.</div>';
+                    return;
                 }
 
-                // Initial run if already loaded
-            }
+                catArray.sort((a, b) => b.totalAmount - a.totalAmount);
+                const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+                catArray.forEach(cat => {
+                    const colors = ['violet','amber','emerald','red'];
+                    const color = colors[cat.name.length % colors.length];
+                    const preview = cat.customers.slice(0,3).map(c =>
+                        '<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><div style="width:4px;height:4px;border-radius:50%;background:var(--violet-400)"></div>' +
+                        '<div style="font-size:0.75rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' +
+                        esc(c.name) + ' <span style="opacity:0.6">(' + esc(c.accountNo) + ')</span></div></div>'
+                    ).join('');
+                    const hiddenCount = cat.count > 3 ? '<div style="font-size:0.7rem;color:var(--text-muted);font-weight:600;margin-top:8px;padding-left:12px">+ ' + (cat.count - 3) + ' more...</div>' : '';
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => { if (typeof window.navigate === 'function') window.navigate('index.html'); else window.location.href = 'index.html'; };
+                    card.innerHTML =
+                        '<div class="card-header" style="border-bottom:none;padding-bottom:0">' +
+                            '<div>' +
+                                '<h3 style="font-size:1.1rem;font-weight:800;color:var(--text-primary)">' + esc(cat.name) + '</h3>' +
+                                '<div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:700;color:var(--text-secondary);margin-top:4px">' +
+                                '<i data-lucide="users" style="width:14px;height:14px"></i> ' + cat.count + ' Customers</div>' +
+                            '</div>' +
+                            '<div class="stat-icon ' + color + '" style="width:48px;height:48px;border-radius:14px"><i data-lucide="layers" style="width:24px;height:24px"></i></div>' +
+                        '</div>' +
+                        '<div class="card-body" style="padding-top:10px">' +
+                            '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px">' +
+                                '<p style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:2px">Total Exposure</p>' +
+                                '<p style="font-family:\'Poppins\',sans-serif;font-size:1.25rem;font-weight:800;color:var(--text-primary)">LKR ' + cat.totalAmount.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) + '</p>' +
+                            '</div>' +
+                            '<div style="padding-left:4px">' + preview + hiddenCount + '</div>' +
+                        '</div>' +
+                        '<div style="background:var(--violet-50);padding:10px 24px;display:flex;align-items:center;justify-content:flex-end;font-size:0.8rem;font-weight:700;color:var(--violet-700);border-top:1px solid var(--violet-100)">' +
+                        'See Dashboard <i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:6px"></i></div>';
+                    grid.appendChild(card);
+                });
+                if (typeof lucide !== 'undefined') lucide.createIcons({ root: document.querySelector('.main-content') || document.body });
+            };
+        }
         </script>
     </main>
-
-
     <script src="js/app.js?v=3.21"></script>
-<input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
+    <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="handleRestore(event)">
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

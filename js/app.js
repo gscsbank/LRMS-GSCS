@@ -1077,7 +1077,7 @@ async function deleteDocument(id) {
     }
 }
 
-// Auto Purge specific corrupted/test account '010101187 - 2' from IndexedDB
+// Auto Purge specific corrupted/test account '010101187 - 2' and clean invalid customer names
 async function autoPurgeTargetedAccount() {
     try {
         if (!window.db) return;
@@ -1087,6 +1087,14 @@ async function autoPurgeTargetedAccount() {
             if (acc === '010101187 - 2' || acc === '010101187-2' || acc.includes('010101187 - 2')) {
                 await window.db.delete("actions", action.id);
                 console.log("Auto-purged target action record:", action.id);
+            }
+        }
+        // Auto clean any customer names that had account numbers embedded from previous parser passes
+        const allCusts = await window.db.getAll("customers");
+        for (const cust of allCusts) {
+            if (cust.name && cust.name.match(/\b\d{7,12}\b/)) {
+                cust.name = cust.name.replace(/\b\d{7,12}\b/g, '').trim();
+                await window.db.update("customers", cust.id, cust);
             }
         }
         invalidateCache('all');
