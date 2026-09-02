@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -49,7 +49,7 @@
             height: 297mm;
             max-height: 297mm;
             color: #000000 !important;
-            padding: 10mm 14mm 8mm 14mm;
+            padding: 7mm 12mm 6mm 12mm;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             display: flex;
@@ -141,7 +141,7 @@
                 height: 297mm !important;
                 max-height: 297mm !important;
                 min-height: 297mm !important;
-                padding: 10mm 14mm 8mm 14mm !important;
+                padding: 7mm 12mm 6mm 12mm !important;
                 box-shadow: none !important;
                 margin: 0 !important;
                 border: none !important;
@@ -556,7 +556,7 @@
             const showSig = document.getElementById('includeSignatures') && document.getElementById('includeSignatures').checked;
 
             const singleManagerSig = (lang === 'sin') ? `
-                <div style="display: flex; justify-content: flex-end; margin-top: 15px; padding-right: 30px; color: #000000;">
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px; padding-right: 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
@@ -565,7 +565,7 @@
                     </div>
                 </div>
             ` : `
-                <div style="display: flex; justify-content: flex-end; margin-top: 15px; padding-right: 30px; color: #000000;">
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px; padding-right: 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_manager.png?v=2" alt="sign" style="height:65px;max-height:75px;max-width:180px;object-fit:contain;margin-bottom:-10px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
@@ -576,7 +576,7 @@
             `;
 
             const twoPartySig = (lang === 'sin') ? `
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px; padding: 0 30px; color: #000000;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding: 0 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
@@ -591,7 +591,7 @@
                     </div>
                 </div>
             ` : `
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px; padding: 0 30px; color: #000000;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; padding: 0 30px; color: #000000;">
                     <div style="text-align: center; display: flex; flex-direction: column; align-items: center;">
                         ${showSig ? `<img src="assets/sign_chairman.png?v=3" alt="sign" style="height:46px;max-height:50px;max-width:140px;object-fit:contain;margin-bottom:-8px;filter:grayscale(100%) contrast(1.4);">` : `<span style="display:block;height:65px;"></span>`}
                         <div style="width:200px;border-top:1.5px solid #000;padding-top:4px;">
@@ -608,8 +608,8 @@
             `;
 
             const lodSig = (lang === 'sin') ? `
-                <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <div style="margin-top: 8px; font-size: 10pt; color: #000000;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                         <div>අත්සන් කළේ:</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -632,8 +632,8 @@
                     </div>
                 </div>
             ` : `
-                <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <div style="margin-top: 8px; font-size: 10pt; color: #000000;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                         <div>Signed by:</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -661,7 +661,7 @@
             let headerHtml = '';
             if (letterType !== 'legal_reminder') {
                 headerHtml = `
-                    <div style="border-bottom: 2.5px double #000000; padding-bottom: 8px; margin-bottom: 12px;">
+                    <div style="border-bottom: 2.5px double #000000; padding-bottom: 8px; margin-bottom: 6px;">
                         <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
                             <div class="logo-container">
                                 <img src="assets/logo.png" alt="GSCS Logo">
@@ -679,7 +679,7 @@
                 `;
             } else {
                 headerHtml = `
-                    <div style="border-top: 2.5px double #000000; border-bottom: 2.5px double #000000; padding: 10px 0; margin-bottom: 18px; text-align: center;">
+                    <div style="border-top: 2.5px double #000000; border-bottom: 2.5px double #000000; padding: 10px 0; margin-bottom: 8px; text-align: center;">
                         <h1 style="font-size: 22px; font-weight: 900; letter-spacing: 0.5px; margin: 0; font-family: 'Inter', sans-serif; color: #000000; text-transform: uppercase;">
                             ${lang === 'sin' ? 'නීතිමය සිහිකැදවීමයි !' : 'LEGAL REMINDER!'}
                         </h1>
@@ -769,12 +769,12 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Top Right Date -->
-                            <div style="text-align: right; font-weight: 700; margin-bottom: 20px; color: #000000;">
+                            <div style="text-align: right; font-weight: 700; margin-bottom: 10px; color: #000000;">
                                 ${formattedLetterDate}
                             </div>
 
                             <!-- Borrower and Guarantor Details Block -->
-                            <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.6; display: grid; grid-template-columns: 100px 1fr; gap: 4px; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; display: grid; grid-template-columns: 100px 1fr; gap: 4px; color: #000000;">
                                 <div style="font-weight: 700;">ණයකරු -</div>
                                 <div>${memberId} - ${name}</div>
                                 
@@ -797,14 +797,14 @@
                             </div>
 
                             <!-- Title -->
-                            <div style="text-align: center; margin: 25px 0 20px 0;">
+                            <div style="text-align: center; margin: 10px 0 10px 0;">
                                 <span style="font-size: 12pt; font-weight: bold; border-bottom: 1.5pt solid #000000; padding-bottom: 2px; text-transform: uppercase; color: #000000;">
                                     එන්තරවාසිය - (ණය)
                                 </span>
                             </div>
 
                             <!-- Body -->
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතියේ පොත්පත් අනුව 
                                 <strong>${loanGrantedDate}</strong> දින <strong>${loanAccNo}</strong> දරන ගිවිසුම් ප්‍රකාර බැඳීම්කරයේ 
                                 ප්‍රධාන ණයකරු / පළමු ඇපකරු / දෙවන ඇපකරු ඔබගෙන් ඉහත කී සමිතියට ණය මුදල 
@@ -813,7 +813,7 @@
                                 <strong>රු. ${formatCurrency(demandTotal)}</strong> ඔබගෙන් අයවීමට තිබේ.
                             </div>
 
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 මෙහි ණය මුදල රු. ${formatCurrency(demandPrincipal)} ද පොළී මුදල වන රු. ${formatCurrency(demandInterest)} රු ${formatCurrency(demandTotal)} ද වූ මුලු මුදල 
                                 <strong>${demandDueDate}</strong> දින දහවල් <strong>${demandDueTime}</strong> ට පෙර ගෙවන ලෙස ඔබට දැන්විය යුතු බව සමිතියේ ගරු කාරක සභාව අප වෙත නියෝග කර තිබේ. 
                                 මේ අනුව ක්‍රියා කිරීමට ඔබ අපොහොසත් වුවහොත් ඉදින් මේ ආරවුල 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වෙනි වගන්තියට අනුව ආරවුලක් වශයෙන් සලකා 
@@ -821,7 +821,7 @@
                                 පළාත් සමුපකාර සංවර්ධන උප කොමසාරිස්තුමා වෙත මෙම ආරවුල යොමු කරනු ලැබේ.
                             </div>
 
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 35px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 14px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 මේ සම්බන්ධයෙන් අදාල සමිතියේ පොත්පත් හා ලියකියවිලි ආදිය පරීක්ෂා කර බැලීමට ඔබට අවශ්‍ය නම් සමිතියේ කළමනාකරු සමඟ නියම කරගත් දිනයක් හා වේලාවක් යොදා පරීක්ෂා කර බැලිය හැකි බව දන්වමි.
                             </div>
 
@@ -835,12 +835,12 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Top Right Date -->
-                            <div style="text-align: right; font-weight: 700; margin-bottom: 20px; color: #000000;">
+                            <div style="text-align: right; font-weight: 700; margin-bottom: 10px; color: #000000;">
                                 ${formattedLetterDate}
                             </div>
 
                             <!-- Borrower and Guarantor Details Block -->
-                            <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.6; display: grid; grid-template-columns: 120px 1fr; gap: 4px; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; display: grid; grid-template-columns: 120px 1fr; gap: 4px; color: #000000;">
                                 <div style="font-weight: 700;">Borrower -</div>
                                 <div>${memberId} - ${name}</div>
                                 
@@ -863,14 +863,14 @@
                             </div>
 
                             <!-- Title -->
-                            <div style="text-align: center; margin: 25px 0 20px 0;">
+                            <div style="text-align: center; margin: 10px 0 10px 0;">
                                 <span style="font-size: 12pt; font-weight: bold; border-bottom: 1.5pt solid #000000; padding-bottom: 2px; text-transform: uppercase; color: #000000;">
                                     LETTER OF DEMAND - (LOAN)
                                 </span>
                             </div>
 
                             <!-- Body -->
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 According to the books and records of the Galapitiyagama Thrift & Credit Co-operative Society, as per the agreement dated 
                                 <strong>${loanGrantedDate}</strong> under Loan Account No: <strong>${loanAccNo}</strong>, you as the principal borrower / first guarantor / second guarantor owe the society a loan principal of 
                                 <strong>LKR ${formatCurrency(demandPrincipal)}</strong> and relevant interest of 
@@ -878,12 +878,12 @@
                                 <strong>LKR ${formatCurrency(demandTotal)}</strong>.
                             </div>
 
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 The Board of Directors of the society has instructed us to notify you to pay the principal of LKR ${formatCurrency(demandPrincipal)} and interest of LKR ${formatCurrency(demandInterest)}, totaling LKR ${formatCurrency(demandTotal)}, on or before 
                                 <strong>${demandDueDate}</strong> at <strong>${demandDueTime}</strong>. If you fail to comply, this dispute will be referred to the Provincial Deputy Commissioner of Cooperative Development to obtain an arbitration award enabling us to recover the amount due, relevant interest, and all legal costs incurred for this case, treating this as an unresolved dispute under Section 58 of the Cooperative Societies Act No. 05 of 1972.
                             </div>
 
-                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 35px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-justify: inter-word; text-indent: 40px; margin-bottom: 14px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 Please be informed that if you wish to inspect the books and documents of the society related to this loan, you may do so by scheduling a date and time with the Manager of the society.
                             </div>
 
@@ -900,12 +900,12 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Top Right Date -->
-                            <div style="text-align: right; font-weight: 700; margin-bottom: 20px; color: #000000;">
+                            <div style="text-align: right; font-weight: 700; margin-bottom: 10px; color: #000000;">
                                 ${formattedLetterDate}
                             </div>
 
                             <!-- Borrower and Guarantor Details Block -->
-                            <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.7; display: grid; grid-template-columns: 110px 1fr; gap: 4px; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; display: grid; grid-template-columns: 110px 1fr; gap: 4px; color: #000000;">
                                 <div style="font-weight: 700;">ණයකරු -</div>
                                 <div>${memberId} - ${name}</div>
                                 <div style="font-weight: 700;">ලිපිනය -</div>
@@ -932,7 +932,7 @@
                             </div>
 
                             <!-- Body -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 සීමා රහිත ගලපිටියාගම සකසුරුවම් හා ණය ගනුදෙනු පිළිබඳ සමුපකාර සමිතියේ පොත්පත් අනුව 
                                 <strong>${loanGrantedDate}</strong> දින <strong>${loanAccNo}</strong> දරන ගිවිසුම් ප්‍රකාර බැඳීම්කරයේ 
                                 ප්‍රධාන ණයකරු / පළමු ඇපකරු / දෙවන ඇපකරු ඔබගෙන් ඉහත කී සමිතියට ණය මුදල 
@@ -940,22 +940,22 @@
                                 <strong>රු. ${formatCurrency(demandInterest)}</strong> එකතුව 
                                 <strong>රු. ${formatCurrency(demandTotal)}</strong> ඔබගෙන් අයවීමට තිබේ.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් සංශෝධිත ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නැවත කිසිදු දැනුම් දීමකින් තොරව කඩිනමින් නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ඔබගේ කටයුතු මත ඉදිරි පියවර තීරණය කරනු ලැබේ.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; font-weight: bold; color: #000000;">
                                 මෙම ලිපිය ඔබට ලැබෙන අවසන් අවවාදය වන අතර, නීතිමය ක්‍රියාමාර්ග තුලින් ඇතිවන අපහසුතාවන්ගෙන් සහනයක් පිණිස ඔබට ලැබෙන අවසන් අවස්ථාවයි.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ඔබගේ විශේෂ අවශ්‍යතා හෝ ගෙවීම් සැලැස්මක් පිළිබඳව සාකච්ඡා කිරීමට අවශ්‍ය නම්, කරුණාකර පහත දුරකථන අංක අමතන්න.
                                 <br><strong>දුරකථන අංක : 0372260658 / 0763154602</strong>
                             </div>
 
                             <!-- Signatures -->
-                            <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 10pt; color: #000000;">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
                                     <span>.......................................................</span>
                                     <span style="font-weight: 700;">නීති නියෝජිත</span>
@@ -964,7 +964,7 @@
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 35px; border-top: 1px dashed #000000; padding-top: 12px; font-size: 8.5pt; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; line-height: 1.5; color: #000000;">
+                            <div style="margin-top: 14px; border-top: 1px dashed #000000; padding-top: 12px; font-size: 8.5pt; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; line-height: 1.45; color: #000000;">
                                 <div>
                                     <div>පිටපත් 01 - සමුපකාර සංවර්ධන සහකාර කොමසාරිස්තුමිය</div>
                                     <div>පිටපත් 02 - සමුපකාර සංවර්ධන නීති අංශය</div>
@@ -983,12 +983,12 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Top Right Date -->
-                            <div style="text-align: right; font-weight: 700; margin-bottom: 20px; color: #000000;">
+                            <div style="text-align: right; font-weight: 700; margin-bottom: 10px; color: #000000;">
                                 ${formattedLetterDate}
                             </div>
 
                             <!-- Borrower and Guarantor Details Block -->
-                            <div style="margin-bottom: 22px; font-size: 10pt; line-height: 1.7; display: grid; grid-template-columns: 130px 1fr; gap: 4px; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; display: grid; grid-template-columns: 130px 1fr; gap: 4px; color: #000000;">
                                 <div style="font-weight: 700;">Borrower -</div>
                                 <div>${memberId} - ${name}</div>
                                 <div style="font-weight: 700;">Address -</div>
@@ -1015,29 +1015,29 @@
                             </div>
 
                             <!-- Body -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 According to the books and records of the Galapitiyagama Thrift & Credit Co-operative Society, as per the agreement dated 
                                 <strong>${loanGrantedDate}</strong> under Loan Account No: <strong>${loanAccNo}</strong>, you as the principal borrower / first guarantor / second guarantor owe the society a loan principal of 
                                 <strong>LKR ${formatCurrency(demandPrincipal)}</strong> and relevant interest of 
                                 <strong>LKR ${formatCurrency(demandInterest)}</strong>, totaling 
                                 <strong>LKR ${formatCurrency(demandTotal)}</strong>.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 If the said amount is not paid before <strong>${demandDueDate}</strong>, we regret to inform you that your loan agreement will be forwarded to the Legal Department of the Cooperative Commissioner to initiate legal action immediately without any further notification under Section 58 of the Cooperative Societies Act No. 05 of 1972, as amended by the Cooperative Societies (Amendment) Act No. 32 of 1983.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 Future steps will be decided based on your actions.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; font-weight: bold; color: #000000;">
                                 This letter is the final warning and the last opportunity to resolve this matter to avoid difficulties arising from legal actions.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 If you need to discuss your special requirements or a payment plan, please call the following telephone numbers.
                                 <br><strong>Telephone: 0372260658 / 0763154602</strong>
                             </div>
 
                             <!-- Signatures -->
-                            <div style="margin-top: 15px; font-size: 10pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 10pt; color: #000000;">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
                                     <span>.......................................................</span>
                                     <span style="font-weight: 700;">Legal Representative</span>
@@ -1046,7 +1046,7 @@
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 35px; border-top: 1px dashed #000000; padding-top: 12px; font-size: 8.5pt; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; line-height: 1.5; color: #000000;">
+                            <div style="margin-top: 14px; border-top: 1px dashed #000000; padding-top: 12px; font-size: 8.5pt; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; line-height: 1.45; color: #000000;">
                                 <div>
                                     <div>Copy 01 - Assistant Commissioner of Cooperative Development</div>
                                     <div>Copy 02 - Cooperative Development Legal Department</div>
@@ -1066,7 +1066,7 @@
                 const title = lang === 'sin' ? 'නීති අංශය වෙත යොමු කිරීම සම්බන්ධවයි.!' : 'REFERRAL TO LEGAL DEPARTMENT!';
                 
                 const titleBlock = `
-                    <div style="text-align: center; margin: 15px 0 20px 0;">
+                    <div style="text-align: center; margin: 8px 0 10px 0;">
                         <span class="print-title-box">
                             ${title}
                         </span>
@@ -1078,7 +1078,7 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
@@ -1086,27 +1086,27 @@
                             ${titleBlock}
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ඔබ විසින් අප සමිතියෙන් ලබාගත් ඉහත සඳහන් ණය මුදල නිසියාකාරව ගෙවීම් සිදුනොකරන බව කණගාටුවෙන් යුතුව දැනුම් දීමට සිදුව ඇත. වරින් වර ඔබ වෙත ඒ පිළිබඳව අප විසින් දැනුවත් කිරීම් සිදුකරනු ලැබුවද ඔබ විසින් අඛණ්ඩව ණය ගෙවීම නොසලකා හැරීම සම්බන්ධව සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය සම්බන්ධව තොරතුරු ලබා දීමට සිදුවී තිබේ.
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 280px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1131,19 +1131,19 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
                                 ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1155,7 +1155,7 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
@@ -1163,27 +1163,27 @@
                             ${titleBlock}
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">Dear Sir / Madam,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">Dear Sir / Madam,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>Regarding the loan of LKR ${loanAmountStr} obtained on ${loanGrantedDate}.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 We regret to inform you that the repayments for the above-mentioned loan obtained by you from our society are not being made properly. Despite informing you about this from time to time, you have continuously neglected the repayments. Therefore, we have been forced to submit details of your loan to the Legal Department of the Cooperative Commissioner.
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 In relation to this loan, the following payments are due as of <strong>${formattedLetterDate}</strong>:
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 320px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 320px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 180px; font-weight: normal;">Arrears Installments</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1208,19 +1208,19 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 If the said amount is not paid before <strong>${demandDueDate}</strong>, we regret to inform you that your loan agreement will be forwarded to the Legal Department of the Cooperative Commissioner to initiate legal action under Section 58 of the Cooperative Societies Act No. 05 of 1972, as amended by the Cooperative Societies (Amendment) Act No. 32 of 1983.
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
                                 ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>Copy 01: First Guarantor - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>Copy 02: Second Guarantor - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1237,64 +1237,64 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraphs -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ඔබ විසින් අප සමිතියෙන් ලබාගෙන ඇති ව්‍යාපාරික ණය මුදලට අදාල වාරික ගෙවීම් නිසියාකාරව සිදු නොවන බව කණගාටුවෙන් දැනුම් දීමට සිදුවේ.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 එබැවින්, ඔබගේ ණය ගිවිසුමට අනුව නියමිත දිනයට අදාල වාරිකය ගෙවීමට කටයුතු කරන ලෙස කාරුණිකව දැනුම් දෙමු. තවද, අදාල ගෙවීම් දිනය ඉක්මවා දින දෙකක් ඇතුලත වාරිකය ගෙවීම සිදු නොකලහොත්, නියමිත අමතර දඩ පොලියක් අයකිරීමට සිදුවන බවද මෙයින් දැනුම් දෙමු.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ව්‍යාපාරික කාර්යබහුලත්වය හේතුවෙන් බැංකු කාර්යාලය වෙත පැමිණ ගෙවීම් සිදු කිරීම අපහසු නම්, අපගේ ක්ෂේත්‍ර නිලධාරී මහත්වරුන් වෙත ඔබගේ වාරික ගෙවීම් භාර දිය හැකිය.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 තවද, ව්‍යාපාරික ණය වාරික ගෙවීම් හෝ වෙනත් ඔබගේ ඉතුරුම් අවශ්‍යතා සඳහා ඔබ අසලටම පැමිණ සේවය ලබාදීමට අපගේ නිලධාරීන් සූදානමින් සිටී.
                             </div>
                             
-                            <div style="margin-left: 40px; margin-bottom: 24px; font-size: 10.5pt; line-height: 1.6; font-weight: 700; color: #000000;">
+                            <div style="margin-left: 40px; margin-bottom: 24px; font-size: 9.5pt; line-height: 1.45; font-weight: 700; color: #000000;">
                                 <div><u>ක්ෂේත්‍ර නිලධාරීන්</u></div>
                                 <div style="font-weight: normal; margin-top: 4px;">ගයාන් - 0741805133</div>
                                 <div style="font-weight: normal;">චානුක - 0768867869</div>
                             </div>
                             
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 25px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 10px; font-size: 9.5pt; line-height: 1.45; font-weight: bold; color: #000000;">
                                 ඔබගේ වටිනා සහයෝගය අපේක්ෂා කරමු.
                             </div>
 
-                            <div style="margin-bottom: 25px; font-size: 11pt; font-weight: bold; border-top: 1px dashed #000000; border-bottom: 1px dashed #000000; padding: 6px 0; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 11pt; font-weight: bold; border-top: 1px dashed #000000; border-bottom: 1px dashed #000000; padding: 6px 0; color: #000000;">
                                 හිඟ වාරික ගණන - ${arrearsInstallments.toFixed(2)}
                             </div>
 
                             <!-- Signatures -->
-                            <div style="margin-top: 25px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 10px; font-size: 9.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
                                 ${twoPartySig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1306,64 +1306,64 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">Dear Sir / Madam,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">Dear Sir / Madam,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>Regarding the loan of LKR ${loanAmountStr} obtained on ${loanGrantedDate}.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraphs -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 We regret to inform you that the repayments for the business loan obtained by you from our society are not being made properly.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 Therefore, we kindly request you to take action to pay the installment on the due date according to your loan agreement. Furthermore, please be informed that if the installment is not paid within two days after the due date, a penalty interest will be charged.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 If it is difficult to visit the bank office due to business activities, your installments can be handed over to our field officers.
                             </div>
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.7; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 Moreover, our officers are ready to visit your doorstep to provide services for business loan repayments or other savings requirements.
                             </div>
                             
-                            <div style="margin-left: 40px; margin-bottom: 24px; font-size: 10.5pt; line-height: 1.6; font-weight: 700; color: #000000;">
+                            <div style="margin-left: 40px; margin-bottom: 24px; font-size: 9.5pt; line-height: 1.45; font-weight: 700; color: #000000;">
                                 <div><u>Field Officers</u></div>
                                 <div style="font-weight: normal; margin-top: 4px;">Gayan - 0741805133</div>
                                 <div style="font-weight: normal;">Chanuka - 0768867869</div>
                             </div>
                             
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 25px; font-size: 10.5pt; line-height: 1.7; font-weight: bold; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 10px; font-size: 9.5pt; line-height: 1.45; font-weight: bold; color: #000000;">
                                 We look forward to your valuable cooperation.
                             </div>
 
-                            <div style="margin-bottom: 25px; font-size: 11pt; font-weight: bold; border-top: 1px dashed #000000; border-bottom: 1px dashed #000000; padding: 6px 0; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 11pt; font-weight: bold; border-top: 1px dashed #000000; border-bottom: 1px dashed #000000; padding: 6px 0; color: #000000;">
                                 Number of Arrears Installments - ${arrearsInstallments.toFixed(2)}
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 25px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 10px; font-size: 9.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
                                 ${twoPartySig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>Copy 01: First Guarantor - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>Copy 02: Second Guarantor - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1380,40 +1380,40 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ඔබ විසින් අප සමිතියෙන් ලබාගත් ඉහත සඳහන් ණය අංකය යටතේ වූ ණය ගිවිසුමේ කාලය අවසන් වී ඇති අතර, ණය මුදලට අදාල සියලු වාරික ගෙවීම් හා පොලී ගෙවීම් අවසන් කල යුතුය. එම නිසා, අදාල සියලු වාරික ගෙවීම් <strong>${demandDueDate}</strong> දිනට ප්‍රථම ගෙවා අවසන් කිරීමට කටයුතු කරන්න. ඔබගේ සහයෝගය අපගේ විශ්වාසය හා මනා සබඳතාව තවදුරටත් පවත්වා ගැනීමට දායක වනු ඇතැයි අප විශ්වාස කරමු.
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 280px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1438,19 +1438,19 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 එම මුදල <strong>${demandDueDate}</strong> දිනට ප්‍රථම නොගෙවුවහොත් 1983 අංක 32 දරණ සමුපකාර සමිති (සංශෝධිත) පනතින් ජාතික රාජ්‍ය සභාවේ 1972 අංක 05 දරණ සමුපකාර සමිති පනතේ 58 වැනි වගන්තිය ප්‍රකාරව නීතිමය කටයුතු සිදු කිරීම සඳහා සමුපකාර කොමසාරිස්තුමාගේ නීති අංශය වෙත ඔබගේ ණය ගිවිසුම ලබාදීමට සිදුවන බව කණගාටුවෙන් යුතුව දැනුම් දෙමු.
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
                                 ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1462,40 +1462,40 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Recipient Address -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">Dear Sir / Madam,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">Dear Sir / Madam,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>Regarding the loan of LKR ${loanAmountStr} obtained on ${loanGrantedDate}.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 The period of the loan agreement under the above-mentioned loan number obtained by you from our society has expired, and all installment and interest payments related to the loan must be completed. Therefore, please take steps to complete all relevant payments before <strong>${demandDueDate}</strong>. We trust that your cooperation will contribute to maintaining our trust and relationship.
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 In relation to this loan, the following payments are due as of <strong>${formattedLetterDate}</strong>:
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 320px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 320px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 180px; font-weight: normal;">Arrears Installments</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1520,19 +1520,19 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 If the said amount is not paid before <strong>${demandDueDate}</strong>, we regret to inform you that your loan agreement will be forwarded to the Legal Department of the Cooperative Commissioner to initiate legal action under Section 58 of the Cooperative Societies Act No. 05 of 1972, as amended by the Cooperative Societies (Amendment) Act No. 32 of 1983.
                             </div>
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
                                 ${singleManagerSig}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>Copy 01: First Guarantor - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>Copy 02: Second Guarantor - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1572,40 +1572,40 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Customer Address Left Header -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">මහත්මයාණෙනි / මහත්මියනි,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>${loanGrantedDate} දින ලබා ගත් රු. ${loanAmountStr} ණය මුදල සම්බන්ධවයි.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(ගිණුම් අංක ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; color: #000000;">
                                 ${body1}
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 මෙම ණය මුදලට අදාළව <strong>${formattedLetterDate}</strong> දිනට පහත පරිදි ගෙවීම් සිදුකල යුතුව ඇත.
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 280px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 280px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 160px; font-weight: normal;">හිඟ වාරික ගණන</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1630,31 +1630,31 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 <strong>${formattedLetterDate}</strong> දිනට ගෙවිය යුතු ඉහත දක්වා ඇති මුදල මෙම ලිපිය ලැබී දින 14ක් ඇතුලත ගෙවීම් සිදුකල යුතු අතර ප්‍රමාද වන දින ගණනට පොලියක්ද ඇතුලත් වන බව දන්වා සිටිමි.
                             </div>
 
                             ${body2 ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ${body2}
                             </div>
                             ` : ''}
 
                             ${finalParagraph ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ${finalParagraph}
                             </div>
                             ` : ''}
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>ස්තූතියි,</div>
                                 <div>මෙයට,</div>
                                 ${signers}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>පිටපත් 01. පළමු ඇපකරු - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>පිටපත් 02. දෙවන ඇපකරු - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1685,40 +1685,40 @@
                         ${headerHtml}
                         <div class="a4-content">
                             <!-- Customer Address Left Header -->
-                            <div style="margin-bottom: 20px; font-size: 10pt; line-height: 1.5; font-weight: 600; color: #000000;">
+                            <div style="margin-bottom: 10px; font-size: 10pt; line-height: 1.45; font-weight: 600; color: #000000;">
                                 <div>${memberId} &nbsp;&nbsp; ${name}</div>
                                 <div>${address}</div>
                             </div>
 
                             <!-- Title Box -->
-                            <div style="text-align: center; margin: 15px 0 20px 0;">
+                            <div style="text-align: center; margin: 8px 0 10px 0;">
                                 <span class="print-title-box">
                                     ${title}
                                 </span>
                             </div>
 
                             <!-- Salutation -->
-                            <div style="font-weight: 600; margin-bottom: 12px; color: #000000;">Dear Sir / Madam,</div>
+                            <div style="font-weight: 600; margin-bottom: 6px; color: #000000;">Dear Sir / Madam,</div>
 
                             <!-- Subject Block -->
-                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 16px; color: #000000;">
+                            <div style="text-align: center; font-weight: bold; font-size: 11pt; line-height: 1.4; margin-bottom: 8px; color: #000000;">
                                 <div>Regarding the loan of LKR ${loanAmountStr} obtained on ${loanGrantedDate}.</div>
-                                <div style="font-weight: normal; font-size: 10.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
+                                <div style="font-weight: normal; font-size: 9.5pt; margin-top: 2px;">(Account No: ${loanAccNo})</div>
                             </div>
 
                             <!-- Body Paragraph 1 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; color: #000000;">
                                 ${body1}
                             </div>
 
                             <!-- Table Intro -->
-                            <div style="margin-bottom: 12px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-bottom: 6px; font-size: 9.5pt; color: #000000;">
                                 In relation to this loan, the following payments are due as of <strong>${formattedLetterDate}</strong>:
                             </div>
 
                             <!-- Details Table -->
-                            <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-                                <table style="width: 320px; border-collapse: collapse; font-size: 10.5pt; font-weight: 600; color: #000000;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+                                <table style="width: 320px; border-collapse: collapse; font-size: 9.5pt; font-weight: 600; color: #000000;">
                                     <tr>
                                         <td style="padding: 4px 8px; width: 180px; font-weight: normal;">Arrears Installments</td>
                                         <td style="padding: 4px 8px; text-align: right;">${arrearsInstallments.toFixed(2)}</td>
@@ -1743,31 +1743,31 @@
                             </div>
 
                             <!-- Body Paragraph 2 -->
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 Please be informed that the above-mentioned amount due as of <strong>${formattedLetterDate}</strong> must be settled within 14 days of receiving this letter. Interest will continue to accumulate for any further delayed days.
                             </div>
 
                             ${body2 ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ${body2}
                             </div>
                             ` : ''}
 
                             ${finalParagraph ? `
-                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 16px; font-size: 10.5pt; line-height: 1.6; color: #000000;">
+                            <div style="text-align: justify; text-indent: 40px; margin-bottom: 8px; font-size: 9.5pt; line-height: 1.45; color: #000000;">
                                 ${finalParagraph}
                             </div>
                             ` : ''}
 
                             <!-- Sign Off -->
-                            <div style="margin-top: 15px; font-size: 10.5pt; color: #000000;">
+                            <div style="margin-top: 8px; font-size: 9.5pt; color: #000000;">
                                 <div>Thank you,</div>
                                 <div>Yours faithfully,</div>
                                 ${signers}
                             </div>
 
                             <!-- Copies Section -->
-                            <div style="margin-top: 25px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
+                            <div style="margin-top: 10px; border-top: 1px dashed #000000; padding-top: 10px; font-size: 8.5pt; color: #000000; line-height: 1.4;">
                                 ${g1Name ? `<div>Copy 01: First Guarantor - ${currentCust ? currentCust.guarantor1 : ''} &nbsp;&nbsp; ${g1Address ? `(${g1Address})` : ''}</div>` : ''}
                                 ${g2Name ? `<div>Copy 02: Second Guarantor - ${currentCust ? currentCust.guarantor2 : ''} &nbsp;&nbsp; ${g2Address ? `(${g2Address})` : ''}</div>` : ''}
                             </div>
@@ -1778,6 +1778,18 @@
             }
 
             letterContainer.innerHTML = htmlContent;
+
+            // Auto-scale: shrink content if it overflows A4 height
+            requestAnimationFrame(() => {
+                const pageH = letterContainer.offsetHeight;
+                const scrollH = letterContainer.scrollHeight;
+                if (scrollH > pageH && pageH > 0) {
+                    const scale = Math.max(0.75, pageH / scrollH);
+                    letterContainer.style.fontSize = (scale * 9.5).toFixed(2) + 'pt';
+                } else {
+                    letterContainer.style.fontSize = '';
+                }
+            });
         }
 
         // Action Handler: Print & optional Save to History
